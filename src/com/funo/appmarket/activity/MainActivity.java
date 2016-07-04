@@ -6,15 +6,19 @@ import java.util.List;
 import com.funo.appmarket.R;
 import com.funo.appmarket.bean.LawyerBean;
 import com.funo.appmarket.business.TestService;
+import com.funo.appmarket.business.TestService.GetLawyersCallback;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
+	private TextView textView;
+	
 	private TestService testService;
 	
-	private List<LawyerBean> lawyers = new ArrayList<LawyerBean>();
+	private List<LawyerBean> lawyerData = new ArrayList<LawyerBean>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +28,17 @@ public class MainActivity extends Activity {
 		
 		setContentView(R.layout.activity_main);
 		
-		lawyers = testService.getLawyers();
+		textView = (TextView) findViewById(R.id.textView);
+		
+		testService.getLawyers(new GetLawyersCallback() {
+			
+			@Override
+			public void doCallback(List<LawyerBean> lawyers) {
+				lawyerData = lawyers;
+				textView.setText("结果数：" + lawyerData.size());
+			}
+			
+		});
 	}
 
 }
