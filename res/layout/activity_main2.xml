@@ -1,0 +1,97 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="15dp"
+        android:paddingTop="15dp" >
+
+        <TextView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="魔百和"
+            android:textColor="@color/lawngreen"
+            android:textSize="25sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@+id/logo"
+            android:text="全部应用"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/installed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/ic_launcher"
+            android:gravity="center_vertical"
+            android:text="已装应用"
+            android:textColor="@android:color/white"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/ranklist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toLeftOf="@+id/installed"
+            android:drawableLeft="@drawable/ic_launcher"
+            android:gravity="center_vertical"
+            android:text="排行榜"
+            android:textColor="@android:color/white"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/ranklist"
+            android:drawableLeft="@drawable/ic_launcher"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="搜索"
+            android:textColor="@android:color/white"
+            android:textSize="22sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@+id/navList"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:background="#ddd"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" />
+
+        <com.open.androidtvwidget.recycle.RecyclerViewTV
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="#000000"
+            android:clipToPadding="false"
+            android:focusable="false" />
+    </LinearLayout>
+
+    <com.open.androidtvwidget.view.MainUpView
+        android:id="@+id/mainUpView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
