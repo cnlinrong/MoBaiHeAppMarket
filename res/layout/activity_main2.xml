@@ -123,9 +123,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp" />
+            android:scrollbars="none"
+            android:layout_marginRight="20dp" />
 
         <HorizontalScrollView
             android:layout_width="0dp"
