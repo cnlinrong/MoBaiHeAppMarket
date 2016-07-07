@@ -7,6 +7,7 @@ import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.NavListAdapter;
 import com.funo.appmarket.bean.NavItem;
+import com.funo.appmarket.util.ToastUtils;
 import com.open.androidtvwidget.bridge.RecyclerViewBridge;
 import com.open.androidtvwidget.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.recycle.OnChildSelectedListener;
@@ -17,12 +18,18 @@ import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity2 extends BaseActivity {
 
 	private ListView navList;
+	private TextView all_app;
+	private View search;
+	private View ranklist;
+	private View installed;
 	
 	private GridLayout gl_gridlayout;
 	
@@ -39,6 +46,43 @@ public class MainActivity2 extends BaseActivity {
 
 		setContentView(R.layout.activity_main2);
 
+		all_app = (TextView) findViewById(R.id.all_app);
+		all_app.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ToastUtils.showShortToast(getContext(), "全部应用");
+			}
+			
+		});
+		search = findViewById(R.id.search);
+		search.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ToastUtils.showShortToast(getContext(), "搜索");
+			}
+			
+		});
+		ranklist = findViewById(R.id.ranklist);
+		ranklist.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ToastUtils.showShortToast(getContext(), "排行榜");
+			}
+			
+		});
+		installed = findViewById(R.id.installed);
+		installed.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ToastUtils.showShortToast(getContext(), "已装应用");
+			}
+			
+		});
+		
 		gl_gridlayout = (GridLayout) findViewById(R.id.gl_gridlayout);
 		gl_gridlayout.setColumnCount(7);
 		gl_gridlayout.setRowCount(2);
@@ -178,16 +222,24 @@ public class MainActivity2 extends BaseActivity {
 		});
 		
 		navList = (ListView) findViewById(R.id.navList);
-		NavItem navItem = new NavItem("游戏", "", "");
-		navItems.add(navItem);
-		navItem = new NavItem("教育阅读", "", "");
-		navItems.add(navItem);
-		navItem = new NavItem("生活助手", "", "");
-		navItems.add(navItem);
-		navItem = new NavItem("亲子乐园", "", "");
-		navItems.add(navItem);
-		navListAdapter = new NavListAdapter(getContext(), navItems);
-		navList.setAdapter(navListAdapter);
+		navList.post(new Runnable() {
+
+			@Override
+			public void run() {
+				int itemHeight = navList.getHeight() / 4;
+				NavItem navItem = new NavItem("游戏", "", "");
+				navItems.add(navItem);
+				navItem = new NavItem("教育阅读", "", "");
+				navItems.add(navItem);
+				navItem = new NavItem("生活助手", "", "");
+				navItems.add(navItem);
+				navItem = new NavItem("亲子乐园", "", "");
+				navItems.add(navItem);
+				navListAdapter = new NavListAdapter(getContext(), navItems, itemHeight);
+				navList.setAdapter(navListAdapter);
+			}
+			
+		});
 	}
 
 }

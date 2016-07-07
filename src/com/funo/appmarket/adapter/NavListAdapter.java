@@ -20,9 +20,12 @@ public class NavListAdapter extends BaseAdapter {
 	
 	private List<NavItem> navItems = new ArrayList<NavItem>();
 	
-	public NavListAdapter(Context context, List<NavItem> navItems) {
+	private int itemHeight;
+	
+	public NavListAdapter(Context context, List<NavItem> navItems, int itemHeight) {
 		this.mContext = context;
 		this.navItems = navItems;
+		this.itemHeight = itemHeight;
 	}
 	
 	@Override
@@ -44,6 +47,7 @@ public class NavListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = View.inflate(mContext, R.layout.list_item_nav_list, null);
+			convertView.setMinimumHeight(itemHeight);
 		}
 		ImageView image = ViewHolderUtils.get(convertView, R.id.image);
 		TextView name = ViewHolderUtils.get(convertView, R.id.name);
