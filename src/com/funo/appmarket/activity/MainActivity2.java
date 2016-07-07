@@ -7,6 +7,7 @@ import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.NavListAdapter;
 import com.funo.appmarket.bean.NavItem;
+import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ToastUtils;
 import com.open.androidtvwidget.bridge.RecyclerViewBridge;
 import com.open.androidtvwidget.recycle.GridLayoutManagerTV;
@@ -95,16 +96,17 @@ public class MainActivity2 extends BaseActivity {
 				int height = gl_gridlayout.getHeight();
 				int itemWidth = height / 3 + 77;
 
-				Button tv = new Button(getContext());
-				tv.setText("游戏1");
-				tv.setWidth(itemWidth * 2);
+				View v = View.inflate(getContext(), R.layout.gridlayout_item, null);
+//				v.setBackgroundColor(CommonUtils.getRandomColor());
+				v.setMinimumWidth(itemWidth * 2);
 				GridLayout.Spec rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
 				GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
 				params.setGravity(Gravity.FILL);
-				gl_gridlayout.addView(tv, params);
+				gl_gridlayout.addView(v, params);
 
 				Button tv2 = new Button(getContext());
+				tv2.setBackgroundColor(CommonUtils.getRandomColor());
 				tv2.setText("游戏2");
 				tv2.setWidth(itemWidth);
 				GridLayout.Spec rowSpec2 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
@@ -113,6 +115,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv2, params2);
 
 				Button tv3 = new Button(getContext());
+				tv3.setBackgroundColor(CommonUtils.getRandomColor());
 				tv3.setText("游戏3");
 				tv3.setWidth(itemWidth);
 				GridLayout.Spec rowSpec3 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
@@ -121,6 +124,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv3, params3);
 
 				Button tv4 = new Button(getContext());
+				tv4.setBackgroundColor(CommonUtils.getRandomColor());
 				tv4.setText("游戏4");
 				tv4.setWidth(itemWidth);
 				GridLayout.Spec rowSpec4 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
@@ -129,6 +133,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv4, params4);
 
 				Button tv5 = new Button(getContext());
+				tv5.setBackgroundColor(CommonUtils.getRandomColor());
 				tv5.setText("游戏5");
 				tv5.setWidth(itemWidth);
 				GridLayout.Spec rowSpec5 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
@@ -137,6 +142,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv5, params5);
 				
 				Button tv6 = new Button(getContext());
+				tv6.setBackgroundColor(CommonUtils.getRandomColor());
 				tv6.setText("游戏6");
 				tv6.setWidth(itemWidth);
 				GridLayout.Spec rowSpec6 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
@@ -145,6 +151,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv6, params6);
 
 				Button tv7 = new Button(getContext());
+				tv7.setBackgroundColor(CommonUtils.getRandomColor());
 				tv7.setText("游戏7");
 				tv7.setWidth(itemWidth);
 				GridLayout.Spec rowSpec7 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
@@ -153,6 +160,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv7, params7);
 				
 				Button tv8 = new Button(getContext());
+				tv8.setBackgroundColor(CommonUtils.getRandomColor());
 				tv8.setText("游戏8");
 				tv8.setWidth(itemWidth);
 				GridLayout.Spec rowSpec8 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
@@ -161,6 +169,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv8, params8);
 
 				Button tv9 = new Button(getContext());
+				tv9.setBackgroundColor(CommonUtils.getRandomColor());
 				tv9.setText("游戏9");
 				tv9.setWidth(itemWidth);
 				GridLayout.Spec rowSpec9 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
@@ -169,6 +178,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv9, params9);
 				
 				Button tv10 = new Button(getContext());
+				tv10.setBackgroundColor(CommonUtils.getRandomColor());
 				tv10.setText("游戏10");
 				tv10.setWidth(itemWidth);
 				GridLayout.Spec rowSpec10 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
@@ -177,6 +187,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv10, params10);
 
 				Button tv11 = new Button(getContext());
+				tv11.setBackgroundColor(CommonUtils.getRandomColor());
 				tv11.setText("游戏11");
 				tv11.setWidth(itemWidth);
 				GridLayout.Spec rowSpec11 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
@@ -185,6 +196,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv11, params11);
 				
 				Button tv12 = new Button(getContext());
+				tv12.setBackgroundColor(CommonUtils.getRandomColor());
 				tv12.setText("游戏12");
 				tv12.setWidth(itemWidth);
 				GridLayout.Spec rowSpec12 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
@@ -193,6 +205,7 @@ public class MainActivity2 extends BaseActivity {
 				gl_gridlayout.addView(tv12, params12);
 
 				Button tv13 = new Button(getContext());
+				tv13.setBackgroundColor(CommonUtils.getRandomColor());
 				tv13.setText("游戏13");
 				tv13.setWidth(itemWidth);
 				GridLayout.Spec rowSpec13 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);

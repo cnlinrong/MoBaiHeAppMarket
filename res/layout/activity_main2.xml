@@ -124,6 +124,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="20dp"
             android:scrollbars="none"
+            android:background="@drawable/nav_list_bg"
             android:layout_marginRight="20dp" />
 
         <HorizontalScrollView
