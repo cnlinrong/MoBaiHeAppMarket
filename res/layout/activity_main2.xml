@@ -79,14 +79,19 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp" />
 
-        <com.open.androidtvwidget.recycle.RecyclerViewTV
-            android:id="@+id/recyclerView"
+        <HorizontalScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:background="#000000"
-            android:clipToPadding="false"
-            android:focusable="false" />
+            android:scrollbars="none" >
+
+            <android.support.v7.widget.GridLayout
+                android:id="@+id/gl_gridlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="#ddd"
+                android:padding="5dp" />
+        </HorizontalScrollView>
     </LinearLayout>
 
     <com.open.androidtvwidget.view.MainUpView
