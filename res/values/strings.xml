@@ -4,5 +4,7 @@
     <string name="app_name">魔百和</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_grid_layout">GridLayoutActivity</string>
+    <string name="title_activity_installed">InstalledActivity</string>
 
 </resources>

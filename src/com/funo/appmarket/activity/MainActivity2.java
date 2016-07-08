@@ -3,6 +3,7 @@ package com.funo.appmarket.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.funo.appmarket.GridLayoutActivity;
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.NavListAdapter;
@@ -14,12 +15,15 @@ import com.open.androidtvwidget.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.recycle.OnChildSelectedListener;
 import com.open.androidtvwidget.view.MainUpView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -79,7 +83,7 @@ public class MainActivity2 extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				ToastUtils.showShortToast(getContext(), "已装应用");
+				startActivity(new Intent(getContext(), InstalledActivity.class));
 			}
 			
 		});
@@ -96,122 +100,123 @@ public class MainActivity2 extends BaseActivity {
 				int height = gl_gridlayout.getHeight();
 				int itemWidth = height / 3 + 77;
 
-				View v = View.inflate(getContext(), R.layout.gridlayout_item, null);
-//				v.setBackgroundColor(CommonUtils.getRandomColor());
-				v.setMinimumWidth(itemWidth * 2);
+				View v1 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v1.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v1.findViewById(R.id.content_tv)).setText("游戏1");
+				v1.setMinimumWidth(itemWidth * 2);
 				GridLayout.Spec rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
 				GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
 				params.setGravity(Gravity.FILL);
-				gl_gridlayout.addView(v, params);
+				gl_gridlayout.addView(v1, params);
 
-				Button tv2 = new Button(getContext());
-				tv2.setBackgroundColor(CommonUtils.getRandomColor());
-				tv2.setText("游戏2");
-				tv2.setWidth(itemWidth);
+				View v2 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v2.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v2.findViewById(R.id.content_tv)).setText("游戏2");
+				v2.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec2 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec2 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params2 = new GridLayout.LayoutParams(rowSpec2, columnSpec2);
-				gl_gridlayout.addView(tv2, params2);
+				gl_gridlayout.addView(v2, params2);
 
-				Button tv3 = new Button(getContext());
-				tv3.setBackgroundColor(CommonUtils.getRandomColor());
-				tv3.setText("游戏3");
-				tv3.setWidth(itemWidth);
+				View v3 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v3.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v3.findViewById(R.id.content_tv)).setText("游戏3");
+				v3.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec3 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec3 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params3 = new GridLayout.LayoutParams(rowSpec3, columnSpec3);
-				gl_gridlayout.addView(tv3, params3);
+				gl_gridlayout.addView(v3, params3);
 
-				Button tv4 = new Button(getContext());
-				tv4.setBackgroundColor(CommonUtils.getRandomColor());
-				tv4.setText("游戏4");
-				tv4.setWidth(itemWidth);
+				View v4 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v4.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v4.findViewById(R.id.content_tv)).setText("游戏4");
+				v4.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec4 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec4 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params4 = new GridLayout.LayoutParams(rowSpec4, columnSpec4);
-				gl_gridlayout.addView(tv4, params4);
+				gl_gridlayout.addView(v4, params4);
 
-				Button tv5 = new Button(getContext());
-				tv5.setBackgroundColor(CommonUtils.getRandomColor());
-				tv5.setText("游戏5");
-				tv5.setWidth(itemWidth);
+				View v5 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v5.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v5.findViewById(R.id.content_tv)).setText("游戏5");
+				v5.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec5 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec5 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params5 = new GridLayout.LayoutParams(rowSpec5, columnSpec5);
-				gl_gridlayout.addView(tv5, params5);
+				gl_gridlayout.addView(v5, params5);
 				
-				Button tv6 = new Button(getContext());
-				tv6.setBackgroundColor(CommonUtils.getRandomColor());
-				tv6.setText("游戏6");
-				tv6.setWidth(itemWidth);
+				View v6 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v6.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v6.findViewById(R.id.content_tv)).setText("游戏6");
+				v6.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec6 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec6 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params6 = new GridLayout.LayoutParams(rowSpec6, columnSpec6);
-				gl_gridlayout.addView(tv6, params6);
+				gl_gridlayout.addView(v6, params6);
 
-				Button tv7 = new Button(getContext());
-				tv7.setBackgroundColor(CommonUtils.getRandomColor());
-				tv7.setText("游戏7");
-				tv7.setWidth(itemWidth);
+				View v7 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v7.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v7.findViewById(R.id.content_tv)).setText("游戏7");
+				v7.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec7 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec7 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params7 = new GridLayout.LayoutParams(rowSpec7, columnSpec7);
-				gl_gridlayout.addView(tv7, params7);
+				gl_gridlayout.addView(v7, params7);
 				
-				Button tv8 = new Button(getContext());
-				tv8.setBackgroundColor(CommonUtils.getRandomColor());
-				tv8.setText("游戏8");
-				tv8.setWidth(itemWidth);
+				View v8 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v8.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v8.findViewById(R.id.content_tv)).setText("游戏8");
+				v8.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec8 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec8 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params8 = new GridLayout.LayoutParams(rowSpec8, columnSpec8);
-				gl_gridlayout.addView(tv8, params8);
+				gl_gridlayout.addView(v8, params8);
 
-				Button tv9 = new Button(getContext());
-				tv9.setBackgroundColor(CommonUtils.getRandomColor());
-				tv9.setText("游戏9");
-				tv9.setWidth(itemWidth);
+				View v9 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v9.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v9.findViewById(R.id.content_tv)).setText("游戏9");
+				v9.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec9 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec9 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params9 = new GridLayout.LayoutParams(rowSpec9, columnSpec9);
-				gl_gridlayout.addView(tv9, params9);
+				gl_gridlayout.addView(v9, params9);
 				
-				Button tv10 = new Button(getContext());
-				tv10.setBackgroundColor(CommonUtils.getRandomColor());
-				tv10.setText("游戏10");
-				tv10.setWidth(itemWidth);
+				View v10 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v10.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v10.findViewById(R.id.content_tv)).setText("游戏10");
+				v10.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec10 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec10 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params10 = new GridLayout.LayoutParams(rowSpec10, columnSpec10);
-				gl_gridlayout.addView(tv10, params10);
+				gl_gridlayout.addView(v10, params10);
 
-				Button tv11 = new Button(getContext());
-				tv11.setBackgroundColor(CommonUtils.getRandomColor());
-				tv11.setText("游戏11");
-				tv11.setWidth(itemWidth);
+				View v11 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v11.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v11.findViewById(R.id.content_tv)).setText("游戏11");
+				v11.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec11 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec11 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params11 = new GridLayout.LayoutParams(rowSpec11, columnSpec11);
-				gl_gridlayout.addView(tv11, params11);
+				gl_gridlayout.addView(v11, params11);
 				
-				Button tv12 = new Button(getContext());
-				tv12.setBackgroundColor(CommonUtils.getRandomColor());
-				tv12.setText("游戏12");
-				tv12.setWidth(itemWidth);
+				View v12 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v12.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v12.findViewById(R.id.content_tv)).setText("游戏12");
+				v12.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec12 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec12 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params12 = new GridLayout.LayoutParams(rowSpec12, columnSpec12);
-				gl_gridlayout.addView(tv12, params12);
+				gl_gridlayout.addView(v12, params12);
 
-				Button tv13 = new Button(getContext());
-				tv13.setBackgroundColor(CommonUtils.getRandomColor());
-				tv13.setText("游戏13");
-				tv13.setWidth(itemWidth);
+				View v13 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v13.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v13.findViewById(R.id.content_tv)).setText("游戏13");
+				v13.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec13 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec13 = GridLayout.spec(GridLayout.UNDEFINED);
 				GridLayout.LayoutParams params13 = new GridLayout.LayoutParams(rowSpec13, columnSpec13);
-				gl_gridlayout.addView(tv13, params13);
+				gl_gridlayout.addView(v13, params13);
 			}
 
 		});
@@ -248,8 +253,18 @@ public class MainActivity2 extends BaseActivity {
 				navItems.add(navItem);
 				navItem = new NavItem("亲子乐园", "", "");
 				navItems.add(navItem);
+				navItem = new NavItem("亲子啊啊", "", "");
+				navItems.add(navItem);
 				navListAdapter = new NavListAdapter(getContext(), navItems, itemHeight);
 				navList.setAdapter(navListAdapter);
+			}
+			
+		});
+		navList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				startActivity(new Intent(getContext(), GridLayoutActivity.class));
 			}
 			
 		});
