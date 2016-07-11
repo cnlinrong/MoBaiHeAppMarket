@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.funo.appmarket.R;
-import com.funo.appmarket.R.id;
-import com.funo.appmarket.R.layout;
 import com.funo.appmarket.activity.base.BaseActivity;
-import com.funo.appmarket.adapter.InstalledGridViewAdapter;
+import com.funo.appmarket.adapter.AppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.GridView;
 
-public class InstalledActivity extends BaseActivity {
+public class AppsActivity extends BaseActivity {
 
 	private GridView installed_list;
-	private InstalledGridViewAdapter installedGridViewAdapter;
+	private AppsGridViewAdapter installedGridViewAdapter;
 	
 	private List<AppBean> appBeans = new ArrayList<AppBean>();
 	
@@ -24,7 +27,7 @@ public class InstalledActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_installed);
+		setContentView(R.layout.activity_apps);
 		
 		installed_list = (GridView) findViewById(R.id.installed_list);
 		AppBean appBean = new AppBean("室内设计", null, 0, 0);
@@ -63,8 +66,16 @@ public class InstalledActivity extends BaseActivity {
 		appBeans.add(appBean);
 		appBean = new AppBean("室内设计", null, 0, 0);
 		appBeans.add(appBean);
-		installedGridViewAdapter = new InstalledGridViewAdapter(getContext(), appBeans);
+		installedGridViewAdapter = new AppsGridViewAdapter(getContext(), appBeans);
 		installed_list.setAdapter(installedGridViewAdapter);
+		installed_list.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				startActivity(new Intent(getContext(), AppDetailActivity.class));
+			}
+			
+		});
 	}
 
 }

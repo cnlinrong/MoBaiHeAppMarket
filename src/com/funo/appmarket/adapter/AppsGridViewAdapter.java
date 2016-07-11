@@ -14,13 +14,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class InstalledGridViewAdapter extends BaseAdapter {
+public class AppsGridViewAdapter extends BaseAdapter {
 
 	private Context mContext;
 	
 	private List<AppBean> appBeans = new ArrayList<AppBean>();
 	
-	public InstalledGridViewAdapter(Context context, List<AppBean> appBeans) {
+	public AppsGridViewAdapter(Context context, List<AppBean> appBeans) {
 		this.mContext = context;
 		this.appBeans = appBeans;
 	}
@@ -43,7 +43,7 @@ public class InstalledGridViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = View.inflate(mContext, R.layout.gridview_item_installed, null);
+			convertView = View.inflate(mContext, R.layout.gridview_item_apps, null);
 		}
 		ImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);

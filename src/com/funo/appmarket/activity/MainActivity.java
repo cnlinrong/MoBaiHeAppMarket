@@ -1,175 +1,261 @@
 package com.funo.appmarket.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
+import com.funo.appmarket.adapter.NavListAdapter;
+import com.funo.appmarket.bean.NavItem;
+import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ToastUtils;
-import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
-import com.open.androidtvwidget.bridge.OpenEffectBridge;
-import com.open.androidtvwidget.utils.Utils;
-import com.open.androidtvwidget.view.MainLayout;
+import com.open.androidtvwidget.bridge.RecyclerViewBridge;
+import com.open.androidtvwidget.recycle.GridLayoutManagerTV;
+import com.open.androidtvwidget.recycle.OnChildSelectedListener;
 import com.open.androidtvwidget.view.MainUpView;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.support.v7.widget.GridLayout;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewTreeObserver.OnGlobalFocusChangeListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
 
-public class MainActivity extends BaseActivity implements OnClickListener {
+public class MainActivity extends BaseActivity {
 
+	private ListView navList;
+	private View search;
+	private View ranklist;
+	private View installed;
+	
+	private GridLayout gl_gridlayout;
+	
 	MainUpView mainUpView1;
-	View test_top_iv;
-	OpenEffectBridge mOpenEffectBridge;
-	View mOldFocus; // 4.3以下版本需要自己保存.
-
+	RecyclerViewBridge mRecyclerViewBridge;
+	private View oldView;
+	
+	private NavListAdapter navListAdapter;
+	private List<NavItem> navItems = new ArrayList<NavItem>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
 
-		test_top_iv = findViewById(R.id.test_top_iv);
-		/* MainUpView 设置. */
-		mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
-		// mainUpView1 = new MainUpView(this); // 手动添加(test)
-		// mainUpView1.attach2Window(this); // 手动添加(test)
-		mOpenEffectBridge = (OpenEffectBridge) mainUpView1.getEffectBridge();
-		// 4.2 绘制有问题，所以不使用绘制边框.
-		// 也不支持倒影效果，绘制有问题.
-		// 请大家不要按照我这样写.
-		// 如果你不想放大小人超出边框(demo，张靓颖的小人)，可以不使用OpenEffectBridge.
-		// 我只是测试----DEMO.(建议大家使用 NoDrawBridge)
-		if (Utils.getSDKVersion() == 17) { // 测试 android 4.2版本.
-			switchNoDrawBridgeVersion();
-		} else { // 其它版本（android 4.3以上）.
-			mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
-			mainUpView1.setShadowResource(R.drawable.item_shadow); // 设置移动边框的阴影.
-		}
-		// mainUpView1.setUpRectResource(R.drawable.item_highlight); //
-		// 设置移动边框的图片.(test)
-		// mainUpView1.setDrawUpRectPadding(new Rect(0, 0, 0, -26)); //
-		// 设置移动边框的距离.
-		// mainUpView1.setDrawShadowPadding(0); // 阴影图片设置距离.
-		// mOpenEffectBridge.setTranDurAnimTime(500); // 动画时间.
+		search = findViewById(R.id.search);
+		search.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ToastUtils.showShortToast(getContext(), "搜索");
+			}
+			
+		});
+		ranklist = findViewById(R.id.ranklist);
+		ranklist.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getContext(), AppsActivity.class));
+			}
+			
+		});
+		installed = findViewById(R.id.installed);
+		installed.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getContext(), AppsActivity.class));
+			}
+			
+		});
+		
+		gl_gridlayout = (GridLayout) findViewById(R.id.gl_gridlayout);
+		gl_gridlayout.setColumnCount(7);
+		gl_gridlayout.setRowCount(2);
+		gl_gridlayout.setOrientation(GridLayout.HORIZONTAL);
 
-		MainLayout main_lay11 = (MainLayout) findViewById(R.id.main_lay);
-		main_lay11.getViewTreeObserver().addOnGlobalFocusChangeListener(new OnGlobalFocusChangeListener() {
+		gl_gridlayout.post(new Runnable() {
 
 			@Override
-			public void onGlobalFocusChanged(final View oldFocus, final View newFocus) {
-				if (newFocus != null)
-					newFocus.bringToFront(); // 防止放大的view被压在下面. (建议使用MainLayout)
-				float scale = 1.2f;
-				mainUpView1.setFocusView(newFocus, mOldFocus, scale);
-				mOldFocus = newFocus; // 4.3以下需要自己保存.
-				// 测试是否让边框绘制在下面，还是上面. (建议不要使用此函数)
-				if (newFocus != null) {
-					testTopDemo(newFocus, scale);
-				}
+			public void run() {
+				int height = gl_gridlayout.getHeight();
+				int itemWidth = height / 3 + 77;
+
+				View v1 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v1.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v1.findViewById(R.id.content_tv)).setText("游戏1");
+				v1.setMinimumWidth(itemWidth * 2);
+				GridLayout.Spec rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
+				GridLayout.Spec columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
+				GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
+				params.setGravity(Gravity.FILL);
+				gl_gridlayout.addView(v1, params);
+
+				View v2 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v2.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v2.findViewById(R.id.content_tv)).setText("游戏2");
+				v2.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec2 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
+				GridLayout.Spec columnSpec2 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params2 = new GridLayout.LayoutParams(rowSpec2, columnSpec2);
+				gl_gridlayout.addView(v2, params2);
+
+				View v3 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v3.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v3.findViewById(R.id.content_tv)).setText("游戏3");
+				v3.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec3 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
+				GridLayout.Spec columnSpec3 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params3 = new GridLayout.LayoutParams(rowSpec3, columnSpec3);
+				gl_gridlayout.addView(v3, params3);
+
+				View v4 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v4.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v4.findViewById(R.id.content_tv)).setText("游戏4");
+				v4.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec4 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
+				GridLayout.Spec columnSpec4 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params4 = new GridLayout.LayoutParams(rowSpec4, columnSpec4);
+				gl_gridlayout.addView(v4, params4);
+
+				View v5 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v5.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v5.findViewById(R.id.content_tv)).setText("游戏5");
+				v5.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec5 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
+				GridLayout.Spec columnSpec5 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params5 = new GridLayout.LayoutParams(rowSpec5, columnSpec5);
+				gl_gridlayout.addView(v5, params5);
+				
+				View v6 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v6.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v6.findViewById(R.id.content_tv)).setText("游戏6");
+				v6.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec6 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
+				GridLayout.Spec columnSpec6 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params6 = new GridLayout.LayoutParams(rowSpec6, columnSpec6);
+				gl_gridlayout.addView(v6, params6);
+
+				View v7 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v7.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v7.findViewById(R.id.content_tv)).setText("游戏7");
+				v7.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec7 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+				GridLayout.Spec columnSpec7 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params7 = new GridLayout.LayoutParams(rowSpec7, columnSpec7);
+				gl_gridlayout.addView(v7, params7);
+				
+				View v8 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v8.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v8.findViewById(R.id.content_tv)).setText("游戏8");
+				v8.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec8 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+				GridLayout.Spec columnSpec8 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params8 = new GridLayout.LayoutParams(rowSpec8, columnSpec8);
+				gl_gridlayout.addView(v8, params8);
+
+				View v9 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v9.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v9.findViewById(R.id.content_tv)).setText("游戏9");
+				v9.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec9 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+				GridLayout.Spec columnSpec9 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params9 = new GridLayout.LayoutParams(rowSpec9, columnSpec9);
+				gl_gridlayout.addView(v9, params9);
+				
+				View v10 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v10.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v10.findViewById(R.id.content_tv)).setText("游戏10");
+				v10.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec10 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+				GridLayout.Spec columnSpec10 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params10 = new GridLayout.LayoutParams(rowSpec10, columnSpec10);
+				gl_gridlayout.addView(v10, params10);
+
+				View v11 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v11.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v11.findViewById(R.id.content_tv)).setText("游戏11");
+				v11.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec11 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+				GridLayout.Spec columnSpec11 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params11 = new GridLayout.LayoutParams(rowSpec11, columnSpec11);
+				gl_gridlayout.addView(v11, params11);
+				
+				View v12 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v12.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v12.findViewById(R.id.content_tv)).setText("游戏12");
+				v12.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec12 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+				GridLayout.Spec columnSpec12 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params12 = new GridLayout.LayoutParams(rowSpec12, columnSpec12);
+				gl_gridlayout.addView(v12, params12);
+
+				View v13 = View.inflate(getContext(), R.layout.gridlayout_item, null);
+				v13.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
+				((TextView) v13.findViewById(R.id.content_tv)).setText("游戏13");
+				v13.setMinimumWidth(itemWidth);
+				GridLayout.Spec rowSpec13 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+				GridLayout.Spec columnSpec13 = GridLayout.spec(GridLayout.UNDEFINED);
+				GridLayout.LayoutParams params13 = new GridLayout.LayoutParams(rowSpec13, columnSpec13);
+				gl_gridlayout.addView(v13, params13);
 			}
 
 		});
-		// test demo.
-		gridview_lay = findViewById(R.id.gridview_lay);
-		gridview_lay.setOnClickListener(this);
-		findViewById(R.id.listview_lay).setOnClickListener(this);
-		findViewById(R.id.keyboard_lay).setOnClickListener(this);
-		findViewById(R.id.viewpager_lay).setOnClickListener(this);
-		findViewById(R.id.effect_rlay).setOnClickListener(this);
-		findViewById(R.id.menu_rlayt).setOnClickListener(this);
-		findViewById(R.id.recyclerview_rlayt).setOnClickListener(this);
-		/**
-		 * 尽量不要使用鼠标. !!!! 如果使用鼠标，自己要处理好焦点问题.(警告)
-		 */
-		// main_lay11.setOnHoverListener(new OnHoverListener() {
-		// @Override
-		// public boolean onHover(View v, MotionEvent event) {
-		// mainUpView1.setVisibility(View.INVISIBLE);
-		// return true;
-		// }
-		// });
-		//
-		for (int i = 0; i < main_lay11.getChildCount(); i++) {
-			main_lay11.getChildAt(i).setOnTouchListener(new OnTouchListener() {
+		
+		mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
+		mainUpView1.setEffectBridge(new RecyclerViewBridge());
+		mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
+		mRecyclerViewBridge.setUpRectResource(R.drawable.test_rectangle);
+		GridLayoutManagerTV gridlayoutManager = new GridLayoutManagerTV(this, 3);
+		gridlayoutManager.setLeftPadding((int) getResources().getDimension(R.dimen.px250));
+		gridlayoutManager.setRightPadding((int) getResources().getDimension(R.dimen.px150));
+		gridlayoutManager.setOnChildSelectedListener(new OnChildSelectedListener() {
+			
+			@Override
+			public void onChildSelected(RecyclerView parent, View focusview, int position, int dy) {
+				focusview.bringToFront();
+				mRecyclerViewBridge.setFocusView(focusview, oldView, 1.2f);
+				oldView = focusview;
+			}
+			
+		});
+		
+		navList = (ListView) findViewById(R.id.navList);
+		navList.post(new Runnable() {
 
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					if (event.getAction() == MotionEvent.ACTION_UP) {
-						// v.performClick();
-						v.requestFocus();
-					}
-					return false;
-				}
+			@Override
+			public void run() {
+				int itemHeight = navList.getHeight() / 4;
+				NavItem navItem = new NavItem("游戏", "", "");
+				navItems.add(navItem);
+				navItem = new NavItem("教育阅读", "", "");
+				navItems.add(navItem);
+				navItem = new NavItem("生活助手", "", "");
+				navItems.add(navItem);
+				navItem = new NavItem("亲子乐园", "", "");
+				navItems.add(navItem);
+				navItem = new NavItem("亲子啊啊", "", "");
+				navItems.add(navItem);
+				navListAdapter = new NavListAdapter(getContext(), navItems, itemHeight);
+				navList.setAdapter(navListAdapter);
+			}
+			
+		});
+		navList.setOnItemClickListener(new OnItemClickListener() {
 
-			});
-		}
-	}
-
-	public View gridview_lay;
-
-	/**
-	 * 这是一个测试DEMO，希望对API了解下再使用. 这种DEMO是为了实现这个效果:
-	 * https://raw.githubusercontent.com/FrozenFreeFall/ImageSaveHttp/master/
-	 * chaochupingm%20.jpg
-	 */
-	public void testTopDemo(View newView, float scale) {
-		// 测试第一个小人放大的效果.
-		if (newView.getId() == R.id.gridview_lay) { // 小人在外面的测试.
-			Rect rect = new Rect(getDimension(R.dimen.px7), -getDimension(R.dimen.px42), getDimension(R.dimen.px7),
-					getDimension(R.dimen.px7));
-			mOpenEffectBridge.setDrawUpRectPadding(rect); // 设置移动边框间距，不要被挡住了。
-			mOpenEffectBridge.setDrawShadowRectPadding(rect); // 设置阴影边框间距，不要被挡住了。
-			mOpenEffectBridge.setDrawUpRectEnabled(false); // 让移动边框绘制在小人的下面.
-			test_top_iv.animate().scaleX(scale).scaleY(scale).setDuration(100).start(); // 让小人超出控件.
-		} else { // 其它的还原.
-			mOpenEffectBridge.setDrawUpRectPadding(0);
-			mOpenEffectBridge.setDrawShadowPadding(0);
-			mOpenEffectBridge.setDrawUpRectEnabled(true);
-			test_top_iv.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start(); // 让小人超出控件.
-		}
-	}
-
-	public int getDimension(int id) {
-		return (int) getResources().getDimension(id);
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.gridview_lay:
-			ToastUtils.showShortToast(getContext(), "Gridview demo test");
-			break;
-		case R.id.listview_lay:
-			ToastUtils.showShortToast(getContext(), "Listview demo test");
-			break;
-		case R.id.keyboard_lay:
-			ToastUtils.showShortToast(getContext(), "键盘 demo test");
-			break;
-		case R.id.viewpager_lay: // viewpager页面切换测试.
-			ToastUtils.showShortToast(getContext(), "ViewPager页面切换测试");
-			break;
-		case R.id.effect_rlay:
-			ToastUtils.showShortToast(getContext(), "Effect动画切换测试");
-			switchNoDrawBridgeVersion();
-			break;
-		case R.id.menu_rlayt: // 菜单测试.
-			ToastUtils.showShortToast(getContext(), "菜单测试");
-			break;
-		case R.id.recyclerview_rlayt:
-			ToastUtils.showShortToast(getContext(), "recyclerview测试");
-			startActivity(new Intent(getContext(), DemoRecyclerviewActivity.class));
-		}
-	}
-
-	private void switchNoDrawBridgeVersion() {
-		EffectNoDrawBridge effectNoDrawBridge = new EffectNoDrawBridge();
-		effectNoDrawBridge.setTranDurAnimTime(200);
-		mainUpView1.setEffectBridge(effectNoDrawBridge); // 4.3以下版本边框移动.
-		mainUpView1.setUpRectResource(R.drawable.white_light_10); // 设置移动边框的图片.
-		mainUpView1.setDrawUpRectPadding(new Rect(25, 25, 23, 23)); // 边框图片设置间距.
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				startActivity(new Intent(getContext(), SubActivity.class));
+			}
+			
+		});
 	}
 
 }

@@ -1,11 +1,14 @@
 package com.funo.appmarket.bean;
 
+import java.util.List;
+
 public class AppBean {
 
 	private String appName;
 	private String appImgUrl;
 	private int rate;
 	private int installStatus;
+	private List<String> appImgs;
 
 	public String getAppName() {
 		return appName;
@@ -37,6 +40,14 @@ public class AppBean {
 
 	public void setInstallStatus(int installStatus) {
 		this.installStatus = installStatus;
+	}
+
+	public List<String> getAppImgs() {
+		return appImgs;
+	}
+
+	public void setAppImgs(List<String> appImgs) {
+		this.appImgs = appImgs;
 	}
 
 	public AppBean(String appName, String appImgUrl, int rate, int installStatus) {

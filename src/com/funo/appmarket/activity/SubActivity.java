@@ -3,7 +3,6 @@ package com.funo.appmarket.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.funo.appmarket.GridLayoutActivity;
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.NavListAdapter;
@@ -24,17 +23,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity2 extends BaseActivity {
+public class SubActivity extends BaseActivity {
 
 	private ListView navList;
-	private TextView all_app;
 	private View search;
-	private View ranklist;
-	private View installed;
 	
 	private GridLayout gl_gridlayout;
 	
@@ -49,41 +44,14 @@ public class MainActivity2 extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main2);
+		setContentView(R.layout.activity_sub);
 
-		all_app = (TextView) findViewById(R.id.all_app);
-		all_app.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				ToastUtils.showShortToast(getContext(), "全部应用");
-			}
-			
-		});
 		search = findViewById(R.id.search);
 		search.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				ToastUtils.showShortToast(getContext(), "搜索");
-			}
-			
-		});
-		ranklist = findViewById(R.id.ranklist);
-		ranklist.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				ToastUtils.showShortToast(getContext(), "排行榜");
-			}
-			
-		});
-		installed = findViewById(R.id.installed);
-		installed.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(getContext(), InstalledActivity.class));
 			}
 			
 		});
@@ -264,7 +232,7 @@ public class MainActivity2 extends BaseActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startActivity(new Intent(getContext(), GridLayoutActivity.class));
+				startActivity(new Intent(getContext(), AppsActivity.class));
 			}
 			
 		});
