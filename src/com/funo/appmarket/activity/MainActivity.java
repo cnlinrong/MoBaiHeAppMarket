@@ -8,7 +8,6 @@ import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.NavListAdapter;
 import com.funo.appmarket.bean.NavItem;
 import com.funo.appmarket.util.CommonUtils;
-import com.funo.appmarket.util.ToastUtils;
 import com.open.androidtvwidget.bridge.RecyclerViewBridge;
 import com.open.androidtvwidget.recycle.GridLayoutManagerTV;
 import com.open.androidtvwidget.recycle.OnChildSelectedListener;
@@ -53,7 +52,7 @@ public class MainActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				ToastUtils.showShortToast(getContext(), "搜索");
+				startActivity(new Intent(getContext(), SearchActivity.class));
 			}
 			
 		});

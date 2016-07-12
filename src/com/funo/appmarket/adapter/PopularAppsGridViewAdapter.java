@@ -15,13 +15,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AppsGridViewAdapter extends BaseAdapter {
+public class PopularAppsGridViewAdapter extends BaseAdapter {
 
 	private Context mContext;
 	
 	private List<AppBean> appBeans = new ArrayList<AppBean>();
 	
-	public AppsGridViewAdapter(Context context, List<AppBean> appBeans) {
+	public PopularAppsGridViewAdapter(Context context, List<AppBean> appBeans) {
 		this.mContext = context;
 		this.appBeans = appBeans;
 	}
@@ -44,7 +44,7 @@ public class AppsGridViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = View.inflate(mContext, R.layout.gridview_item_apps, null);
+			convertView = View.inflate(mContext, R.layout.gridview_item_popular_apps, null);
 		}
 		ImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
