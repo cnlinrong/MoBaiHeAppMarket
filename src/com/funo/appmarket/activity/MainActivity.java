@@ -89,7 +89,7 @@ public class MainActivity extends BaseActivity {
 
 				View v1 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v1.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v1.findViewById(R.id.content_tv)).setText("游戏1");
+				((TextView) v1.findViewById(R.id.title)).setText("游戏1");
 				v1.setMinimumWidth(itemWidth * 2);
 				GridLayout.Spec rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity {
 
 				View v2 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v2.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v2.findViewById(R.id.content_tv)).setText("游戏2");
+				((TextView) v2.findViewById(R.id.title)).setText("游戏2");
 				v2.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec2 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec2 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity {
 
 				View v3 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v3.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v3.findViewById(R.id.content_tv)).setText("游戏3");
+				((TextView) v3.findViewById(R.id.title)).setText("游戏3");
 				v3.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec3 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec3 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity {
 
 				View v4 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v4.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v4.findViewById(R.id.content_tv)).setText("游戏4");
+				((TextView) v4.findViewById(R.id.title)).setText("游戏4");
 				v4.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec4 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec4 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -126,7 +126,7 @@ public class MainActivity extends BaseActivity {
 
 				View v5 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v5.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v5.findViewById(R.id.content_tv)).setText("游戏5");
+				((TextView) v5.findViewById(R.id.title)).setText("游戏5");
 				v5.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec5 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec5 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity {
 				
 				View v6 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v6.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v6.findViewById(R.id.content_tv)).setText("游戏6");
+				((TextView) v6.findViewById(R.id.title)).setText("游戏6");
 				v6.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec6 = GridLayout.spec(GridLayout.UNDEFINED, 1, 2);
 				GridLayout.Spec columnSpec6 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity {
 
 				View v7 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v7.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v7.findViewById(R.id.content_tv)).setText("游戏7");
+				((TextView) v7.findViewById(R.id.title)).setText("游戏7");
 				v7.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec7 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec7 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -153,7 +153,7 @@ public class MainActivity extends BaseActivity {
 				
 				View v8 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v8.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v8.findViewById(R.id.content_tv)).setText("游戏8");
+				((TextView) v8.findViewById(R.id.title)).setText("游戏8");
 				v8.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec8 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec8 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity {
 
 				View v9 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v9.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v9.findViewById(R.id.content_tv)).setText("游戏9");
+				((TextView) v9.findViewById(R.id.title)).setText("游戏9");
 				v9.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec9 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec9 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -171,7 +171,7 @@ public class MainActivity extends BaseActivity {
 				
 				View v10 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v10.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v10.findViewById(R.id.content_tv)).setText("游戏10");
+				((TextView) v10.findViewById(R.id.title)).setText("游戏10");
 				v10.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec10 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec10 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity {
 
 				View v11 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v11.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v11.findViewById(R.id.content_tv)).setText("游戏11");
+				((TextView) v11.findViewById(R.id.title)).setText("游戏11");
 				v11.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec11 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec11 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -189,7 +189,7 @@ public class MainActivity extends BaseActivity {
 				
 				View v12 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v12.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v12.findViewById(R.id.content_tv)).setText("游戏12");
+				((TextView) v12.findViewById(R.id.title)).setText("游戏12");
 				v12.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec12 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec12 = GridLayout.spec(GridLayout.UNDEFINED);
@@ -198,7 +198,7 @@ public class MainActivity extends BaseActivity {
 
 				View v13 = View.inflate(getContext(), R.layout.gridlayout_item, null);
 				v13.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-				((TextView) v13.findViewById(R.id.content_tv)).setText("游戏13");
+				((TextView) v13.findViewById(R.id.title)).setText("游戏13");
 				v13.setMinimumWidth(itemWidth);
 				GridLayout.Spec rowSpec13 = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 				GridLayout.Spec columnSpec13 = GridLayout.spec(GridLayout.UNDEFINED);
