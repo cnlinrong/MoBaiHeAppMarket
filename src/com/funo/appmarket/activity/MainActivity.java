@@ -14,6 +14,7 @@ import com.open.androidtvwidget.recycle.OnChildSelectedListener;
 import com.open.androidtvwidget.view.MainUpView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -227,6 +229,19 @@ public class MainActivity extends BaseActivity {
 		});
 		
 		navList = (ListView) findViewById(R.id.navList);
+		navList.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				view.setBackgroundColor(Color.parseColor("#0076fb"));
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+			
+		});
 		navList.post(new Runnable() {
 
 			@Override
