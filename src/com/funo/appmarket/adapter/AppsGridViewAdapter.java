@@ -54,4 +54,9 @@ public class AppsGridViewAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	public void setData(List<AppBean> appData) {
+		this.appBeans = appData;
+		notifyDataSetChanged();
+	}
+	
 }

@@ -1,14 +1,50 @@
 package com.funo.appmarket.bean;
 
-import java.util.List;
-
 public class AppBean {
 
+	private long appId;
+	private String appInfo;
+	private String appIntro;
+	private String appLogo;
 	private String appName;
-	private String appImgUrl;
-	private int rate;
-	private int installStatus;
-	private List<String> appImgs;
+	private double appSize;
+	private String appVersion;
+	private long partnerId;
+	private int score;
+	private String tag;
+	private String updateTime;
+
+	public long getAppId() {
+		return appId;
+	}
+
+	public void setAppId(long appId) {
+		this.appId = appId;
+	}
+
+	public String getAppInfo() {
+		return appInfo;
+	}
+
+	public void setAppInfo(String appInfo) {
+		this.appInfo = appInfo;
+	}
+
+	public String getAppIntro() {
+		return appIntro;
+	}
+
+	public void setAppIntro(String appIntro) {
+		this.appIntro = appIntro;
+	}
+
+	public String getAppLogo() {
+		return appLogo;
+	}
+
+	public void setAppLogo(String appLogo) {
+		this.appLogo = appLogo;
+	}
 
 	public String getAppName() {
 		return appName;
@@ -18,43 +54,57 @@ public class AppBean {
 		this.appName = appName;
 	}
 
-	public String getAppImgUrl() {
-		return appImgUrl;
+	public double getAppSize() {
+		return appSize;
 	}
 
-	public void setAppImgUrl(String appImgUrl) {
-		this.appImgUrl = appImgUrl;
+	public void setAppSize(double appSize) {
+		this.appSize = appSize;
 	}
 
-	public int getRate() {
-		return rate;
+	public String getAppVersion() {
+		return appVersion;
 	}
 
-	public void setRate(int rate) {
-		this.rate = rate;
+	public void setAppVersion(String appVersion) {
+		this.appVersion = appVersion;
 	}
 
-	public int getInstallStatus() {
-		return installStatus;
+	public long getPartnerId() {
+		return partnerId;
 	}
 
-	public void setInstallStatus(int installStatus) {
-		this.installStatus = installStatus;
+	public void setPartnerId(long partnerId) {
+		this.partnerId = partnerId;
 	}
 
-	public List<String> getAppImgs() {
-		return appImgs;
+	public int getScore() {
+		return score;
 	}
 
-	public void setAppImgs(List<String> appImgs) {
-		this.appImgs = appImgs;
+	public void setScore(int score) {
+		this.score = score;
 	}
 
-	public AppBean(String appName, String appImgUrl, int rate, int installStatus) {
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public AppBean(String appName, String appInfo) {
 		this.appName = appName;
-		this.appImgUrl = appImgUrl;
-		this.rate = rate;
-		this.installStatus = installStatus;
+		this.appInfo = appInfo;
 	}
 
 }

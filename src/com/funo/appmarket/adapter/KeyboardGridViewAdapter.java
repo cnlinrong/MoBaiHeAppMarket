@@ -10,6 +10,8 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 
 public class KeyboardGridViewAdapter extends BaseAdapter {
@@ -63,12 +65,18 @@ public class KeyboardGridViewAdapter extends BaseAdapter {
 		numbers.add("0");
 	}
 	
-	public void switch2Letter() {
-		is_letter = true;
-	}
-	
-	public void switch2Number() {
-		is_letter = false;
+	public void switchInput(GridView keyboard, Button v) {
+		is_letter = !is_letter;
+		
+		if (is_letter) {
+			keyboard.setNumColumns(5);
+			v.setBackgroundResource(R.drawable.btn_123);
+		} else {
+			keyboard.setNumColumns(3);
+			v.setBackgroundResource(R.drawable.btn_abc);
+		}
+		
+		notifyDataSetChanged();
 	}
 	
 	@Override

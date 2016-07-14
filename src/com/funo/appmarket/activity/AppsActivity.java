@@ -7,17 +7,20 @@ import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.AppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.business.AppService;
+import com.funo.appmarket.business.AppService.RecAppInfoCallback;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.GridView;
 
 public class AppsActivity extends BaseActivity {
 
+	private AppService appService;
+	
 	private GridView installed_list;
 	private AppsGridViewAdapter installedGridViewAdapter;
 	
@@ -30,42 +33,44 @@ public class AppsActivity extends BaseActivity {
 		setContentView(R.layout.activity_apps);
 		
 		installed_list = (GridView) findViewById(R.id.installed_list);
-		AppBean appBean = new AppBean("室内设计", null, 0, 0);
+		
+		AppBean appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", null, 0, 0);
+		appBean = new AppBean("室内设计", "暂无内容");
 		appBeans.add(appBean);
+		
 		installedGridViewAdapter = new AppsGridViewAdapter(getContext(), appBeans);
 		installed_list.setAdapter(installedGridViewAdapter);
 		installed_list.setOnItemClickListener(new OnItemClickListener() {
@@ -78,4 +83,22 @@ public class AppsActivity extends BaseActivity {
 		});
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		appService = new AppService(getContext());
+		appService.recAppInfo(new RecAppInfoCallback() {
+			
+			@Override
+			public void doCallback(List<AppBean> appData) {
+				if (appData != null) {
+					appBeans = appData;
+					installedGridViewAdapter.setData(appData);
+				}
+			}
+			
+		});
+	}
+	
 }

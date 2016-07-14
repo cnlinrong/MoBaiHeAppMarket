@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,11 +18,13 @@
             android:gravity="center"
             android:orientation="vertical" >
 
-            <ImageView
+            <com.funo.appmarket.view.CustomImageView
                 android:id="@+id/app_logo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_launcher" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                zhy:borderRadius="20dp"
+                zhy:src="@drawable/icon"
+                zhy:type="round" />
 
             <TextView
                 android:id="@+id/title"
@@ -30,7 +33,7 @@
                 android:layout_marginTop="10dp"
                 android:text="多彩百科全书"
                 android:textColor="@android:color/white"
-                android:textSize="22sp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/sub_title"
@@ -39,7 +42,7 @@
                 android:layout_marginTop="5dp"
                 android:text="童话故事里的"
                 android:textColor="@android:color/white"
-                android:textSize="17sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <ImageView

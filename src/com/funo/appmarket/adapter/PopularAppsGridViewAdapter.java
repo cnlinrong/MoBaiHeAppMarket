@@ -7,12 +7,12 @@ import com.funo.appmarket.R;
 import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ViewHolderUtils;
+import com.funo.appmarket.view.CustomImageView;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class PopularAppsGridViewAdapter extends BaseAdapter {
@@ -46,7 +46,7 @@ public class PopularAppsGridViewAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = View.inflate(mContext, R.layout.gridview_item_popular_apps, null);
 		}
-		ImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
+		CustomImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
 		AppBean appBean = getItem(position);
 		appName.setText(appBean.getAppName());

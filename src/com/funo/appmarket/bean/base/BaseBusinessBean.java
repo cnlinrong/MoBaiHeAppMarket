@@ -1,24 +1,53 @@
 package com.funo.appmarket.bean.base;
 
-public class BaseBusinessBean {
+import java.util.List;
 
-	private String resultcode;
-	private String resultdesc;
+public abstract class BaseBusinessBean<T> {
 
-	public String getResultcode() {
-		return resultcode;
+	private String code;
+	private int dataCounts;
+	private String msg;
+	private List<T> responseData;
+	private String time;
+
+	public String getCode() {
+		return code;
 	}
 
-	public void setResultcode(String resultcode) {
-		this.resultcode = resultcode;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String getResultdesc() {
-		return resultdesc;
+	public int getDataCounts() {
+		return dataCounts;
 	}
 
-	public void setResultdesc(String resultdesc) {
-		this.resultdesc = resultdesc;
+	public void setDataCounts(int dataCounts) {
+		this.dataCounts = dataCounts;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
+	public List<T> getResponseData() {
+		return responseData;
+	}
+
+	public void setResponseData(List<T> responseData) {
+		this.responseData = responseData;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 
 }
