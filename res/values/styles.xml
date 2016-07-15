@@ -10,4 +10,11 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="MyRatingBar" parent="@style/Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_bac</item>
+        <item name="android:minHeight">60dip</item>
+        <item name="android:maxHeight">60dip</item>
+        <item name="android:isIndicator">false</item>
+    </style>
+    
 </resources>

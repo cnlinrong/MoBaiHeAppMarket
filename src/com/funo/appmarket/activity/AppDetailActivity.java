@@ -7,11 +7,13 @@ import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.AppImgsViewPagerAdapter;
 import com.funo.appmarket.util.ToastUtils;
+import com.funo.appmarket.view.SliderIndicatorBarView;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.SystemProperties;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	private Button btn_rate;
 	private Button btn_uninstall;
 	
+	private SliderIndicatorBarView sliderIndicatorBarView;
+	
 	private ViewPager app_imgs;
 	private AppImgsViewPagerAdapter appImgsViewPagerAdapter;
 	
@@ -39,6 +43,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_app_detail);
+		
+		sliderIndicatorBarView = (SliderIndicatorBarView) findViewById(R.id.slider_bar);
 		
 		root_view = findViewById(R.id.root_view);
 		
@@ -58,13 +64,33 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		appImgs.add("https://www.baidu.com/img/bd_logo1.png");
 		appImgsViewPagerAdapter = new AppImgsViewPagerAdapter(getSupportFragmentManager(), getContext(), appImgs);
 		app_imgs.setAdapter(appImgsViewPagerAdapter);
+		app_imgs.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int arg0) {
+				sliderIndicatorBarView.selectIndicator(arg0);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				
+			}
+			
+		});
+		
+		sliderIndicatorBarView.setNum(appImgs.size());
 		
 		root_view.post(new Runnable() {
 			
 			@Override
 			public void run() {
 				View rootView = LayoutInflater.from(getContext()).inflate(R.layout.popupwindow_rate, null);
-				popupWindow = new PopupWindow(rootView, LayoutParams.MATCH_PARENT, root_view.getHeight() / 2, false);
+				popupWindow = new PopupWindow(rootView, LayoutParams.MATCH_PARENT, root_view.getHeight() / 2, true);
 				popupWindow.setBackgroundDrawable(new BitmapDrawable());
 				popupWindow.setOutsideTouchable(true);
 			}

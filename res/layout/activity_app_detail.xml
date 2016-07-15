@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_bg"
-    android:id="@+id/root_view" >
+    android:background="@drawable/main_bg" >
 
     <LinearLayout
         android:layout_width="0dp"
@@ -140,7 +140,7 @@
                 android:layout_marginLeft="100dp"
                 android:layout_marginRight="100dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/btn_bg_01"
+                android:background="@drawable/selector_app_detail_btn"
                 android:padding="12dp"
                 android:text="启动"
                 android:textColor="@android:color/white"
@@ -154,7 +154,7 @@
                 android:layout_marginLeft="100dp"
                 android:layout_marginRight="100dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/btn_bg_02"
+                android:background="@drawable/selector_app_detail_btn"
                 android:padding="12dp"
                 android:text="评分"
                 android:textColor="@android:color/white"
@@ -167,7 +167,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="100dp"
                 android:layout_marginRight="100dp"
-                android:background="@drawable/btn_bg_02"
+                android:background="@drawable/selector_app_detail_btn"
                 android:padding="12dp"
                 android:text="卸载"
                 android:textColor="@android:color/white"
@@ -193,42 +193,12 @@
                 android:layout_marginTop="60dp"
                 android:background="#ddd" />
 
-            <LinearLayout
+            <com.funo.appmarket.view.SliderIndicatorBarView
                 android:id="@+id/slider_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp" >
-
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:src="@drawable/slider_img_01" />
-
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/slider_img_02" />
-
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:src="@drawable/slider_img_02" />
-
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/slider_img_02" />
-
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:src="@drawable/slider_img_02" />
-            </LinearLayout>
+                android:layout_marginTop="15dp" />
 
             <TextView
                 android:id="@+id/app_desc"

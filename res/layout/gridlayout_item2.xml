@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:zhy="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -18,13 +18,15 @@
             android:gravity="center"
             android:orientation="vertical" >
 
-            <com.funo.appmarket.view.CustomImageView
+            <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/app_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                zhy:borderRadius="20dp"
-                zhy:src="@drawable/icon"
-                zhy:type="round" />
+                android:layout_width="77dp"
+                android:layout_height="77dp"
+                android:src="@drawable/icon"
+                app:riv_border_width="0dip"
+                app:riv_corner_radius="25dip"
+                app:riv_mutate_background="true"
+                app:riv_oval="false" />
 
             <TextView
                 android:id="@+id/title"

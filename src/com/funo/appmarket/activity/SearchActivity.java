@@ -8,6 +8,7 @@ import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.KeyboardGridViewAdapter;
 import com.funo.appmarket.adapter.PopularAppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.util.ToastUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,7 +49,7 @@ public class SearchActivity extends BaseActivity {
 			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
+				ToastUtils.showShortToast(getContext(), s.toString());
 			}
 			
 			@Override

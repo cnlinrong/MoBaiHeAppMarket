@@ -13,6 +13,7 @@ import com.funo.appmarket.business.AppService.RecAppInfoCallback;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -20,6 +21,8 @@ import android.widget.GridView;
 public class AppsActivity extends BaseActivity {
 
 	private AppService appService;
+	
+	private View search;
 	
 	private GridView installed_list;
 	private AppsGridViewAdapter installedGridViewAdapter;
@@ -31,6 +34,16 @@ public class AppsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_apps);
+		
+		search = findViewById(R.id.search);
+		search.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getContext(), SearchActivity.class));
+			}
+			
+		});
 		
 		installed_list = (GridView) findViewById(R.id.installed_list);
 		

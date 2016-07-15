@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/holo_purple" >
@@ -12,11 +13,15 @@
         android:paddingBottom="30dp"
         android:paddingTop="30dp" >
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/appLogo"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/icon"
+            app:riv_border_width="0dip"
+            app:riv_corner_radius="25dip"
+            app:riv_mutate_background="true"
+            app:riv_oval="false" />
 
         <TextView
             android:id="@+id/appName"
@@ -70,11 +75,12 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/installed_img" />
 
-    <ImageView 
+    <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="-5dp"
-        android:src="@drawable/recommend_01"/>
+        android:src="@drawable/recommend_01" />
+
 </RelativeLayout>
