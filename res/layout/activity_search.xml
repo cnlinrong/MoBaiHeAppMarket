@@ -29,9 +29,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp" >
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="vertical" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -64,10 +64,11 @@
 
             <GridView
                 android:id="@+id/keyboard"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="25dp"
                 android:horizontalSpacing="15dp"
+                android:layout_gravity="center_horizontal"
                 android:numColumns="5"
                 android:scrollbars="none"
                 android:verticalSpacing="15dp" />
@@ -162,26 +163,40 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:orientation="vertical"
-        android:padding="30dp" >
+        android:orientation="vertical" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
             android:text="热门应用"
             android:textColor="@android:color/white"
             android:textSize="25sp" />
 
-        <GridView
-            android:id="@+id/popular_apps"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:horizontalSpacing="15dp"
-            android:numColumns="2"
-            android:scrollbars="none"
-            android:verticalSpacing="15dp" />
+            android:clipChildren="false"
+            android:padding="25dp"
+            android:clipToPadding="false"
+            android:orientation="vertical" >
+
+            <com.open.androidtvwidget.view.GridViewTV
+                android:id="@+id/popular_apps"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="15dp"
+                android:numColumns="2"
+                android:scrollbars="none"
+                android:verticalSpacing="15dp" />
+
+            <com.open.androidtvwidget.view.MainUpView
+                android:id="@+id/mainUpView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

@@ -9,8 +9,11 @@ import com.funo.appmarket.adapter.KeyboardGridViewAdapter;
 import com.funo.appmarket.adapter.PopularAppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.util.ToastUtils;
+import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
+import com.open.androidtvwidget.view.MainUpView;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,12 +21,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 
 public class SearchActivity extends BaseActivity {
 
+	private MainUpView mainUpView1;
+	private View mOldView;
+	
 	private GridView keyboard;
 	private GridView popular_apps;
 	private EditText search_input;
@@ -42,8 +49,36 @@ public class SearchActivity extends BaseActivity {
 		
 		setContentView(R.layout.activity_search);
 		
+		mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
+		EffectNoDrawBridge effectNoDrawBridge = new EffectNoDrawBridge();
+        effectNoDrawBridge.setTranDurAnimTime(200);
+        mainUpView1.setEffectBridge(effectNoDrawBridge); // 4.3以下版本边框移动.
+        mainUpView1.setUpRectResource(R.drawable.white_light_10); // 设置移动边框的图片.
+        mainUpView1.setDrawUpRectPadding(new Rect(25, 25, 23, 23)); // 边框图片设置间距.
+		
 		keyboard = (GridView) findViewById(R.id.keyboard);
 		popular_apps = (GridView) findViewById(R.id.popular_apps);
+		popular_apps.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				/**
+				 * 这里注意要加判断是否为NULL.
+				 * 因为在重新加载数据以后会出问题.
+				 */
+				if (view != null) {
+					view.bringToFront();
+					mainUpView1.setFocusView(view, mOldView, 1.1f);
+				}
+				mOldView = view;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				mainUpView1.setVisibility(View.INVISIBLE);
+			}
+			
+		});
 		search_input = (EditText) findViewById(R.id.search_input);
 		search_input.addTextChangedListener(new TextWatcher() {
 			
