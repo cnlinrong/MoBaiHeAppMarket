@@ -53,8 +53,8 @@ public class SearchActivity extends BaseActivity {
 		EffectNoDrawBridge effectNoDrawBridge = new EffectNoDrawBridge();
         effectNoDrawBridge.setTranDurAnimTime(200);
         mainUpView1.setEffectBridge(effectNoDrawBridge); // 4.3以下版本边框移动.
-        mainUpView1.setUpRectResource(R.drawable.white_light_10); // 设置移动边框的图片.
-        mainUpView1.setDrawUpRectPadding(new Rect(25, 25, 23, 23)); // 边框图片设置间距.
+        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
+        mainUpView1.setDrawUpRectPadding(2);
 		
 		keyboard = (GridView) findViewById(R.id.keyboard);
 		popular_apps = (GridView) findViewById(R.id.popular_apps);
@@ -68,7 +68,7 @@ public class SearchActivity extends BaseActivity {
 				 */
 				if (view != null) {
 					view.bringToFront();
-					mainUpView1.setFocusView(view, mOldView, 1.1f);
+					mainUpView1.setFocusView(view, mOldView, 1.05f);
 				}
 				mOldView = view;
 			}
@@ -158,6 +158,15 @@ public class SearchActivity extends BaseActivity {
 				startActivity(new Intent(getContext(), AppDetailActivity.class));				
 			}
 			
+		});
+		
+		keyboard.post(new Runnable() {
+
+			@Override
+			public void run() {
+				keyboard.requestFocus();
+			}
+
 		});
 	}
 

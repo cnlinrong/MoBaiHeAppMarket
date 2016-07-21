@@ -8,5 +8,6 @@
     <string name="title_activity_installed">InstalledActivity</string>
     <string name="title_activity_installed_app_detail">InstalledAppDetailActivity</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_loading">LoadingActivity</string>
 
 </resources>

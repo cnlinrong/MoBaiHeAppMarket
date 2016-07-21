@@ -7,8 +7,8 @@ import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.AppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
-import com.funo.appmarket.business.AppService;
-import com.funo.appmarket.business.AppService.RecAppInfoCallback;
+import com.funo.appmarket.business.RecAppInfoService;
+import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -23,8 +24,9 @@ import android.widget.GridView;
 
 public class AppsActivity extends BaseActivity {
 
-	private AppService appService;
+	private RecAppInfoService appService;
 	
+	private View search;
 	private MainUpView mainUpView1;
 	private View mOldView;
 	
@@ -39,12 +41,22 @@ public class AppsActivity extends BaseActivity {
 		
 		setContentView(R.layout.activity_apps);
 		
+		search = findViewById(R.id.search);
+		search.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getContext(), SearchActivity.class));
+			}
+			
+		});
+		
 		mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
 		EffectNoDrawBridge effectNoDrawBridge = new EffectNoDrawBridge();
         effectNoDrawBridge.setTranDurAnimTime(200);
         mainUpView1.setEffectBridge(effectNoDrawBridge); // 4.3以下版本边框移动.
-        mainUpView1.setUpRectResource(R.drawable.white_light_10); // 设置移动边框的图片.
-        mainUpView1.setDrawUpRectPadding(new Rect(25, 25, 23, 23)); // 边框图片设置间距.
+        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
+        mainUpView1.setDrawUpRectPadding(2);
 		
 		installed_list = (GridView) findViewById(R.id.installed_list);
 		installed_list.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -57,7 +69,7 @@ public class AppsActivity extends BaseActivity {
 				 */
 				if (view != null) {
 					view.bringToFront();
-					mainUpView1.setFocusView(view, mOldView, 1.2f);
+					mainUpView1.setFocusView(view, mOldView, 1.1f);
 				}
 				mOldView = view;
 			}
@@ -116,20 +128,29 @@ public class AppsActivity extends BaseActivity {
 			}
 			
 		});
+		
+		installed_list.post(new Runnable() {
+
+			@Override
+			public void run() {
+				installed_list.requestFocus();
+			}
+
+		});
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		appService = new AppService(getContext());
+		appService = new RecAppInfoService(getContext());
 		appService.recAppInfo(new RecAppInfoCallback() {
 			
 			@Override
 			public void doCallback(List<AppBean> appData) {
 				if (appData != null) {
 					appBeans = appData;
-					installedGridViewAdapter.setData(appData);
+//					installedGridViewAdapter.setData(appData);
 				}
 			}
 			
