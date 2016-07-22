@@ -27,21 +27,21 @@ public class RecAppInfoService extends BaseService {
 
 	/**
 	 * 首页或分类页推荐应用查询
+	 * 
+	 * @param recAppInfoReqParam
+	 * @param getLawyersCallback
 	 */
-	public void recAppInfo(final RecAppInfoCallback getLawyersCallback) {
-		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam("0", PAGE_SIZE, 1);
+	public void recAppInfo(RecAppInfoReqParam recAppInfoReqParam, final RecAppInfoCallback getLawyersCallback) {
 		String reqNo = CommonUtils.genReqNo();
 		Call<ResponseBody> call = iRecAppInfoService.recAppInfo(reqNo, CommonUtils.signReq(reqNo, gson.toJson(recAppInfoReqParam)), recAppInfoReqParam);
 		call.enqueue(new Callback<ResponseBody>() {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				if (getLawyersCallback != null) {
-					RecAppInfoBusinessBean recAppInfoBusinessBean = handleResponse(response, RecAppInfoBusinessBean.class);
-					if (recAppInfoBusinessBean != null) {
+				RecAppInfoBusinessBean recAppInfoBusinessBean = handleResponse(response, RecAppInfoBusinessBean.class);
+				if (recAppInfoBusinessBean != null) {
+					if (getLawyersCallback != null) {
 						getLawyersCallback.doCallback(recAppInfoBusinessBean.getResponseData());
-					} else {
-						getLawyersCallback.doCallback(null);
 					}
 				}
 			}

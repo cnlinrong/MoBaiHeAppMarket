@@ -9,6 +9,8 @@ import com.funo.appmarket.adapter.AppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.business.RecAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
+import com.funo.appmarket.business.base.BaseService;
+import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
@@ -144,7 +146,11 @@ public class AppsActivity extends BaseActivity {
 		super.onResume();
 		
 		appService = new RecAppInfoService(getContext());
-		appService.recAppInfo(new RecAppInfoCallback() {
+		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
+		recAppInfoReqParam.type = 0;
+		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
+		recAppInfoReqParam.currentPage = 1;
+		appService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
 			
 			@Override
 			public void doCallback(List<AppBean> appData) {

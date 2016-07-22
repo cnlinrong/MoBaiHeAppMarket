@@ -13,6 +13,8 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.bean.NavItem;
 import com.funo.appmarket.business.RecAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
+import com.funo.appmarket.business.base.BaseService;
+import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
 import com.funo.appmarket.datasource.HomeTemplate1;
 import com.funo.appmarket.datasource.HomeTemplate2;
 import com.funo.appmarket.datasource.HomeTemplate3;
@@ -59,7 +61,11 @@ public class SubActivity extends BaseActivity {
 		initView();
 
 		appService = new RecAppInfoService(getContext());
-		appService.recAppInfo(new RecAppInfoCallback() {
+		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
+		recAppInfoReqParam.type = 1;
+		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
+		recAppInfoReqParam.currentPage = 1;
+		appService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
 
 			@Override
 			public void doCallback(List<AppBean> appData) {

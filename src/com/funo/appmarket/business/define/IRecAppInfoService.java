@@ -24,15 +24,9 @@ public interface IRecAppInfoService {
 
 	public class RecAppInfoReqParam {
 
-		String type;// 0：首页推荐 1：分类页推荐
-		int pageSize;
-		int currentPage;
-
-		public RecAppInfoReqParam(String type, int pageSize, int currentPage) {
-			this.type = type;
-			this.pageSize = pageSize;
-			this.currentPage = currentPage;
-		}
+		public int type;// 0：首页推荐 1：分类页推荐
+		public int pageSize;
+		public int currentPage;
 
 	}
 

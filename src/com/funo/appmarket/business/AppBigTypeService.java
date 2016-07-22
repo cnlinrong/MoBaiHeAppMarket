@@ -27,21 +27,21 @@ public class AppBigTypeService extends BaseService {
 
 	/**
 	 * 查询应用大类信息
+	 * 
+	 * @param appBigTypeParam
+	 * @param appBigTypeCallback
 	 */
-	public void app_bigType(final AppBigTypeCallback appBigTypeCallback) {
-		AppBigTypeParam appBigTypeParam = new AppBigTypeParam(null);
+	public void app_bigType(AppBigTypeParam appBigTypeParam, final AppBigTypeCallback appBigTypeCallback) {
 		String reqNo = CommonUtils.genReqNo();
 		Call<ResponseBody> call = iAppBigTypeService.app_bigType(reqNo, CommonUtils.signReq(reqNo, gson.toJson(appBigTypeParam)), appBigTypeParam);
 		call.enqueue(new Callback<ResponseBody>() {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				if (appBigTypeCallback != null) {
-					AppBigTypeBusinessBean appBigTypeBusinessBean = handleResponse(response, AppBigTypeBusinessBean.class);
-					if (appBigTypeBusinessBean != null) {
+				AppBigTypeBusinessBean appBigTypeBusinessBean = handleResponse(response, AppBigTypeBusinessBean.class);
+				if (appBigTypeBusinessBean != null) {
+					if (appBigTypeCallback != null) {
 						appBigTypeCallback.doCallback(appBigTypeBusinessBean.getResponseData());
-					} else {
-						appBigTypeCallback.doCallback(null);
 					}
 				}
 			}

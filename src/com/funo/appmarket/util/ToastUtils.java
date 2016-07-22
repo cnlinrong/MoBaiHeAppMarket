@@ -9,7 +9,7 @@ public class ToastUtils {
 	
 	private static Toast toast;
 	
-	public static void showShortToast(Context context, String content) {
+	public static void showSameShortToast(Context context, String content) {
 		if (mContext != context) {
 			mContext = context;
 			toast = Toast.makeText(mContext, content, Toast.LENGTH_SHORT);
@@ -19,7 +19,7 @@ public class ToastUtils {
 		toast.show();
 	}
 	
-	public static void showLongToast(Context context, String content) {
+	public static void showSameLongToast(Context context, String content) {
 		if (mContext != context) {
 			mContext = context;
 			toast = Toast.makeText(mContext, content, Toast.LENGTH_LONG);
@@ -27,6 +27,14 @@ public class ToastUtils {
 			toast.setText(content);
 		}
 		toast.show();
+	}
+	
+	public static void showShortToast(Context context, String content) {
+		Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+	}
+	
+	public static void showLongToast(Context context, String content) {
+		Toast.makeText(context, content, Toast.LENGTH_LONG).show();
 	}
 	
 }

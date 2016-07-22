@@ -2,7 +2,7 @@ package com.funo.appmarket.bean.base;
 
 import java.util.List;
 
-public abstract class BaseBusinessBean<T> {
+public class BaseBusinessBean<T> {
 
 	private String code;
 	private int dataCounts;

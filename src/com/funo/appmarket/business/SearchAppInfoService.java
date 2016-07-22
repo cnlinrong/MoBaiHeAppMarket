@@ -27,21 +27,21 @@ public class SearchAppInfoService extends BaseService {
 
 	/**
 	 * 根据应用名称模糊查询应用信息
+	 * 
+	 * @param searchAppInfoParam
+	 * @param searchAppInfoCallback
 	 */
-	public void searchAppInfo(final SearchAppInfoCallback searchAppInfoCallback) {
-		SearchAppInfoParam searchAppInfoParam = new SearchAppInfoParam(null, 0, PAGE_SIZE, 1);
+	public void searchAppInfo(SearchAppInfoParam searchAppInfoParam, final SearchAppInfoCallback searchAppInfoCallback) {
 		String reqNo = CommonUtils.genReqNo();
 		Call<ResponseBody> call = iSearchAppInfoService.searchAppInfo(reqNo, CommonUtils.signReq(reqNo, gson.toJson(searchAppInfoParam)), searchAppInfoParam);
 		call.enqueue(new Callback<ResponseBody>() {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				if (searchAppInfoCallback != null) {
-					SearchAppInfoBusinessBean searchAppInfoBusinessBean = handleResponse(response, SearchAppInfoBusinessBean.class);
-					if (searchAppInfoBusinessBean != null) {
+				SearchAppInfoBusinessBean searchAppInfoBusinessBean = handleResponse(response, SearchAppInfoBusinessBean.class);
+				if (searchAppInfoBusinessBean != null) {
+					if (searchAppInfoCallback != null) {
 						searchAppInfoCallback.doCallback(searchAppInfoBusinessBean.getResponseData());
-					} else {
-						searchAppInfoCallback.doCallback(null);
 					}
 				}
 			}

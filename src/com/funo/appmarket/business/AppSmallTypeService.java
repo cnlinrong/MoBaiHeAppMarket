@@ -27,21 +27,21 @@ public class AppSmallTypeService extends BaseService {
 
 	/**
 	 * 查询应用子类信息
+	 * 
+	 * @param appSmallTypeParam
+	 * @param appSmallTypeCallback
 	 */
-	public void recAppInfo(final AppSmallTypeCallback appSmallTypeCallback) {
-		AppSmallTypeParam appSmallTypeParam = new AppSmallTypeParam(null);
+	public void app_smallType(AppSmallTypeParam appSmallTypeParam, final AppSmallTypeCallback appSmallTypeCallback) {
 		String reqNo = CommonUtils.genReqNo();
 		Call<ResponseBody> call = iAppSmallTypeService.app_smallType(reqNo, CommonUtils.signReq(reqNo, gson.toJson(appSmallTypeParam)), appSmallTypeParam);
 		call.enqueue(new Callback<ResponseBody>() {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				if (appSmallTypeCallback != null) {
-					AppSmallTypeBusinessBean appSmallTypeBusinessBean = handleResponse(response, AppSmallTypeBusinessBean.class);
-					if (appSmallTypeBusinessBean != null) {
+				AppSmallTypeBusinessBean appSmallTypeBusinessBean = handleResponse(response, AppSmallTypeBusinessBean.class);
+				if (appSmallTypeBusinessBean != null) {
+					if (appSmallTypeCallback != null) {
 						appSmallTypeCallback.doCallback(appSmallTypeBusinessBean.getResponseData());
-					} else {
-						appSmallTypeCallback.doCallback(null);
 					}
 				}
 			}

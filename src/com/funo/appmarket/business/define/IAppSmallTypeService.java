@@ -24,11 +24,7 @@ public interface IAppSmallTypeService {
 
 	public class AppSmallTypeParam {
 
-		String smallTypeValue;// smallTypeValue为空则返回所有数据
-
-		public AppSmallTypeParam(String smallTypeValue) {
-			this.smallTypeValue = smallTypeValue;
-		}
+		public String smallTypeValue;// smallTypeValue为空则返回所有数据
 
 	}
 

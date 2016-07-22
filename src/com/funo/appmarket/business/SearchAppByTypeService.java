@@ -27,21 +27,21 @@ public class SearchAppByTypeService extends BaseService {
 
 	/**
 	 * 查询相关子类下的应用信息
+	 * 
+	 * @param searchAppByTypeParam
+	 * @param searchAppByTypeCallback
 	 */
-	public void searchAppByType(final SearchAppByTypeCallback searchAppByTypeCallback) {
-		SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam(null, null, PAGE_SIZE, 1);
+	public void searchAppByType(SearchAppByTypeParam searchAppByTypeParam, final SearchAppByTypeCallback searchAppByTypeCallback) {
 		String reqNo = CommonUtils.genReqNo();
 		Call<ResponseBody> call = iSearchAppByTypeService.searchAppByType(reqNo, CommonUtils.signReq(reqNo, gson.toJson(searchAppByTypeParam)), searchAppByTypeParam);
 		call.enqueue(new Callback<ResponseBody>() {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				if (searchAppByTypeCallback != null) {
-					SearchAppByTypeBusinessBean searchAppByTypeBusinessBean = handleResponse(response, SearchAppByTypeBusinessBean.class);
-					if (searchAppByTypeBusinessBean != null) {
+				SearchAppByTypeBusinessBean searchAppByTypeBusinessBean = handleResponse(response, SearchAppByTypeBusinessBean.class);
+				if (searchAppByTypeBusinessBean != null) {
+					if (searchAppByTypeCallback != null) {
 						searchAppByTypeCallback.doCallback(searchAppByTypeBusinessBean.getResponseData());
-					} else {
-						searchAppByTypeCallback.doCallback(null);
 					}
 				}
 			}

@@ -13,6 +13,8 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.bean.NavItem;
 import com.funo.appmarket.business.RecAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
+import com.funo.appmarket.business.base.BaseService;
+import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
 import com.funo.appmarket.datasource.HomeTemplate1;
 import com.funo.appmarket.datasource.HomeTemplate2;
 import com.funo.appmarket.datasource.HomeTemplate3;
@@ -51,16 +53,24 @@ public class MainActivity extends BaseActivity {
 	private NavListAdapter navListAdapter;
 	private List<NavItem> navItems = new ArrayList<NavItem>();
 
+	private int templateUsedId = 1;// 首页模板
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
 
+		templateUsedId = sys_sp.getInt("templateUsedId", 1);
+		
 		initView();
 
 		appService = new RecAppInfoService(getContext());
-		appService.recAppInfo(new RecAppInfoCallback() {
+		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
+		recAppInfoReqParam.type = 0;
+		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
+		recAppInfoReqParam.currentPage = 1;
+		appService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
 
 			@Override
 			public void doCallback(List<AppBean> appData) {
@@ -169,9 +179,21 @@ public class MainActivity extends BaseActivity {
 			public void run() {
 				GridViewHolder holder = new GridViewHolder(gl_gridlayout);
 
-//				IHomeTemplate homeTemplate = new HomeTemplate1(appBeans, hsv.getHeight());
-//				IHomeTemplate homeTemplate = new HomeTemplate2(appBeans, hsv.getHeight());
-				IHomeTemplate homeTemplate = new HomeTemplate3(appBeans, hsv.getHeight());
+				IHomeTemplate homeTemplate = null;
+				switch (templateUsedId) {
+				case 1:
+//					homeTemplate = new HomeTemplate1(appBeans, hsv.getHeight());
+					break;
+				case 2:
+//					homeTemplate = new HomeTemplate2(appBeans, hsv.getHeight());
+					break;
+				case 3:
+					homeTemplate = new HomeTemplate3(appBeans, hsv.getHeight());
+					break;
+				default:
+					homeTemplate = new HomeTemplate1(appBeans, hsv.getHeight());
+					break;
+				}
 				GridBuilder.newInstance(getContext(), gl_gridlayout).setScaleAnimationDuration(200)
 						.setOrientation(homeTemplate.getOrientation())
 						.setRowCount(homeTemplate.getRowCount())

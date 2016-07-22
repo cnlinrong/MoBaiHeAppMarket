@@ -24,11 +24,7 @@ public interface IAppBigTypeService {
 
 	public class AppBigTypeParam {
 
-		String bigTypeValue;// bigTypeValue为空则返回所有数据
-
-		public AppBigTypeParam(String bigTypeValue) {
-			this.bigTypeValue = bigTypeValue;
-		}
+		public String bigTypeValue;// bigTypeValue为空则返回所有数据
 
 	}
 

@@ -4,6 +4,7 @@ public class AppBigType {
 
 	private String value;
 	private String label;
+	private String logo;
 	private String updateTime;
 
 	public String getValue() {
@@ -20,6 +21,14 @@ public class AppBigType {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 
 	public String getUpdateTime() {

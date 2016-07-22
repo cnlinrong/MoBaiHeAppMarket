@@ -8,6 +8,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -15,7 +16,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BaseService {
 
-	protected final int PAGE_SIZE = 20;
+	public static final int PAGE_SIZE = 20;// 每页的数目
+	
+	private static final String ERROR_MSG = "网络请求错误，请重试。";// 错误消息
 	
 	protected final boolean SHOW_ERROR_TOAST = true;
 	protected final boolean HIDE_ERROR_TOAST = false;
@@ -42,14 +45,16 @@ public class BaseService {
 		CrashReport.postCatchedException(new RuntimeException("网络请求错误：" + errorMsg));
 		
 		if (showToast) {
-			ToastUtils.showShortToast(mContext, "网络请求错误，请重试。");
+			ToastUtils.showShortToast(mContext, errorMsg);
 		}
 	}
 	
 	protected <T extends BaseBusinessBean<?>> T handleResponse(Response<ResponseBody> response, Class<T> clz) {
 		T t = null;
 		try {
-			t = gson.fromJson(response.body().string(), clz);
+			String json = response.body().string();
+			Log.e("JSON", json);
+			t = gson.fromJson(json, clz);
 			if (!TextUtils.equals(REQUEST_CODE_SUCCESS, t.getCode())) {
 				reportError(SHOW_ERROR_TOAST, t.getMsg());
 			}
