@@ -11,6 +11,7 @@ import com.funo.appmarket.business.RecAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
 import com.funo.appmarket.business.base.BaseService;
 import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
+import com.funo.appmarket.util.AnimationUtils;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -43,6 +45,18 @@ public class InstalledActivity extends BaseActivity {
 		setContentView(R.layout.activity_installed);
 		
 		search = findViewById(R.id.search);
+		search.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+				} else {
+					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+				}
+			}
+			
+		});
 		search.setOnClickListener(new OnClickListener() {
 			
 			@Override

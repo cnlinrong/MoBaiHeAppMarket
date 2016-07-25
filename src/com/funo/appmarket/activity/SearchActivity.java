@@ -143,6 +143,19 @@ public class SearchActivity extends BaseActivity {
 			
 		});
 		
+		AppBean appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		
 		popularAppsGridViewAdapter = new PopularAppsGridViewAdapter(getContext(), appData);
 		popular_apps.setAdapter(popularAppsGridViewAdapter);
 		popular_apps.setOnItemClickListener(new OnItemClickListener() {

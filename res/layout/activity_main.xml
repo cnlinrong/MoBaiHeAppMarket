@@ -8,8 +8,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
+        android:paddingLeft="40dp"
+        android:clipToPadding="false"
+        android:paddingRight="40dp"
         android:layout_marginTop="40dp" >
 
         <LinearLayout

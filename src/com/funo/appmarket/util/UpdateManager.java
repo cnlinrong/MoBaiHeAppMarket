@@ -8,13 +8,6 @@ import java.net.URL;
 
 import org.json.JSONObject;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.cemobile.schoolble.R;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import android.app.AlertDialog;
@@ -29,12 +22,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import cemobile.android.library.util.ToastUtils;
 
 public class UpdateManager {
 
@@ -140,7 +129,7 @@ public class UpdateManager {
 	/*
 	 * 检测软件是否需要更新
 	 */
-	public void checkUpdate() {
+	public void checkUpdate() {/*
 		RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 		JsonObjectRequest request = new JsonObjectRequest(PATH, null, new Listener<JSONObject>() {
 
@@ -160,7 +149,7 @@ public class UpdateManager {
 
 		});
 		requestQueue.add(request);
-	}
+	*/}
 
 	/*
 	 * 与本地版本比较判断是否需要更新
@@ -218,7 +207,7 @@ public class UpdateManager {
 	/*
 	 * 显示正在下载对话框
 	 */
-	public void showDownloadDialog() {
+	public void showDownloadDialog() {/*
 		AlertDialog.Builder builder = new Builder(mContext);
 		View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_update_progress, null);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.id_progress);
@@ -245,7 +234,7 @@ public class UpdateManager {
 
 		// 下载文件
 		downloadAPK();
-	}
+	*/}
 
 	/*
 	 * 开启新线程下载文件

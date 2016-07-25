@@ -39,4 +39,11 @@ public class NavItem {
 		this.updateTime = updateTime;
 	}
 
+	public NavItem(String value, String label, String logo) {
+		super();
+		this.value = value;
+		this.label = label;
+		this.logo = logo;
+	}
+
 }

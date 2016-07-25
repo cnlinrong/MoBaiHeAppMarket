@@ -11,6 +11,7 @@ import com.funo.appmarket.business.GetTopAppService;
 import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
 import com.funo.appmarket.business.base.BaseService;
 import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
+import com.funo.appmarket.util.AnimationUtils;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -43,6 +45,18 @@ public class RankListActivity extends BaseActivity {
 		setContentView(R.layout.activity_rank_list);
 		
 		search = findViewById(R.id.search);
+		search.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+				} else {
+					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+				}
+			}
+			
+		});
 		search.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -82,42 +96,42 @@ public class RankListActivity extends BaseActivity {
 			
 		});
 		
-//		AppBean appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
-//		appBean = new AppBean("室内设计", "暂无内容");
-//		appBeans.add(appBean);
+		AppBean appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
+		appBean = new AppBean("室内设计", "暂无内容");
+		appData.add(appBean);
 		
 		installedGridViewAdapter = new AppsGridViewAdapter(getContext(), appData);
 		installed_list.setAdapter(installedGridViewAdapter);
