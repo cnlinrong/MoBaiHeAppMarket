@@ -3,8 +3,10 @@ package com.funo.appmarket.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bumptech.glide.Glide;
 import com.funo.appmarket.R;
 import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ViewHolderUtils;
 
@@ -49,6 +51,7 @@ public class AppsGridViewAdapter extends BaseAdapter {
 		ImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
 		AppBean appBean = getItem(position);
+		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
 		appName.setText(appBean.getAppName());
 		convertView.setBackgroundColor(CommonUtils.getRandomColor());
 		return convertView;

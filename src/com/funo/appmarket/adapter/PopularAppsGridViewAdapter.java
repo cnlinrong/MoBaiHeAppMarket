@@ -3,8 +3,10 @@ package com.funo.appmarket.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bumptech.glide.Glide;
 import com.funo.appmarket.R;
 import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ViewHolderUtils;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -51,7 +53,13 @@ public class PopularAppsGridViewAdapter extends BaseAdapter {
 		AppBean appBean = getItem(position);
 		appName.setText(appBean.getAppName());
 		convertView.setBackgroundColor(CommonUtils.getRandomColor());
+		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
 		return convertView;
 	}
 
+	public void setData(List<AppBean> appBeans) {
+		this.appBeans = appBeans;
+		notifyDataSetChanged();
+	}
+	
 }

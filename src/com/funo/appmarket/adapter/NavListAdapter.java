@@ -3,8 +3,10 @@ package com.funo.appmarket.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bumptech.glide.Glide;
 import com.funo.appmarket.R;
 import com.funo.appmarket.bean.NavItem;
+import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.util.ViewHolderUtils;
 
 import android.content.Context;
@@ -52,7 +54,8 @@ public class NavListAdapter extends BaseAdapter {
 		ImageView image = ViewHolderUtils.get(convertView, R.id.image);
 		TextView name = ViewHolderUtils.get(convertView, R.id.name);
 		NavItem navItem = getItem(position);
-		name.setText(navItem.getName());
+		name.setText(navItem.getLabel());
+		Glide.with(mContext).load(Constants.IMAGE_URL + navItem.getLogo()).into(image);
 		return convertView;
 	}
 

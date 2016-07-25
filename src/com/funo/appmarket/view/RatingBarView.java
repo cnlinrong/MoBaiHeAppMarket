@@ -1,7 +1,6 @@
 package com.funo.appmarket.view;
 
 import com.funo.appmarket.R;
-import com.funo.appmarket.util.ToastUtils;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -12,6 +11,8 @@ import android.widget.LinearLayout;
 
 public class RatingBarView extends LinearLayout implements OnClickListener {
 
+	private RatingCallback ratingCallback;
+	
 	private int focused_index = 1;
 
 	public RatingBarView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -131,7 +132,19 @@ public class RatingBarView extends LinearLayout implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		ToastUtils.showShortToast(getContext(), focused_index + "");
+		if (ratingCallback != null) {
+			ratingCallback.rate(focused_index);
+		}
 	}
 
+	public void setRatingCallback(RatingCallback ratingCallback) {
+		this.ratingCallback = ratingCallback;
+	}
+	
+	public interface RatingCallback {
+		
+		public void rate(int rating);
+		
+	}
+	
 }

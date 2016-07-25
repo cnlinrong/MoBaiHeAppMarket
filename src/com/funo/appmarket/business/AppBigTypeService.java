@@ -2,8 +2,8 @@ package com.funo.appmarket.business;
 
 import java.util.List;
 
-import com.funo.appmarket.bean.AppBigType;
 import com.funo.appmarket.bean.AppBigTypeBusinessBean;
+import com.funo.appmarket.bean.NavItem;
 import com.funo.appmarket.business.base.BaseService;
 import com.funo.appmarket.business.define.IAppBigTypeService;
 import com.funo.appmarket.business.define.IAppBigTypeService.AppBigTypeParam;
@@ -59,7 +59,7 @@ public class AppBigTypeService extends BaseService {
 
 	public interface AppBigTypeCallback {
 
-		public void doCallback(List<AppBigType> appBigTypes);
+		public void doCallback(List<NavItem> appBigTypes);
 
 	}
 

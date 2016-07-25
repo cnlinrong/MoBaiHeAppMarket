@@ -25,7 +25,7 @@ public interface IAppScoreUpdateService {
 	public class AppScoreUpdateParam {
 
 		public long appId;// 应用ID
-		public long eqId;// 设备流水号
+		public String eqId;// 设备流水号
 		public int score;// 评分
 		
 	}

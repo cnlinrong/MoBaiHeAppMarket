@@ -38,6 +38,14 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
+            android:name=".activity.RankListActivity"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".activity.InstalledActivity"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
             android:name=".activity.AppDetailActivity"
             android:screenOrientation="landscape" >
         </activity>

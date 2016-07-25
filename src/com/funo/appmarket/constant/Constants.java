@@ -4,6 +4,8 @@ public class Constants {
 
 	public static final String BASE_URL = "http://172.16.16.139:8081/mobaiheInte/";// 接口地址
 	public static final String IMAGE_URL = "http://172.16.16.146/wcity/FTP/gsfop/";// 图片地址
+	
+	public static final String TEST_DOWNLOAD_URL = "http://114.55.112.85:8081/h5/qiandao_v1.2.apk";
 
 	/**
 	 * 随机颜色

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bumptech.glide.Glide;
+import com.funo.appmarket.constant.Constants;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -54,7 +55,7 @@ public class AppImgsViewPagerAdapter extends FragmentPagerAdapter {
 			ImageView iv = new ImageView(mContext);
 			iv.setLayoutParams(layoutParams);
 			iv.setScaleType(ScaleType.FIT_XY);
-			Glide.with(mContext).load(appImgs.get(position)).into(iv);
+			Glide.with(mContext).load(Constants.IMAGE_URL + appImgs.get(position)).into(iv);
 			return iv;
 		}
 		

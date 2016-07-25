@@ -1,7 +1,11 @@
 package com.funo.appmarket.bean;
 
-public class AppBean {
+import java.io.Serializable;
 
+public class AppBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private long appId;// 应用ID
 	private long partnerId;// 合作伙伴ID
 	private String appLogo;// 应用LOGO

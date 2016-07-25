@@ -2,38 +2,41 @@ package com.funo.appmarket.bean;
 
 public class NavItem {
 
-	private String name;
-	private String image;
-	private String category;
+	private String value;
+	private String label;
+	private String logo;
+	private String updateTime;
 
-	public String getName() {
-		return name;
+	public String getValue() {
+		return value;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
-	public String getImage() {
-		return image;
+	public String getLabel() {
+		return label;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
-	public String getCategory() {
-		return category;
+	public String getLogo() {
+		return logo;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 
-	public NavItem(String name, String image, String category) {
-		this.name = name;
-		this.image = image;
-		this.category = category;
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 
 }

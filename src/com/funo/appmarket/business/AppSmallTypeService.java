@@ -2,8 +2,8 @@ package com.funo.appmarket.business;
 
 import java.util.List;
 
-import com.funo.appmarket.bean.AppSmallType;
 import com.funo.appmarket.bean.AppSmallTypeBusinessBean;
+import com.funo.appmarket.bean.NavItem;
 import com.funo.appmarket.business.base.BaseService;
 import com.funo.appmarket.business.define.IAppSmallTypeService;
 import com.funo.appmarket.business.define.IAppSmallTypeService.AppSmallTypeParam;
@@ -59,7 +59,7 @@ public class AppSmallTypeService extends BaseService {
 
 	public interface AppSmallTypeCallback {
 
-		public void doCallback(List<AppSmallType> appSmallTypes);
+		public void doCallback(List<NavItem> appSmallTypes);
 
 	}
 

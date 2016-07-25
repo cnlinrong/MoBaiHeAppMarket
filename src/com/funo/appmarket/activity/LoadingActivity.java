@@ -4,17 +4,34 @@ import java.util.List;
 
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
+import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.bean.NavItem;
 import com.funo.appmarket.bean.StatusChangeNotify;
 import com.funo.appmarket.business.AppBigTypeService;
+import com.funo.appmarket.business.AppBigTypeService.AppBigTypeCallback;
 import com.funo.appmarket.business.AppScoreUpdateService;
+import com.funo.appmarket.business.AppScoreUpdateService.AppScoreUpdateCallback;
 import com.funo.appmarket.business.AppSmallTypeService;
+import com.funo.appmarket.business.AppSmallTypeService.AppSmallTypeCallback;
 import com.funo.appmarket.business.GetTopAppService;
+import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
 import com.funo.appmarket.business.SearchAppByTypeService;
+import com.funo.appmarket.business.SearchAppByTypeService.SearchAppByTypeCallback;
 import com.funo.appmarket.business.SearchAppInfoService;
+import com.funo.appmarket.business.SearchAppInfoService.SearchAppInfoCallback;
 import com.funo.appmarket.business.StatusChangeNotifyService;
 import com.funo.appmarket.business.StatusChangeNotifyService.StatusChangeNotifyCallback;
 import com.funo.appmarket.business.SyncEquipmentInfoService;
+import com.funo.appmarket.business.SyncEquipmentInfoService.SyncEquipmentInfoCallback;
+import com.funo.appmarket.business.base.BaseService;
+import com.funo.appmarket.business.define.IAppBigTypeService.AppBigTypeParam;
+import com.funo.appmarket.business.define.IAppScoreUpdateService.AppScoreUpdateParam;
+import com.funo.appmarket.business.define.IAppSmallTypeService.AppSmallTypeParam;
+import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
+import com.funo.appmarket.business.define.ISearchAppByTypeService.SearchAppByTypeParam;
+import com.funo.appmarket.business.define.ISearchAppInfoService.SearchAppInfoParam;
 import com.funo.appmarket.business.define.IStatusChangeNotifyService.StatusChangeNotifyParam;
+import com.funo.appmarket.business.define.ISyncEquipmentInfoService.SyncEquipmentInfoParam;
 import com.funo.appmarket.util.ToastUtils;
 
 import android.content.Intent;
@@ -60,102 +77,102 @@ public class LoadingActivity extends BaseActivity {
 			}
 			
 		});
-//		
-//		syncEquipmentInfoService = new SyncEquipmentInfoService(getContext());
-//		SyncEquipmentInfoParam syncEquipmentInfoParam = new SyncEquipmentInfoParam();
-//		syncEquipmentInfoParam.eqNo = "1";
-//		syncEquipmentInfoService.syncEquipmentInfo(syncEquipmentInfoParam, new SyncEquipmentInfoCallback() {
-//			
-//			@Override
-//			public void doCallback() {
-//				
-//			}
-//			
-//		});
-//		
-//		appBigTypeService = new AppBigTypeService(getContext());
-//		AppBigTypeParam appBigTypeParam = new AppBigTypeParam();
-//		appBigTypeParam.bigTypeValue = null;
-//		appBigTypeService.app_bigType(appBigTypeParam, new AppBigTypeCallback() {
-//			
-//			@Override
-//			public void doCallback(List<AppBigType> appBigTypes) {
-//				if (appBigTypes != null) {
-//					ToastUtils.showShortToast(getContext(), appBigTypes.size() + "");
-//				}
-//			}
-//			
-//		});
 		
-//		appSmallTypeService = new AppSmallTypeService(getContext());
-//		AppSmallTypeParam appSmallTypeParam = new AppSmallTypeParam();
-//		appSmallTypeParam.smallTypeValue = null;
-//		appSmallTypeService.app_smallType(appSmallTypeParam, new AppSmallTypeCallback() {
-//			
-//			@Override
-//			public void doCallback(List<AppSmallType> appSmallTypes) {
-//				
-//			}
-//			
-//		});
+		syncEquipmentInfoService = new SyncEquipmentInfoService(getContext());
+		SyncEquipmentInfoParam syncEquipmentInfoParam = new SyncEquipmentInfoParam();
+		syncEquipmentInfoParam.eqNo = "1";
+		syncEquipmentInfoService.syncEquipmentInfo(syncEquipmentInfoParam, new SyncEquipmentInfoCallback() {
+			
+			@Override
+			public void doCallback() {
+				
+			}
+			
+		});
 		
-//		searchAppByTypeService = new SearchAppByTypeService(getContext());
-//		SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam();
-//		searchAppByTypeParam.smallTypeId = 1;
-//		searchAppByTypeParam.orderType = 0;
-//		searchAppByTypeParam.pageSize = BaseService.PAGE_SIZE;
-//		searchAppByTypeParam.currentPage = 1;
-//		searchAppByTypeService.searchAppByType(searchAppByTypeParam, new SearchAppByTypeCallback() {
-//			
-//			@Override
-//			public void doCallback(List<AppBean> appBeans) {
-//				
-//			}
-//			
-//		});
+		appBigTypeService = new AppBigTypeService(getContext());
+		AppBigTypeParam appBigTypeParam = new AppBigTypeParam();
+		appBigTypeParam.bigTypeValue = null;
+		appBigTypeService.app_bigType(appBigTypeParam, new AppBigTypeCallback() {
+			
+			@Override
+			public void doCallback(List<NavItem> appBigTypes) {
+				if (appBigTypes != null) {
+					ToastUtils.showShortToast(getContext(), appBigTypes.size() + "");
+				}
+			}
+			
+		});
 		
-//		searchAppInfoService = new SearchAppInfoService(getContext());
-//		SearchAppInfoParam searchAppInfoParam = new SearchAppInfoParam();
-//		searchAppInfoParam.appName = "测试";
-//		searchAppInfoParam.appPy = "CS";
-//		searchAppInfoParam.pageSize = BaseService.PAGE_SIZE;
-//		searchAppInfoParam.currentPage = 1;
-//		searchAppInfoService.searchAppInfo(searchAppInfoParam, new SearchAppInfoCallback() {
-//			
-//			@Override
-//			public void doCallback(List<AppBean> appBeans) {
-//				
-//			}
-//			
-//		});
+		appSmallTypeService = new AppSmallTypeService(getContext());
+		AppSmallTypeParam appSmallTypeParam = new AppSmallTypeParam();
+		appSmallTypeParam.smallTypeValue = null;
+		appSmallTypeService.app_smallType(appSmallTypeParam, new AppSmallTypeCallback() {
+			
+			@Override
+			public void doCallback(List<NavItem> appSmallTypes) {
+				
+			}
+			
+		});
 		
-//		appScoreUpdateService = new AppScoreUpdateService(getContext());
-//		AppScoreUpdateParam appScoreUpdateParam = new AppScoreUpdateParam();
-//		appScoreUpdateParam.appId = 46;
-//		appScoreUpdateParam.eqId = 123;
-//		appScoreUpdateParam.score = 3;
-//		appScoreUpdateService.appScoreUpdate(appScoreUpdateParam, new AppScoreUpdateCallback() {
-//			
-//			@Override
-//			public void doCallback() {
-//				
-//			}
-//			
-//		});
+		searchAppByTypeService = new SearchAppByTypeService(getContext());
+		SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam();
+		searchAppByTypeParam.smallTypeId = "1";
+		searchAppByTypeParam.orderType = 0;
+		searchAppByTypeParam.pageSize = BaseService.PAGE_SIZE;
+		searchAppByTypeParam.currentPage = 1;
+		searchAppByTypeService.searchAppByType(searchAppByTypeParam, new SearchAppByTypeCallback() {
+			
+			@Override
+			public void doCallback(List<AppBean> appBeans) {
+				
+			}
+			
+		});
 		
-//		getTopAppService = new GetTopAppService(getContext());
-//		GetTopAppParam getTopAppParam = new GetTopAppParam();
-//		getTopAppParam.orderType = 1;
-//		getTopAppParam.pageSize = BaseService.PAGE_SIZE;
-//		getTopAppParam.currentPage = 1;
-//		getTopAppService.getTopApp(getTopAppParam,  new GetTopAppCallback() {
-//			
-//			@Override
-//			public void doCallback(List<AppBean> appBeans) {
-//				
-//			}
-//			
-//		});
+		searchAppInfoService = new SearchAppInfoService(getContext());
+		SearchAppInfoParam searchAppInfoParam = new SearchAppInfoParam();
+		searchAppInfoParam.appName = "测试";
+		searchAppInfoParam.appPy = "CS";
+		searchAppInfoParam.pageSize = BaseService.PAGE_SIZE;
+		searchAppInfoParam.currentPage = 1;
+		searchAppInfoService.searchAppInfo(searchAppInfoParam, new SearchAppInfoCallback() {
+			
+			@Override
+			public void doCallback(List<AppBean> appBeans) {
+				
+			}
+			
+		});
+		
+		appScoreUpdateService = new AppScoreUpdateService(getContext());
+		AppScoreUpdateParam appScoreUpdateParam = new AppScoreUpdateParam();
+		appScoreUpdateParam.appId = 46;
+		appScoreUpdateParam.eqId = "123";
+		appScoreUpdateParam.score = 3;
+		appScoreUpdateService.appScoreUpdate(appScoreUpdateParam, new AppScoreUpdateCallback() {
+			
+			@Override
+			public void doCallback() {
+				
+			}
+			
+		});
+		
+		getTopAppService = new GetTopAppService(getContext());
+		GetTopAppParam getTopAppParam = new GetTopAppParam();
+		getTopAppParam.orderType = 1;
+		getTopAppParam.pageSize = BaseService.PAGE_SIZE;
+		getTopAppParam.currentPage = 1;
+		getTopAppService.getTopApp(getTopAppParam,  new GetTopAppCallback() {
+			
+			@Override
+			public void doCallback(List<AppBean> appBeans) {
+				
+			}
+			
+		});
 		
 		setContentView(R.layout.activity_loading);
 		
@@ -166,17 +183,14 @@ public class LoadingActivity extends BaseActivity {
 			
 			@Override
 			public void run() {
-				pb.setProgress(pb.getProgress() + 2);
 				if (pb.getProgress() < 100) {
-					pb.postDelayed(this, 50);
-				} else {
-					while (true) {
-						if (statusChangeNotifyFlag) {
-							break;
-						}
-					}
+					pb.setProgress(pb.getProgress() + 2);
+				}
+				if (pb.getProgress() == 100 && statusChangeNotifyFlag) {
 					startActivity(new Intent(getContext(), MainActivity.class));
 					finish();
+				} else {
+					pb.postDelayed(this, 50);
 				}
 			}
 			

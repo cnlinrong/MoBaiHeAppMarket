@@ -8,12 +8,14 @@ import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.KeyboardGridViewAdapter;
 import com.funo.appmarket.adapter.PopularAppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
-import com.funo.appmarket.util.ToastUtils;
+import com.funo.appmarket.business.SearchAppInfoService;
+import com.funo.appmarket.business.SearchAppInfoService.SearchAppInfoCallback;
+import com.funo.appmarket.business.base.BaseService;
+import com.funo.appmarket.business.define.ISearchAppInfoService.SearchAppInfoParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,6 +30,8 @@ import android.widget.GridView;
 
 public class SearchActivity extends BaseActivity {
 
+	private SearchAppInfoService searchAppInfoService;
+	
 	private MainUpView mainUpView1;
 	private View mOldView;
 	
@@ -41,11 +45,13 @@ public class SearchActivity extends BaseActivity {
 	private KeyboardGridViewAdapter keyboardGridViewAdapter;
 	private PopularAppsGridViewAdapter popularAppsGridViewAdapter;
 	
-	private List<AppBean> appBeans = new ArrayList<AppBean>();
+	private List<AppBean> appData = new ArrayList<AppBean>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		searchAppInfoService = new SearchAppInfoService(getContext());
 		
 		setContentView(R.layout.activity_search);
 		
@@ -84,7 +90,7 @@ public class SearchActivity extends BaseActivity {
 			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				ToastUtils.showShortToast(getContext(), s.toString());
+				search(s.toString());
 			}
 			
 			@Override
@@ -137,25 +143,15 @@ public class SearchActivity extends BaseActivity {
 			
 		});
 		
-		AppBean appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		popularAppsGridViewAdapter = new PopularAppsGridViewAdapter(getContext(), appBeans);
+		popularAppsGridViewAdapter = new PopularAppsGridViewAdapter(getContext(), appData);
 		popular_apps.setAdapter(popularAppsGridViewAdapter);
 		popular_apps.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startActivity(new Intent(getContext(), AppDetailActivity.class));				
+				Intent intent = new Intent(getContext(), AppDetailActivity.class);
+				intent.putExtra("selectedApp", popularAppsGridViewAdapter.getItem(position));
+				startActivity(intent);				
 			}
 			
 		});
@@ -168,6 +164,27 @@ public class SearchActivity extends BaseActivity {
 			}
 
 		});
+		
+		search("测");
 	}
 
+	private void search(String keyword) {
+		SearchAppInfoParam searchAppInfoParam = new SearchAppInfoParam();
+		searchAppInfoParam.appName = keyword;
+		searchAppInfoParam.appPy = keyword;
+		searchAppInfoParam.pageSize = BaseService.PAGE_SIZE;
+		searchAppInfoParam.currentPage = 1;
+		searchAppInfoService.searchAppInfo(searchAppInfoParam, new SearchAppInfoCallback() {
+			
+			@Override
+			public void doCallback(List<AppBean> appBeans) {
+				if (appBeans != null) {
+					appData = appBeans;
+					popularAppsGridViewAdapter.setData(appBeans);
+				}
+			}
+			
+		});
+	}
+	
 }

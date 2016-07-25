@@ -6,17 +6,21 @@ import java.util.List;
 import org.evilbinary.tv.widget.BorderView;
 import org.evilbinary.tv.widget.TvHorizontalScrollView;
 
+import com.bumptech.glide.Glide;
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.NavListAdapter;
 import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.bean.NavItem;
+import com.funo.appmarket.business.AppBigTypeService;
+import com.funo.appmarket.business.AppBigTypeService.AppBigTypeCallback;
 import com.funo.appmarket.business.RecAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
 import com.funo.appmarket.business.base.BaseService;
+import com.funo.appmarket.business.define.IAppBigTypeService.AppBigTypeParam;
 import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
+import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.datasource.HomeTemplate1;
-import com.funo.appmarket.datasource.HomeTemplate2;
 import com.funo.appmarket.datasource.HomeTemplate3;
 import com.funo.appmarket.datasource.IHomeTemplate;
 import com.funo.appmarket.util.CommonUtils;
@@ -33,12 +37,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends BaseActivity {
 
-	private RecAppInfoService appService;
+	private AppBigTypeService appBigTypeService;
+	private RecAppInfoService recAppInfoService;
 
 	private TvHorizontalScrollView hsv;
 	private ListView navList;
@@ -65,12 +71,29 @@ public class MainActivity extends BaseActivity {
 		
 		initView();
 
-		appService = new RecAppInfoService(getContext());
+		appBigTypeService = new AppBigTypeService(getContext());
+		AppBigTypeParam appBigTypeParam = new AppBigTypeParam();
+		appBigTypeParam.bigTypeValue = null;
+		appBigTypeService.app_bigType(appBigTypeParam, new AppBigTypeCallback() {
+			
+			@Override
+			public void doCallback(List<NavItem> appBigTypes) {
+				if (appBigTypes != null) {
+					navItems = appBigTypes;
+					if (navListAdapter != null) {
+						navListAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+			
+		});
+		
+		recAppInfoService = new RecAppInfoService(getContext());
 		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
 		recAppInfoReqParam.type = 0;
 		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
 		recAppInfoReqParam.currentPage = 1;
-		appService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
+		recAppInfoService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
 
 			@Override
 			public void doCallback(List<AppBean> appData) {
@@ -96,7 +119,7 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(getContext(), AppsActivity.class));
+				startActivity(new Intent(getContext(), RankListActivity.class));
 			}
 
 		});
@@ -105,23 +128,23 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(getContext(), AppsActivity.class));
+				startActivity(new Intent(getContext(), InstalledActivity.class));
 			}
 
 		});
 
-		appBeans.add(new AppBean("飞上天空", "世界那么大"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("移动音乐", "宝宝音乐"));
-		appBeans.add(new AppBean("乌鸦", "每天疯狂"));
-		appBeans.add(new AppBean("儿童绘画", "每天疯狂"));
-		appBeans.add(new AppBean("爱奇艺", "每天疯狂"));
-		appBeans.add(new AppBean("萌宠", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
+//		appBeans.add(new AppBean("飞上天空", "世界那么大"));
+//		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
+//		appBeans.add(new AppBean("移动音乐", "宝宝音乐"));
+//		appBeans.add(new AppBean("乌鸦", "每天疯狂"));
+//		appBeans.add(new AppBean("儿童绘画", "每天疯狂"));
+//		appBeans.add(new AppBean("爱奇艺", "每天疯狂"));
+//		appBeans.add(new AppBean("萌宠", "每天疯狂"));
+//		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
+//		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
+//		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
+//		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
+//		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
 
 		navList = (ListView) findViewById(R.id.navList);
 		navList.post(new Runnable() {
@@ -129,16 +152,6 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void run() {
 				int itemHeight = navList.getHeight() / 4 + 1;
-				NavItem navItem = new NavItem("游戏", "", "");
-				navItems.add(navItem);
-				navItem = new NavItem("教育阅读", "", "");
-				navItems.add(navItem);
-				navItem = new NavItem("生活助手", "", "");
-				navItems.add(navItem);
-				navItem = new NavItem("亲子乐园", "", "");
-				navItems.add(navItem);
-				navItem = new NavItem("亲子啊啊", "", "");
-				navItems.add(navItem);
 				navListAdapter = new NavListAdapter(getContext(), navItems, itemHeight);
 				navList.setAdapter(navListAdapter);
 			}
@@ -148,7 +161,11 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startActivity(new Intent(getContext(), SubActivity.class));
+				NavItem navItem = navListAdapter.getItem(position);
+				Intent intent = new Intent(getContext(), SubActivity.class);
+				intent.putExtra("parentLabel", navItem.getLabel());
+				intent.putExtra("parentId", navItem.getValue());
+				startActivity(intent);
 			}
 
 		});
@@ -203,7 +220,7 @@ public class MainActivity extends BaseActivity {
 
 					@Override
 					public View onViewCreate(LayoutInflater inflater, View convertView, GridItem gridItem) {
-						AppBean appBean = (AppBean) gridItem.getData();
+						final AppBean appBean = (AppBean) gridItem.getData();
 
 						View v = null;
 						if (null == convertView) {
@@ -218,7 +235,9 @@ public class MainActivity extends BaseActivity {
 
 								@Override
 								public void onClick(View v) {
-									getContext().startActivity(new Intent(getContext(), AppDetailActivity.class));
+									Intent intent = new Intent(getContext(), AppDetailActivity.class);
+									intent.putExtra("selectedApp", appBean);
+									startActivity(intent);
 								}
 
 							});
@@ -226,13 +245,11 @@ public class MainActivity extends BaseActivity {
 							v = convertView;
 						}
 						if (appBean != null) {
-							if (gridItem.getView_type() == 0) {
-								((TextView) v.findViewById(R.id.title)).setText(appBean.getAppName());
-								((TextView) v.findViewById(R.id.sub_title)).setText(appBean.getAppInfo());
-							} else if (gridItem.getView_type() == 1) {
-								((TextView) v.findViewById(R.id.title)).setText(appBean.getAppName());
-							} else if (gridItem.getView_type() == 2) {
-								((TextView) v.findViewById(R.id.title)).setText(appBean.getAppName());
+							TextView title = (TextView) v.findViewById(R.id.title);
+							title.setText(appBean.getAppName());
+							ImageView app_logo = (ImageView) v.findViewById(R.id.app_logo);
+							Glide.with(getContext()).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(app_logo);
+							if (gridItem.getView_type() == 0 || gridItem.getView_type() == 2) {
 								((TextView) v.findViewById(R.id.sub_title)).setText(appBean.getAppInfo());
 							}
 						}

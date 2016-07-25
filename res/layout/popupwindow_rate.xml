@@ -72,6 +72,7 @@
             android:textSize="25sp" />
 
         <com.funo.appmarket.view.RatingBarView 
+            android:id="@+id/ratingBarView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

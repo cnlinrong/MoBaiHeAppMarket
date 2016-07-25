@@ -24,7 +24,7 @@ public interface ISearchAppByTypeService {
 
 	public class SearchAppByTypeParam {
 
-		public long smallTypeId;// 子分类id
+		public String smallTypeId;// 子分类id
 		public int orderType;// 根据最热或最新排序 0:最热 1:最新
 		public int pageSize;// 一页大小
 		public int currentPage;// 当前页面

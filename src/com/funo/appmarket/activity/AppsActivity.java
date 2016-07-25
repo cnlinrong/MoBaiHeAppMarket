@@ -7,15 +7,14 @@ import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.AppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
-import com.funo.appmarket.business.RecAppInfoService;
-import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
+import com.funo.appmarket.business.SearchAppByTypeService;
+import com.funo.appmarket.business.SearchAppByTypeService.SearchAppByTypeCallback;
 import com.funo.appmarket.business.base.BaseService;
-import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
+import com.funo.appmarket.business.define.ISearchAppByTypeService.SearchAppByTypeParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,11 +22,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.GridView;
+import android.widget.TextView;
 
 public class AppsActivity extends BaseActivity {
 
-	private RecAppInfoService appService;
+	private SearchAppByTypeService searchAppByTypeService;
 	
+	private TextView sub_parent_label;
 	private View search;
 	private MainUpView mainUpView1;
 	private View mOldView;
@@ -35,13 +36,24 @@ public class AppsActivity extends BaseActivity {
 	private GridView installed_list;
 	private AppsGridViewAdapter installedGridViewAdapter;
 	
-	private List<AppBean> appBeans = new ArrayList<AppBean>();
+	private List<AppBean> appData = new ArrayList<AppBean>();
+	
+	private String subParentLabel;
+	private String subParentId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_apps);
+		
+		sub_parent_label = (TextView) findViewById(R.id.sub_parent_label);
+		
+		Intent intent = getIntent();
+		subParentLabel = intent.getStringExtra("subParentLabel");
+		subParentId = intent.getStringExtra("subParentId");
+		
+		sub_parent_label.setText(subParentLabel);
 		
 		search = findViewById(R.id.search);
 		search.setOnClickListener(new OnClickListener() {
@@ -83,50 +95,33 @@ public class AppsActivity extends BaseActivity {
 			
 		});
 		
-		AppBean appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appBeans.add(appBean);
-		
-		installedGridViewAdapter = new AppsGridViewAdapter(getContext(), appBeans);
+		installedGridViewAdapter = new AppsGridViewAdapter(getContext(), appData);
 		installed_list.setAdapter(installedGridViewAdapter);
 		installed_list.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startActivity(new Intent(getContext(), AppDetailActivity.class));
+				Intent intent = new Intent(getContext(), AppDetailActivity.class);
+				intent.putExtra("selectedApp", installedGridViewAdapter.getItem(position));
+				startActivity(intent);
+			}
+			
+		});
+		
+		searchAppByTypeService = new SearchAppByTypeService(getContext());
+		SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam();
+		searchAppByTypeParam.smallTypeId = subParentId;
+		searchAppByTypeParam.orderType = 0;
+		searchAppByTypeParam.pageSize = BaseService.PAGE_SIZE;
+		searchAppByTypeParam.currentPage = 1;
+		searchAppByTypeService.searchAppByType(searchAppByTypeParam, new SearchAppByTypeCallback() {
+			
+			@Override
+			public void doCallback(List<AppBean> appBeans) {
+				if (appData != null) {
+					appBeans = appData;
+					installedGridViewAdapter.setData(appData);
+				}
 			}
 			
 		});
@@ -141,26 +136,4 @@ public class AppsActivity extends BaseActivity {
 		});
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		appService = new RecAppInfoService(getContext());
-		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
-		recAppInfoReqParam.type = 0;
-		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
-		recAppInfoReqParam.currentPage = 1;
-		appService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
-			
-			@Override
-			public void doCallback(List<AppBean> appData) {
-				if (appData != null) {
-					appBeans = appData;
-//					installedGridViewAdapter.setData(appData);
-				}
-			}
-			
-		});
-	}
-	
 }
