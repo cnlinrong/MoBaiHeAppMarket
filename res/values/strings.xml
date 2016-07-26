@@ -2,12 +2,6 @@
 <resources>
 
     <string name="app_name">魔百和</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_grid_layout">GridLayoutActivity</string>
-    <string name="title_activity_installed">InstalledActivity</string>
-    <string name="title_activity_installed_app_detail">InstalledAppDetailActivity</string>
-    <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_loading">LoadingActivity</string>
+    <string name="accessibility_service_description">智能安装服务，无需用户的任何操作就可以自动安装程序。</string>
 
 </resources>

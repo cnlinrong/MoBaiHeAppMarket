@@ -1,6 +1,12 @@
 package com.funo.appmarket.activity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.bumptech.glide.Glide;
@@ -12,15 +18,25 @@ import com.funo.appmarket.business.AppScoreUpdateService;
 import com.funo.appmarket.business.AppScoreUpdateService.AppScoreUpdateCallback;
 import com.funo.appmarket.business.define.IAppScoreUpdateService.AppScoreUpdateParam;
 import com.funo.appmarket.constant.Constants;
+import com.funo.appmarket.db.AppInfoDB;
+import com.funo.appmarket.model.AppInfo;
+import com.funo.appmarket.util.InstallUtils;
+import com.funo.appmarket.util.PackageUtils;
 import com.funo.appmarket.util.ToastUtils;
 import com.funo.appmarket.view.RatingBarView;
 import com.funo.appmarket.view.RatingBarView.RatingCallback;
 import com.funo.appmarket.view.RatingView;
 import com.funo.appmarket.view.SliderIndicatorBarView;
+import com.hellobird.circleseekbar.CircleSeekBar;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemProperties;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -40,6 +56,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	private AppScoreUpdateService appScoreUpdateService;
 	
 	private View root_view;
+	private Button btn_download;
 	private Button btn_start;
 	private Button btn_rate;
 	private Button btn_uninstall;
@@ -54,6 +71,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	private TextView app_desc;
 	private RatingView ratingView;
 	
+	private CircleSeekBar circleSeekBar;
+	
 	private String product_model;
 	private String product_serialnum;
 	
@@ -67,6 +86,24 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	private List<String> appImgs = new ArrayList<String>();
 	
 	private AppBean selectedApp;
+	
+	private boolean installed_flag = false;// 是否已安装
+	private String packageName = "com.cemobile.schoolble";// 包名
+	
+	private String mSavePath;
+	private String apkPath;
+	private float mProgress;
+
+	private boolean mIsCancel = false;
+
+	private static final int DOWNLOADING = 1;
+	private static final int DOWNLOAD_FINISH = 2;
+	private static final int DOWNLOAD_CANCEL = 3;
+	private static final int DOWNLOAD_FAIL = 4;
+
+	private String apk_name = "test.apk";
+
+	private String downloadUrl = Constants.TEST_DOWNLOAD_URL;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +131,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		app_desc = (TextView) findViewById(R.id.app_desc);
 		ratingView = (RatingView) findViewById(R.id.ratingView);
 		
+		circleSeekBar = (CircleSeekBar) findViewById(R.id.circleSeekBar);
+		
 		Glide.with(getContext()).load(Constants.IMAGE_URL + selectedApp.getAppLogo()).into(app_logo);
 		app_name.setText(selectedApp.getAppName());
 		download_count.setText("4605次下载");
@@ -106,10 +145,12 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		
 		root_view = findViewById(R.id.root_view);
 		
+		btn_download = (Button) findViewById(R.id.btn_download);
 		btn_start = (Button) findViewById(R.id.btn_start);
 		btn_rate = (Button) findViewById(R.id.btn_rate);
 		btn_uninstall = (Button) findViewById(R.id.btn_uninstall);
 		
+		btn_download.setOnClickListener(this);
 		btn_start.setOnClickListener(this);
 		btn_rate.setOnClickListener(this);
 		btn_uninstall.setOnClickListener(this);
@@ -194,11 +235,81 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		installed_flag = InstallUtils.hasInstalled(getContext(), packageName);
+		if (installed_flag) {
+			btn_start.setVisibility(View.VISIBLE);
+			btn_uninstall.setVisibility(View.VISIBLE);
+			btn_download.setVisibility(View.GONE);
+		}
+	}
+	
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.btn_download:
+			ToastUtils.showShortToast(getContext(), "开始下载");
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+							String sdPath = Environment.getExternalStorageDirectory() + "/";
+							mSavePath = sdPath + "mobaihe-cache";
+
+							File dir = new File(mSavePath);
+							if (!dir.exists())
+								dir.mkdir();
+
+							// 下载文件
+							HttpURLConnection conn = (HttpURLConnection) new URL(downloadUrl).openConnection();
+//							conn.connect();
+							conn.setRequestMethod("POST");
+							InputStream is = conn.getInputStream();
+							int length = conn.getContentLength();
+
+							apkPath = mSavePath + "/" + apk_name;
+							File apkFile = new File(apkPath);
+							FileOutputStream fos = new FileOutputStream(apkFile);
+
+							int count = 0;
+							byte[] buffer = new byte[1024];
+							while (!mIsCancel) {
+								int numread = is.read(buffer);
+								count += numread;
+								// 计算进度条的当前位置
+								mProgress = ((float) count / length) * 100;
+								// 更新进度条
+								mUpdateProgressHandler.sendEmptyMessage(DOWNLOADING);
+
+								// 下载完成
+								if (numread < 0) {
+									mUpdateProgressHandler.sendEmptyMessage(DOWNLOAD_FINISH);
+									break;
+								}
+								fos.write(buffer, 0, numread);
+							}
+							fos.close();
+							is.close();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+						CrashReport.postCatchedException(new RuntimeException("下载文件失败", e));
+						
+						mUpdateProgressHandler.sendEmptyMessage(DOWNLOAD_FAIL);
+					}
+				}
+
+			}).start();
+			break;
 		case R.id.btn_start:
-			String str = SystemProperties.get("ro.product.model", "");
-			ToastUtils.showShortToast(getContext(), str);
+			PackageManager packageManager = getPackageManager();
+			Intent intent = packageManager.getLaunchIntentForPackage(packageName);
+			startActivity(intent);
 			break;
 		case R.id.btn_rate:
 			if (popupWindow != null && !popupWindow.isShowing()) {
@@ -206,12 +317,76 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 		case R.id.btn_uninstall:
-			String str1 = SystemProperties.get("ro.product.stb.serialnum", "");
-			ToastUtils.showShortToast(getContext(), str1);
+			int result = PackageUtils.uninstall(getContext(), packageName);
+//			if (result == PackageUtils.DELETE_SUCCEEDED) {
+//				installed_flag = false;
+//				btn_start.setVisibility(View.GONE);
+//				btn_uninstall.setVisibility(View.GONE);
+//				btn_download.setVisibility(View.VISIBLE);
+//			}
 			break;
 		}
 	}
 
+	private Handler mUpdateProgressHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case DOWNLOADING:
+				// 设置进度条
+				circleSeekBar.setProgress(mProgress);
+				break;
+			case DOWNLOAD_FINISH:
+				circleSeekBar.setVisibility(View.GONE);
+				
+				int result = PackageUtils.install(getContext(), apkPath);
+				if (result == PackageUtils.INSTALL_SUCCEEDED) {
+					AppInfo appInfo = new AppInfo();
+					appInfo.setAppId(selectedApp.getAppId());
+					appInfo.setPartnerId(selectedApp.getAppId());
+					appInfo.setAppLogo(selectedApp.getAppLogo());
+					appInfo.setAppName(selectedApp.getAppName());
+					appInfo.setPackageName(packageName);
+					appInfo.setAppPy(selectedApp.getAppPy());
+					appInfo.setAppInfo(selectedApp.getAppInfo());
+					appInfo.setAppIntro(selectedApp.getAppIntro());
+					appInfo.setAppImg1(selectedApp.getAppImg1());
+					appInfo.setAppImg2(selectedApp.getAppImg2());
+					appInfo.setAppImg3(selectedApp.getAppImg3());
+					appInfo.setAppImg4(selectedApp.getAppImg4());
+					appInfo.setAppImg5(selectedApp.getAppImg5());
+					appInfo.setAppSize(selectedApp.getAppSize());
+					appInfo.setAppVersion(selectedApp.getAppVersion());
+					appInfo.setTag(selectedApp.getTag());
+					appInfo.setUrl(selectedApp.getUrl());
+					appInfo.setScore(selectedApp.getScore());
+					appInfo.setUpdateTime(selectedApp.getUpdateTime());
+					appInfo.setInstalled_flag(false);
+					appInfo.setCreatedDate(new Date());
+					AppInfoDB.saveAppInfo(appInfo);
+					
+//					installed_flag = true;
+//					btn_start.setVisibility(View.VISIBLE);
+//					btn_uninstall.setVisibility(View.VISIBLE);
+//					btn_download.setVisibility(View.GONE);
+				}
+				break;
+			case DOWNLOAD_CANCEL:
+				break;
+			case DOWNLOAD_FAIL:
+				// 隐藏当前对话框
+//				mDownloadDialog.dismiss();
+				// 设置下载状态为取消
+				mIsCancel = true;
+				
+				ToastUtils.showShortToast(getContext(), "下载文件失败");
+				break;
+			}
+		}
+
+	};
+	
 	@Override
 	public void onBackPressed() {
 		if (popupWindow != null && popupWindow.isShowing()) {
