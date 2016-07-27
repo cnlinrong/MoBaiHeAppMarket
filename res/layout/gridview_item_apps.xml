@@ -76,11 +76,12 @@
         android:src="@drawable/installed_img" />
 
     <ImageView
+        android:id="@+id/tag_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="-5dp"
-        android:src="@drawable/recommend_01" />
+        android:visibility="gone" />
 
 </RelativeLayout>

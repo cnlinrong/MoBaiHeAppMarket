@@ -6,9 +6,10 @@ import java.util.List;
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.InstalledAppsGridViewAdapter;
-import com.funo.appmarket.db.AppInfoDB;
-import com.funo.appmarket.model.AppInfo;
+import com.funo.appmarket.db.AppModelDB;
+import com.funo.appmarket.model.AppModel;
 import com.funo.appmarket.util.AnimationUtils;
+import com.funo.appmarket.util.ModelBeanConverter;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
@@ -24,6 +25,12 @@ import android.widget.GridView;
 
 public class InstalledActivity extends BaseActivity {
 
+	private float originalWidth = 1.0f;
+	private float originalHeight = 1.0f;
+	private float targetWidth = 1.4f;
+	private float targetHeight = 1.4f;
+	private long duration = 200;
+	
 	private View search;
 	private MainUpView mainUpView1;
 	private View mOldView;
@@ -31,7 +38,7 @@ public class InstalledActivity extends BaseActivity {
 	private GridView installed_list;
 	private InstalledAppsGridViewAdapter installedAppsGridViewAdapter;
 	
-	private List<AppInfo> appInfos = new ArrayList<AppInfo>();
+	private List<AppModel> appModels = new ArrayList<AppModel>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +46,15 @@ public class InstalledActivity extends BaseActivity {
 		
 		setContentView(R.layout.activity_installed);
 		
-		appInfos = AppInfoDB.getAllAppInfos();
-		
 		search = findViewById(R.id.search);
 		search.setOnFocusChangeListener(new OnFocusChangeListener() {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
 				} else {
-					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
 			}
 			
@@ -93,17 +98,18 @@ public class InstalledActivity extends BaseActivity {
 			
 		});
 		
-		installedAppsGridViewAdapter = new InstalledAppsGridViewAdapter(getContext(), appInfos);
+		installedAppsGridViewAdapter = new InstalledAppsGridViewAdapter(getContext(), appModels);
 		installed_list.setAdapter(installedAppsGridViewAdapter);
 		installed_list.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getContext(), AppDetailActivity.class);
-				intent.putExtra("selectedApp", installedAppsGridViewAdapter.getItem(position));
+				intent.putExtra("selectedApp",
+						ModelBeanConverter.appModel2Bean(installedAppsGridViewAdapter.getItem(position)));
 				startActivity(intent);
 			}
-			
+
 		});
 		
 		installed_list.post(new Runnable() {
@@ -116,4 +122,14 @@ public class InstalledActivity extends BaseActivity {
 		});
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		appModels = AppModelDB.getAllInstalledApps();
+		if (appModels != null) {
+			installedAppsGridViewAdapter.setData(appModels);
+		}
+	}
+	
 }

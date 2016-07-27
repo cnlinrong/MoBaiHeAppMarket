@@ -28,6 +28,12 @@ import android.widget.TextView;
 
 public class AppsActivity extends BaseActivity {
 
+	private float originalWidth = 1.0f;
+	private float originalHeight = 1.0f;
+	private float targetWidth = 1.4f;
+	private float targetHeight = 1.4f;
+	private long duration = 200;
+	
 	private SearchAppByTypeService searchAppByTypeService;
 	
 	private TextView sub_parent_label;
@@ -63,9 +69,9 @@ public class AppsActivity extends BaseActivity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
 				} else {
-					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
 			}
 			

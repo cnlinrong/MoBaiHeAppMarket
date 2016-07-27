@@ -1,6 +1,6 @@
 package com.funo.appmarket.broadcast;
 
-import com.funo.appmarket.db.AppInfoDB;
+import com.funo.appmarket.db.AppModelDB;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,7 +21,7 @@ public class InstallReceiver extends BroadcastReceiver {
 				return;
 			}
 			String packageName = data.substring(PACKAGE_NAME_START_INDEX);
-			AppInfoDB.markAppInstalled(packageName);
+			AppModelDB.markAppInstalled(packageName);
 		}
 	}
 

@@ -53,7 +53,7 @@ public class BaseService {
 		T t = null;
 		try {
 			String json = response.body().string();
-			Log.e("JSON", json);
+//			Log.e("JSON", json);
 			t = gson.fromJson(json, clz);
 			if (!TextUtils.equals(REQUEST_CODE_SUCCESS, t.getCode())) {
 				reportError(SHOW_ERROR_TOAST, t.getMsg());

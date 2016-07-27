@@ -11,6 +11,7 @@ import com.funo.appmarket.business.SyncEquipmentInfoService;
 import com.funo.appmarket.business.SyncEquipmentInfoService.SyncEquipmentInfoCallback;
 import com.funo.appmarket.business.define.IStatusChangeNotifyService.StatusChangeNotifyParam;
 import com.funo.appmarket.business.define.ISyncEquipmentInfoService.SyncEquipmentInfoParam;
+import com.funo.appmarket.db.AppModelDB;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ public class LoadingActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		AppModelDB.clearUninstalledApps();
 		
 		statusChangeNotifyService = new StatusChangeNotifyService(getContext());
 		StatusChangeNotifyParam statusChangeNotifyParam = new StatusChangeNotifyParam();

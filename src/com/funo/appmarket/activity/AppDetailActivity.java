@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.bumptech.glide.Glide;
@@ -18,9 +17,9 @@ import com.funo.appmarket.business.AppScoreUpdateService;
 import com.funo.appmarket.business.AppScoreUpdateService.AppScoreUpdateCallback;
 import com.funo.appmarket.business.define.IAppScoreUpdateService.AppScoreUpdateParam;
 import com.funo.appmarket.constant.Constants;
-import com.funo.appmarket.db.AppInfoDB;
-import com.funo.appmarket.model.AppInfo;
+import com.funo.appmarket.db.AppModelDB;
 import com.funo.appmarket.util.InstallUtils;
+import com.funo.appmarket.util.ModelBeanConverter;
 import com.funo.appmarket.util.PackageUtils;
 import com.funo.appmarket.util.ToastUtils;
 import com.funo.appmarket.view.RatingBarView;
@@ -53,6 +52,8 @@ import android.widget.TextView;
 
 public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
+	private int slider_interval_time = 3000;
+	
 	private AppScoreUpdateService appScoreUpdateService;
 	
 	private View root_view;
@@ -94,8 +95,6 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	private String apkPath;
 	private float mProgress;
 
-	private boolean mIsCancel = false;
-
 	private static final int DOWNLOADING = 1;
 	private static final int DOWNLOAD_FINISH = 2;
 	private static final int DOWNLOAD_CANCEL = 3;
@@ -105,6 +104,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
 	private String downloadUrl = Constants.TEST_DOWNLOAD_URL;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -135,8 +135,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		
 		Glide.with(getContext()).load(Constants.IMAGE_URL + selectedApp.getAppLogo()).into(app_logo);
 		app_name.setText(selectedApp.getAppName());
-		download_count.setText("4605次下载");
-		app_type.setText("应用类型：启蒙教育");
+		download_count.setText(selectedApp.getDownnum() + "次下载");
+		app_type.setText("应用类型：" + selectedApp.getAppSubType());
 		app_version.setText("当前版本：" + selectedApp.getAppVersion() + "版");
 		app_size.setText("应用大小：" + selectedApp.getAppSize() + "M");
 		update_time.setText("更新时间：" + selectedApp.getUpdateTime());
@@ -171,17 +171,19 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		if (!TextUtils.isEmpty(selectedApp.getAppImg5())) {
 			appImgs.add(selectedApp.getAppImg5());
 		}
-//		appImgs.add("https://img3.doubanio.com/icon/ul63839584-4.jpg");
-//		appImgs.add("https://img1.doubanio.com/icon/ul47183650-28.jpg");
-//		appImgs.add("https://img3.doubanio.com/icon/ul79926360-73.jpg");
-//		appImgs.add("https://www.baidu.com/img/bd_logo1.png");
+		appImgs.add("https://img3.doubanio.com/icon/ul63839584-4.jpg");
+		appImgs.add("https://img1.doubanio.com/icon/ul47183650-28.jpg");
+		appImgs.add("https://img3.doubanio.com/icon/ul79926360-73.jpg");
+		appImgs.add("https://www.baidu.com/img/bd_logo1.png");
 		appImgsViewPagerAdapter = new AppImgsViewPagerAdapter(getSupportFragmentManager(), getContext(), appImgs);
 		app_imgs.setAdapter(appImgsViewPagerAdapter);
+		int middlePosition = appImgsViewPagerAdapter.getCount() / 2 / appImgs.size() * appImgs.size();
+		app_imgs.setCurrentItem(middlePosition);
 		app_imgs.setOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
-			public void onPageSelected(int arg0) {
-				sliderIndicatorBarView.selectIndicator(arg0);
+			public void onPageSelected(int position) {
+				sliderIndicatorBarView.selectIndicator(position % appImgs.size());
 			}
 			
 			@Override
@@ -195,6 +197,18 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			}
 			
 		});
+		
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				app_imgs.setCurrentItem(app_imgs.getCurrentItem() + 1);
+				app_imgs.postDelayed(this, slider_interval_time);
+			}
+			
+		};
+		
+		app_imgs.postDelayed(r, slider_interval_time);
 		
 		sliderIndicatorBarView.setNum(appImgs.size());
 		
@@ -243,6 +257,10 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			btn_start.setVisibility(View.VISIBLE);
 			btn_uninstall.setVisibility(View.VISIBLE);
 			btn_download.setVisibility(View.GONE);
+		} else {
+			btn_start.setVisibility(View.GONE);
+			btn_uninstall.setVisibility(View.GONE);
+			btn_download.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -266,7 +284,6 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
 							// 下载文件
 							HttpURLConnection conn = (HttpURLConnection) new URL(downloadUrl).openConnection();
-//							conn.connect();
 							conn.setRequestMethod("POST");
 							InputStream is = conn.getInputStream();
 							int length = conn.getContentLength();
@@ -277,7 +294,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
 							int count = 0;
 							byte[] buffer = new byte[1024];
-							while (!mIsCancel) {
+							while (true) {
 								int numread = is.read(buffer);
 								count += numread;
 								// 计算进度条的当前位置
@@ -318,12 +335,6 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.btn_uninstall:
 			int result = PackageUtils.uninstall(getContext(), packageName);
-//			if (result == PackageUtils.DELETE_SUCCEEDED) {
-//				installed_flag = false;
-//				btn_start.setVisibility(View.GONE);
-//				btn_uninstall.setVisibility(View.GONE);
-//				btn_download.setVisibility(View.VISIBLE);
-//			}
 			break;
 		}
 	}
@@ -342,44 +353,13 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 				
 				int result = PackageUtils.install(getContext(), apkPath);
 				if (result == PackageUtils.INSTALL_SUCCEEDED) {
-					AppInfo appInfo = new AppInfo();
-					appInfo.setAppId(selectedApp.getAppId());
-					appInfo.setPartnerId(selectedApp.getAppId());
-					appInfo.setAppLogo(selectedApp.getAppLogo());
-					appInfo.setAppName(selectedApp.getAppName());
-					appInfo.setPackageName(packageName);
-					appInfo.setAppPy(selectedApp.getAppPy());
-					appInfo.setAppInfo(selectedApp.getAppInfo());
-					appInfo.setAppIntro(selectedApp.getAppIntro());
-					appInfo.setAppImg1(selectedApp.getAppImg1());
-					appInfo.setAppImg2(selectedApp.getAppImg2());
-					appInfo.setAppImg3(selectedApp.getAppImg3());
-					appInfo.setAppImg4(selectedApp.getAppImg4());
-					appInfo.setAppImg5(selectedApp.getAppImg5());
-					appInfo.setAppSize(selectedApp.getAppSize());
-					appInfo.setAppVersion(selectedApp.getAppVersion());
-					appInfo.setTag(selectedApp.getTag());
-					appInfo.setUrl(selectedApp.getUrl());
-					appInfo.setScore(selectedApp.getScore());
-					appInfo.setUpdateTime(selectedApp.getUpdateTime());
-					appInfo.setInstalled_flag(false);
-					appInfo.setCreatedDate(new Date());
-					AppInfoDB.saveAppInfo(appInfo);
-					
-//					installed_flag = true;
-//					btn_start.setVisibility(View.VISIBLE);
-//					btn_uninstall.setVisibility(View.VISIBLE);
-//					btn_download.setVisibility(View.GONE);
+					selectedApp.setPkgname(packageName);
+					AppModelDB.saveApp(ModelBeanConverter.appBean2Model(selectedApp));
 				}
 				break;
 			case DOWNLOAD_CANCEL:
 				break;
 			case DOWNLOAD_FAIL:
-				// 隐藏当前对话框
-//				mDownloadDialog.dismiss();
-				// 设置下载状态为取消
-				mIsCancel = true;
-				
 				ToastUtils.showShortToast(getContext(), "下载文件失败");
 				break;
 			}

@@ -26,7 +26,6 @@ import com.funo.appmarket.datasource.HomeTemplate3;
 import com.funo.appmarket.datasource.IHomeTemplate;
 import com.funo.appmarket.util.AnimationUtils;
 import com.funo.appmarket.util.CommonUtils;
-import com.funo.appmarket.util.ToastUtils;
 import com.gridbuilder.GridBuilder;
 import com.gridbuilder.GridItem;
 import com.gridbuilder.GridViewHolder;
@@ -47,6 +46,12 @@ import android.widget.TextView;
 
 public class MainActivity extends BaseActivity {
 
+	private float originalWidth = 1.0f;
+	private float originalHeight = 1.0f;
+	private float targetWidth = 1.4f;
+	private float targetHeight = 1.4f;
+	private long duration = 200;
+	
 	private AppBigTypeService appBigTypeService;
 	private RecAppInfoService recAppInfoService;
 
@@ -115,9 +120,9 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
 				} else {
-					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
 			}
 			
@@ -136,9 +141,9 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
 				} else {
-					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
 			}
 			
@@ -157,9 +162,9 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
 				} else {
-					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
 			}
 			
@@ -295,6 +300,30 @@ public class MainActivity extends BaseActivity {
 							v = convertView;
 						}
 						if (appBean != null) {
+							ImageView tag_img = (ImageView) v.findViewById(R.id.tag_img);
+							int tag = 0;
+							try {
+								tag = Integer.parseInt(appBean.getTag());
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							}
+							switch (tag) {// 标签类型 0:无标签 1:精品 2:NEW 3:HOT
+							case 0:
+								tag_img.setVisibility(View.GONE);
+								break;
+							case 1:
+								tag_img.setVisibility(View.VISIBLE);
+								tag_img.setImageResource(R.drawable.recommend_best);
+								break;
+							case 2:
+								tag_img.setVisibility(View.VISIBLE);
+								tag_img.setImageResource(R.drawable.recommend_new);
+								break;
+							case 3:
+								tag_img.setVisibility(View.VISIBLE);
+								tag_img.setImageResource(R.drawable.recommend_hot);
+								break;
+							}
 							TextView title = (TextView) v.findViewById(R.id.title);
 							title.setText(appBean.getAppName());
 							ImageView app_logo = (ImageView) v.findViewById(R.id.app_logo);

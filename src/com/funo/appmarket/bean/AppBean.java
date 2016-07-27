@@ -10,6 +10,9 @@ public class AppBean implements Serializable {
 	private long partnerId;// 合作伙伴ID
 	private String appLogo;// 应用LOGO
 	private String appName;// 应用名称
+	private String pkgname;// 应用包名
+	private String downnum;// 下载次数
+	private String appSubType;// 应用类型
 	private String appPy;// 拼音首字母
 	private String appInfo;// 内容摘要
 	private String appIntro;// 应用介绍
@@ -20,10 +23,19 @@ public class AppBean implements Serializable {
 	private String appImg5;// 应用图片5
 	private float appSize;// 应用大小
 	private String appVersion;// 当前版本
-	private int tag;// 标签类型 0:无标签 1:精品 2:NEW 3:HOT
+	private String tag;// 标签类型 0:无标签 1:精品 2:NEW 3:HOT
 	private String url;// 下载地址
 	private float score;// 评分
 	private String updateTime;
+
+	public AppBean() {
+		
+	}
+	
+	public AppBean(String appName, String appInfo) {
+		this.appName = appName;
+		this.appInfo = appInfo;
+	}
 
 	public long getAppId() {
 		return appId;
@@ -55,6 +67,30 @@ public class AppBean implements Serializable {
 
 	public void setAppName(String appName) {
 		this.appName = appName;
+	}
+
+	public String getPkgname() {
+		return pkgname;
+	}
+
+	public void setPkgname(String pkgname) {
+		this.pkgname = pkgname;
+	}
+
+	public String getDownnum() {
+		return downnum;
+	}
+
+	public void setDownnum(String downnum) {
+		this.downnum = downnum;
+	}
+
+	public String getAppSubType() {
+		return appSubType;
+	}
+
+	public void setAppSubType(String appSubType) {
+		this.appSubType = appSubType;
 	}
 
 	public String getAppPy() {
@@ -137,11 +173,11 @@ public class AppBean implements Serializable {
 		this.appVersion = appVersion;
 	}
 
-	public int getTag() {
+	public String getTag() {
 		return tag;
 	}
 
-	public void setTag(int tag) {
+	public void setTag(String tag) {
 		this.tag = tag;
 	}
 
@@ -167,11 +203,6 @@ public class AppBean implements Serializable {
 
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
-	}
-
-	public AppBean(String appName, String appInfo) {
-		this.appName = appName;
-		this.appInfo = appInfo;
 	}
 
 }

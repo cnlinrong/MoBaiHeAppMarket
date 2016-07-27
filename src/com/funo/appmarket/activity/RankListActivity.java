@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
-import com.funo.appmarket.adapter.AppsGridViewAdapter;
+import com.funo.appmarket.adapter.RankListGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.business.GetTopAppService;
 import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
@@ -27,6 +27,12 @@ import android.widget.GridView;
 
 public class RankListActivity extends BaseActivity {
 
+	private float originalWidth = 1.0f;
+	private float originalHeight = 1.0f;
+	private float targetWidth = 1.4f;
+	private float targetHeight = 1.4f;
+	private long duration = 200;
+	
 	private GetTopAppService getTopAppService;
 	
 	private View search;
@@ -34,7 +40,7 @@ public class RankListActivity extends BaseActivity {
 	private View mOldView;
 	
 	private GridView installed_list;
-	private AppsGridViewAdapter installedGridViewAdapter;
+	private RankListGridViewAdapter rankListGridViewAdapter;
 	
 	private List<AppBean> appData = new ArrayList<AppBean>();
 	
@@ -50,9 +56,9 @@ public class RankListActivity extends BaseActivity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
 				} else {
-					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
 			}
 			
@@ -133,14 +139,14 @@ public class RankListActivity extends BaseActivity {
 		appBean = new AppBean("室内设计", "暂无内容");
 		appData.add(appBean);
 		
-		installedGridViewAdapter = new AppsGridViewAdapter(getContext(), appData);
-		installed_list.setAdapter(installedGridViewAdapter);
+		rankListGridViewAdapter = new RankListGridViewAdapter(getContext(), appData);
+		installed_list.setAdapter(rankListGridViewAdapter);
 		installed_list.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getContext(), AppDetailActivity.class);
-				intent.putExtra("selectedApp", installedGridViewAdapter.getItem(position));
+				intent.putExtra("selectedApp", rankListGridViewAdapter.getItem(position));
 				startActivity(intent);
 			}
 			
@@ -157,7 +163,7 @@ public class RankListActivity extends BaseActivity {
 			public void doCallback(List<AppBean> appBeans) {
 				if (appBeans != null) {
 					appData = appBeans;
-					installedGridViewAdapter.setData(appBeans);
+					rankListGridViewAdapter.setData(appBeans);
 				}
 			}
 			

@@ -65,7 +65,7 @@
 
         <service
             android:name="com.funo.appmarket.autoinstall.MyAccessibilityService"
-            android:label="我的智能安装"
+            android:label="魔百和智能安装"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
@@ -79,6 +79,13 @@
         <receiver android:name="com.funo.appmarket.broadcast.InstallReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.funo.appmarket.broadcast.UninstallReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
                 <data android:scheme="package" />
             </intent-filter>

@@ -46,6 +46,12 @@ import android.widget.TextView;
 
 public class SubActivity extends BaseActivity {
 
+	private float originalWidth = 1.0f;
+	private float originalHeight = 1.0f;
+	private float targetWidth = 1.4f;
+	private float targetHeight = 1.4f;
+	private long duration = 200;
+	
 	private AppSmallTypeService appSmallTypeService;
 	private RecAppInfoService recAppInfoService;
 	
@@ -120,9 +126,9 @@ public class SubActivity extends BaseActivity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					AnimationUtils.scaleAnim(v, 1.0f, 1.0f, 1.5f, 1.5f, 200);
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
 				} else {
-					AnimationUtils.scaleAnim(v, 1.5f, 1.5f, 1.0f, 1.0f, 200);
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
 			}
 			
@@ -261,6 +267,30 @@ public class SubActivity extends BaseActivity {
 							v = convertView;
 						}
 						if (appBean != null) {
+							ImageView tag_img = (ImageView) v.findViewById(R.id.tag_img);
+							int tag = 0;
+							try {
+								tag = Integer.parseInt(appBean.getTag());
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							}
+							switch (tag) {// 标签类型 0:无标签 1:精品 2:NEW 3:HOT
+							case 0:
+								tag_img.setVisibility(View.GONE);
+								break;
+							case 1:
+								tag_img.setVisibility(View.VISIBLE);
+								tag_img.setImageResource(R.drawable.recommend_best);
+								break;
+							case 2:
+								tag_img.setVisibility(View.VISIBLE);
+								tag_img.setImageResource(R.drawable.recommend_new);
+								break;
+							case 3:
+								tag_img.setVisibility(View.VISIBLE);
+								tag_img.setImageResource(R.drawable.recommend_hot);
+								break;
+							}
 							TextView title = (TextView) v.findViewById(R.id.title);
 							title.setText(appBean.getAppName());
 							ImageView app_logo = (ImageView) v.findViewById(R.id.app_logo);

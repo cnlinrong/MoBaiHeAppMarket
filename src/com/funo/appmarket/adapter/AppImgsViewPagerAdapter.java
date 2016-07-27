@@ -33,12 +33,13 @@ public class AppImgsViewPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		return new MyFragment(position);
+		int index = position % appImgs.size();
+		return new MyFragment(index);
 	}
 
 	@Override
 	public int getCount() {
-		return appImgs.size();
+		return Integer.MAX_VALUE;
 	}
 
 	class MyFragment extends Fragment {
@@ -55,7 +56,11 @@ public class AppImgsViewPagerAdapter extends FragmentPagerAdapter {
 			ImageView iv = new ImageView(mContext);
 			iv.setLayoutParams(layoutParams);
 			iv.setScaleType(ScaleType.FIT_XY);
-			Glide.with(mContext).load(Constants.IMAGE_URL + appImgs.get(position)).into(iv);
+			if (appImgs.get(position).startsWith("http")) {
+				Glide.with(mContext).load(appImgs.get(position)).into(iv);
+			} else {
+				Glide.with(mContext).load(Constants.IMAGE_URL + appImgs.get(position)).into(iv);
+			}
 			return iv;
 		}
 		
