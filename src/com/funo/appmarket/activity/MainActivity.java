@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity {
 		
 		recAppInfoService = new RecAppInfoService(getContext());
 		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
-		recAppInfoReqParam.type = 0;
+		recAppInfoReqParam.type = 0;// 0：首页推荐 1：分类页推荐
 		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
 		recAppInfoReqParam.currentPage = 1;
 		recAppInfoService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
@@ -178,35 +178,12 @@ public class MainActivity extends BaseActivity {
 
 		});
 
-		appBeans.add(new AppBean("飞上天空", "世界那么大"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("移动音乐", "宝宝音乐"));
-		appBeans.add(new AppBean("乌鸦", "每天疯狂"));
-		appBeans.add(new AppBean("儿童绘画", "每天疯狂"));
-		appBeans.add(new AppBean("爱奇艺", "每天疯狂"));
-		appBeans.add(new AppBean("萌宠", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-		appBeans.add(new AppBean("疯狂桌球", "每天疯狂"));
-
 		navList = (ListView) findViewById(R.id.navList);
 		navList.post(new Runnable() {
 
 			@Override
 			public void run() {
 				int itemHeight = navList.getHeight() / 4 + 1;
-				NavItem navItem = new NavItem("游戏", "游戏", "");
-				navItems.add(navItem);
-				navItem = new NavItem("教育阅读", "教育阅读", "");
-				navItems.add(navItem);
-				navItem = new NavItem("生活助手", "生活助手", "");
-				navItems.add(navItem);
-				navItem = new NavItem("亲子乐园", "亲子乐园", "");
-				navItems.add(navItem);
-				navItem = new NavItem("亲子啊啊", "亲子啊啊", "");
-				navItems.add(navItem);
 				navListAdapter = new NavListAdapter(getContext(), navItems, itemHeight);
 				navList.setAdapter(navListAdapter);
 			}

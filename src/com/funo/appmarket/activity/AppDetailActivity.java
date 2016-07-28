@@ -89,7 +89,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	private AppBean selectedApp;
 	
 	private boolean installed_flag = false;// 是否已安装
-	private String packageName = "com.cemobile.schoolble";// 包名
+	private String packageName;// 包名
 	
 	private String mSavePath;
 	private String apkPath;
@@ -100,9 +100,9 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	private static final int DOWNLOAD_CANCEL = 3;
 	private static final int DOWNLOAD_FAIL = 4;
 
-	private String apk_name = "test.apk";
+	private String apk_name;
 
-	private String downloadUrl = Constants.TEST_DOWNLOAD_URL;
+	private String downloadUrl;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -118,6 +118,9 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		
 		Intent intent = getIntent();
 		selectedApp = (AppBean) intent.getSerializableExtra("selectedApp");
+		packageName = selectedApp.getPkgname();
+		downloadUrl = Constants.IMAGE_URL + selectedApp.getUrl();
+		apk_name = downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1);
 		
 		sliderIndicatorBarView = (SliderIndicatorBarView) findViewById(R.id.slider_bar);
 		
@@ -171,14 +174,12 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		if (!TextUtils.isEmpty(selectedApp.getAppImg5())) {
 			appImgs.add(selectedApp.getAppImg5());
 		}
-		appImgs.add("https://img3.doubanio.com/icon/ul63839584-4.jpg");
-		appImgs.add("https://img1.doubanio.com/icon/ul47183650-28.jpg");
-		appImgs.add("https://img3.doubanio.com/icon/ul79926360-73.jpg");
-		appImgs.add("https://www.baidu.com/img/bd_logo1.png");
 		appImgsViewPagerAdapter = new AppImgsViewPagerAdapter(getSupportFragmentManager(), getContext(), appImgs);
 		app_imgs.setAdapter(appImgsViewPagerAdapter);
-		int middlePosition = appImgsViewPagerAdapter.getCount() / 2 / appImgs.size() * appImgs.size();
-		app_imgs.setCurrentItem(middlePosition);
+		if (!appImgs.isEmpty()) {
+			int middlePosition = appImgsViewPagerAdapter.getCount() / 2 / appImgs.size() * appImgs.size();
+			app_imgs.setCurrentItem(middlePosition);
+		}
 		app_imgs.setOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
@@ -353,7 +354,6 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 				
 				int result = PackageUtils.install(getContext(), apkPath);
 				if (result == PackageUtils.INSTALL_SUCCEEDED) {
-					selectedApp.setPkgname(packageName);
 					AppModelDB.saveApp(ModelBeanConverter.appBean2Model(selectedApp));
 				}
 				break;

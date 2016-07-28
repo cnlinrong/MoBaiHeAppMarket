@@ -23,7 +23,7 @@ public class MyApplication extends Application {
 		CrashReport.initCrashReport(getApplicationContext(), "900037894", true);
 
 		x.Ext.init(this);// xutils 初始化
-		daoConfig = new DbManager.DaoConfig().setDbName("mobaihe_db")// 创建数据库的名称
+		daoConfig = new DbManager.DaoConfig().setDbName("mobaihe.db")// 创建数据库的名称
 				.setDbVersion(1)// 数据库版本号
 				.setDbUpgradeListener(new DbManager.DbUpgradeListener() {
 

@@ -33,12 +33,17 @@ public class AppImgsViewPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		int index = position % appImgs.size();
-		return new MyFragment(index);
+		if (!appImgs.isEmpty()) {
+			position = position % appImgs.size();
+		}
+		return new MyFragment(position);
 	}
 
 	@Override
 	public int getCount() {
+		if (appImgs.isEmpty()) {
+			return 0;
+		}
 		return Integer.MAX_VALUE;
 	}
 

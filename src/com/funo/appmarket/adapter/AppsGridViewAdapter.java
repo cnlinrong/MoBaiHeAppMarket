@@ -9,6 +9,7 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ViewHolderUtils;
+import com.funo.appmarket.view.RatingView;
 
 import android.content.Context;
 import android.view.View;
@@ -48,12 +49,14 @@ public class AppsGridViewAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = View.inflate(mContext, R.layout.gridview_item_apps, null);
 		}
+		RatingView ratingView = ViewHolderUtils.get(convertView, R.id.ratingView);
 		ImageView tag_img = ViewHolderUtils.get(convertView, R.id.tag_img);
 		ImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
 		AppBean appBean = getItem(position);
 		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
 		appName.setText(appBean.getAppName());
+		ratingView.setScore(appBean.getScore());
 		convertView.setBackgroundColor(CommonUtils.getRandomColor());
 		int tag = 0;
 		try {

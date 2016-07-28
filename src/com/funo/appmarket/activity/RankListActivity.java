@@ -1,29 +1,17 @@
 package com.funo.appmarket.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
-import com.funo.appmarket.adapter.RankListGridViewAdapter;
-import com.funo.appmarket.bean.AppBean;
-import com.funo.appmarket.business.GetTopAppService;
-import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
-import com.funo.appmarket.business.base.BaseService;
-import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
+import com.funo.appmarket.adapter.RankListViewPagerAdapter;
 import com.funo.appmarket.util.AnimationUtils;
-import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
-import com.open.androidtvwidget.view.MainUpView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.GridView;
+import android.widget.TextView;
 
 public class RankListActivity extends BaseActivity {
 
@@ -33,22 +21,23 @@ public class RankListActivity extends BaseActivity {
 	private float targetHeight = 1.4f;
 	private long duration = 200;
 	
-	private GetTopAppService getTopAppService;
+	private TextView btn_hot;
+	private TextView btn_new;
+	
+	private ViewPager rankListViewPager;
+	private RankListViewPagerAdapter rankListViewPagerAdapter;
 	
 	private View search;
-	private MainUpView mainUpView1;
-	private View mOldView;
-	
-	private GridView installed_list;
-	private RankListGridViewAdapter rankListGridViewAdapter;
-	
-	private List<AppBean> appData = new ArrayList<AppBean>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_rank_list);
+		
+		rankListViewPager = (ViewPager) findViewById(R.id.rankListViewPager);
+		rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0);
+		rankListViewPager.setAdapter(rankListViewPagerAdapter);
 		
 		search = findViewById(R.id.search);
 		search.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -72,111 +61,63 @@ public class RankListActivity extends BaseActivity {
 			
 		});
 		
-		mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
-		EffectNoDrawBridge effectNoDrawBridge = new EffectNoDrawBridge();
-        effectNoDrawBridge.setTranDurAnimTime(200);
-        mainUpView1.setEffectBridge(effectNoDrawBridge); // 4.3以下版本边框移动.
-        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
-        mainUpView1.setDrawUpRectPadding(2);
-		
-		installed_list = (GridView) findViewById(R.id.installed_list);
-		installed_list.setOnItemSelectedListener(new OnItemSelectedListener() {
-
+		btn_hot = (TextView) findViewById(R.id.btn_hot);
+		btn_hot.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				/**
-				 * 这里注意要加判断是否为NULL.
-				 * 因为在重新加载数据以后会出问题.
-				 */
-				if (view != null) {
-					view.bringToFront();
-					mainUpView1.setFocusView(view, mOldView, 1.1f);
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
+				} else {
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
-				mOldView = view;
 			}
-
+			
+		});
+		btn_hot.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
+			public void onClick(View v) {
+				btn_hot.setTextSize(22);
+				btn_new.setTextSize(17);
 				
+				refreshData(0);
 			}
 			
 		});
 		
-		AppBean appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		
-		rankListGridViewAdapter = new RankListGridViewAdapter(getContext(), appData);
-		installed_list.setAdapter(rankListGridViewAdapter);
-		installed_list.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(getContext(), AppDetailActivity.class);
-				intent.putExtra("selectedApp", rankListGridViewAdapter.getItem(position));
-				startActivity(intent);
-			}
-			
-		});
-		
-		getTopAppService = new GetTopAppService(getContext());
-		GetTopAppParam getTopAppParam = new GetTopAppParam();
-		getTopAppParam.orderType = 0;
-		getTopAppParam.pageSize = BaseService.PAGE_SIZE;
-		getTopAppParam.currentPage = 1;
-		getTopAppService.getTopApp(getTopAppParam,  new GetTopAppCallback() {
+		btn_new = (TextView) findViewById(R.id.btn_new);
+		btn_new.setOnFocusChangeListener(new OnFocusChangeListener() {
 			
 			@Override
-			public void doCallback(List<AppBean> appBeans) {
-				if (appBeans != null) {
-					appData = appBeans;
-					rankListGridViewAdapter.setData(appBeans);
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
+				} else {
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
 				}
 			}
 			
 		});
-		
-		installed_list.post(new Runnable() {
-
+		btn_new.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public void run() {
-				installed_list.requestFocus();
+			public void onClick(View v) {
+				btn_hot.setTextSize(17);
+				btn_new.setTextSize(22);
+				
+				refreshData(1);
 			}
-
+			
 		});
+		
 	}
 
+	/**
+	 * @param orderType 根据最热或最新排序 0:最热 1:最新
+	 */
+	private void refreshData(int orderType) {
+		
+	}
+	
 }

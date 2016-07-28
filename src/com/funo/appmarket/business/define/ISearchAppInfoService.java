@@ -24,9 +24,9 @@ public interface ISearchAppInfoService {
 
 	public class SearchAppInfoParam {
 
-		public String appName;// 应用名称，模糊查询
+//		public String appName;// 应用名称，模糊查询
 		public String appPy;// 应用拼音首字母
-		public long appId;// 应用ID
+//		public long appId;// 应用ID
 		public int pageSize;// 一页大小
 		public int currentPage;// 当前页面
 		

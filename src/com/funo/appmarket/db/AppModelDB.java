@@ -11,8 +11,6 @@ import com.funo.appmarket.app.MyApplication;
 import com.funo.appmarket.model.AppModel;
 import com.tencent.bugly.crashreport.CrashReport;
 
-import android.util.Log;
-
 public class AppModelDB {
 
 	public static DbManager getDbManager() {
@@ -65,7 +63,7 @@ public class AppModelDB {
 	public static AppModel getAppByPackageName(String packageName) {
 		AppModel appModel = null;
 		try {
-			List<AppModel> appModels = getDbManager().selector(AppModel.class).where("packageName", "=", packageName)
+			List<AppModel> appModels = getDbManager().selector(AppModel.class).where("pkgname", "=", packageName)
 					.findAll();
 			if (appModels != null && !appModels.isEmpty()) {
 				appModel = appModels.get(0);
@@ -79,6 +77,26 @@ public class AppModelDB {
 	}
 
 	/**
+	 * 根据应用拼音查询应用信息
+	 * 
+	 * @param pinyin
+	 * 
+	 * @return
+	 */
+	public static List<AppModel> findAppsByPinyin(String pinyin) {
+		List<AppModel> appModels = null;
+		try {
+			appModels = getDbManager().selector(AppModel.class).where("appPy", "like", "%" + pinyin + "%")
+					.findAll();
+		} catch (DbException e) {
+			e.printStackTrace();
+
+			CrashReport.postCatchedException(e);
+		}
+		return appModels;
+	}
+	
+	/**
 	 * 保存应用信息
 	 * 
 	 * @param appModel
@@ -90,8 +108,6 @@ public class AppModelDB {
 				appModel.setId(model.getId());
 			}
 			getDbManager().saveOrUpdate(appModel);
-			Log.w("saveApp-getAllApps>>>>>>>", getAllApps().size() + "");
-			Log.w("saveApp-getAllInstalledApps>>>>>>>", getAllInstalledApps().size() + "");
 		} catch (DbException e) {
 			e.printStackTrace();
 
@@ -123,10 +139,8 @@ public class AppModelDB {
 	 */
 	public static void markAppInstalled(String packageName) {
 		try {
-			getDbManager().update(AppModel.class, WhereBuilder.b("packageName", "=", packageName),
+			getDbManager().update(AppModel.class, WhereBuilder.b("pkgname", "=", packageName),
 					new KeyValue("installed_flag", true));
-			Log.w("markAppInstalled-getAllApps>>>>>>>", getAllApps().size() + "");
-			Log.w("markAppInstalled-getAllInstalledApps>>>>>>>", getAllInstalledApps().size() + "");
 		} catch (DbException e) {
 			e.printStackTrace();
 
@@ -141,9 +155,7 @@ public class AppModelDB {
 	 */
 	public static void deleteApp(String packageName) {
 		try {
-			getDbManager().delete(AppModel.class, WhereBuilder.b("packageName", "=", packageName));
-			Log.w("deleteApp-getAllApps>>>>>>>", getAllApps().size() + "");
-			Log.w("deleteApp-getAllInstalledApps>>>>>>>", getAllInstalledApps().size() + "");
+			getDbManager().delete(AppModel.class, WhereBuilder.b("pkgname", "=", packageName));
 		} catch (DbException e) {
 			e.printStackTrace();
 
@@ -157,8 +169,6 @@ public class AppModelDB {
 	public static void clearUninstalledApps() {
 		try {
 			getDbManager().delete(AppModel.class, WhereBuilder.b("installed_flag", "=", false));
-//			Log.w("clearUninstalledApps-getAllApps>>>>>>>", getAllApps().size() + "");
-//			Log.w("clearUninstalledApps-getAllInstalledApps>>>>>>>", getAllInstalledApps().size() + "");
 		} catch (DbException e) {
 			e.printStackTrace();
 

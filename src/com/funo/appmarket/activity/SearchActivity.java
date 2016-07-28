@@ -8,32 +8,47 @@ import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.KeyboardGridViewAdapter;
 import com.funo.appmarket.adapter.PopularAppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.business.RecAppInfoService;
 import com.funo.appmarket.business.SearchAppInfoService;
+import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
 import com.funo.appmarket.business.SearchAppInfoService.SearchAppInfoCallback;
 import com.funo.appmarket.business.base.BaseService;
+import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
 import com.funo.appmarket.business.define.ISearchAppInfoService.SearchAppInfoParam;
+import com.funo.appmarket.util.AnimationUtils;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 
 public class SearchActivity extends BaseActivity {
 
+	private float originalWidth = 1.0f;
+	private float originalHeight = 1.0f;
+	private float targetWidth = 1.4f;
+	private float targetHeight = 1.4f;
+	private long duration = 200;
+	
 	private SearchAppInfoService searchAppInfoService;
+	private RecAppInfoService recAppInfoService;
 	
 	private MainUpView mainUpView1;
 	private View mOldView;
+	private TextView label_tv;
 	
 	private GridView keyboard;
 	private GridView popular_apps;
@@ -52,6 +67,7 @@ public class SearchActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		
 		searchAppInfoService = new SearchAppInfoService(getContext());
+		recAppInfoService = new RecAppInfoService(getContext());
 		
 		setContentView(R.layout.activity_search);
 		
@@ -62,6 +78,8 @@ public class SearchActivity extends BaseActivity {
         mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
         mainUpView1.setDrawUpRectPadding(2);
 		
+        label_tv = (TextView) findViewById(R.id.label_tv);
+        
 		keyboard = (GridView) findViewById(R.id.keyboard);
 		popular_apps = (GridView) findViewById(R.id.popular_apps);
 		popular_apps.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -105,6 +123,18 @@ public class SearchActivity extends BaseActivity {
 			
 		});
 		btn_123 = (Button) findViewById(R.id.btn_123);
+		btn_123.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
+				} else {
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
+				}
+			}
+			
+		});
 		btn_123.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -114,6 +144,18 @@ public class SearchActivity extends BaseActivity {
 			
 		});
 		btn_clear = (Button) findViewById(R.id.btn_clear);
+		btn_clear.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
+				} else {
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
+				}
+			}
+			
+		});
 		btn_clear.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -123,11 +165,25 @@ public class SearchActivity extends BaseActivity {
 			
 		});
 		btn_delete = (Button) findViewById(R.id.btn_delete);
+		btn_delete.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					AnimationUtils.scaleAnim(v, originalWidth, originalHeight, targetWidth, targetHeight, duration);
+				} else {
+					AnimationUtils.scaleAnim(v, targetWidth, targetHeight, originalWidth, originalHeight, duration);
+				}
+			}
+			
+		});
 		btn_delete.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				search_input.setText(search_input.getText().subSequence(0, search_input.getText().length() - 1));
+				if (!TextUtils.isEmpty(search_input.getText())) {
+					search_input.setText(search_input.getText().subSequence(0, search_input.getText().length() - 1));
+				}
 			}
 			
 		});
@@ -178,26 +234,44 @@ public class SearchActivity extends BaseActivity {
 
 		});
 		
-		search("测");
+		search("");
 	}
 
 	private void search(String keyword) {
-		SearchAppInfoParam searchAppInfoParam = new SearchAppInfoParam();
-		searchAppInfoParam.appName = keyword;
-		searchAppInfoParam.appPy = keyword;
-		searchAppInfoParam.pageSize = BaseService.PAGE_SIZE;
-		searchAppInfoParam.currentPage = 1;
-		searchAppInfoService.searchAppInfo(searchAppInfoParam, new SearchAppInfoCallback() {
-			
-			@Override
-			public void doCallback(List<AppBean> appBeans) {
-				if (appBeans != null) {
-					appData = appBeans;
-					popularAppsGridViewAdapter.setData(appBeans);
+		if (TextUtils.isEmpty(keyword)) {
+			label_tv.setText("热门应用");
+			RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
+			recAppInfoReqParam.type = 0;
+			recAppInfoReqParam.pageSize = 6;
+			recAppInfoReqParam.currentPage = 1;
+			recAppInfoService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
+
+				@Override
+				public void doCallback(List<AppBean> appData) {
+					if (appData != null) {
+						popularAppsGridViewAdapter.setData(appData);
+					}
 				}
-			}
-			
-		});
+
+			});
+		} else {
+			label_tv.setText("搜索结果");
+			SearchAppInfoParam searchAppInfoParam = new SearchAppInfoParam();
+			searchAppInfoParam.appPy = keyword;
+			searchAppInfoParam.pageSize = BaseService.PAGE_SIZE;
+			searchAppInfoParam.currentPage = 1;
+			searchAppInfoService.searchAppInfo(searchAppInfoParam, new SearchAppInfoCallback() {
+				
+				@Override
+				public void doCallback(List<AppBean> appBeans) {
+					if (appBeans != null) {
+						SearchActivity.this.appData = appBeans;
+						popularAppsGridViewAdapter.setData(appBeans);
+					}
+				}
+				
+			});
+		}
 	}
 	
 }

@@ -9,6 +9,7 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ViewHolderUtils;
+import com.funo.appmarket.view.RatingView;
 
 import android.content.Context;
 import android.view.View;
@@ -61,11 +62,13 @@ public class RankListGridViewAdapter extends BaseAdapter {
 			order_tv.setBackgroundResource(R.drawable.order_img_02);
 			break;
 		}
+		RatingView ratingView = ViewHolderUtils.get(convertView, R.id.ratingView);
 		ImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
 		AppBean appBean = getItem(position);
 		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
 		appName.setText(appBean.getAppName());
+		ratingView.setScore(appBean.getScore());
 		convertView.setBackgroundColor(CommonUtils.getRandomColor());
 		return convertView;
 	}

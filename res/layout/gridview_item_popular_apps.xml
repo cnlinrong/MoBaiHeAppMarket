@@ -42,41 +42,13 @@
             android:textColor="@android:color/white"
             android:textSize="17sp" />
 
-        <LinearLayout
+        <com.funo.appmarket.view.RatingView
+            android:id="@+id/ratingView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/rate_star_01" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:src="@drawable/rate_star_01" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/rate_star_01" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:src="@drawable/rate_star_01" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/rate_star_02" />
-        </LinearLayout>
+            android:layout_height="wrap_content" />
 
         <TextView
+            android:id="@+id/size_downloadnum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

@@ -33,50 +33,21 @@
             android:textColor="@android:color/white"
             android:textSize="17sp" />
 
-        <LinearLayout
+        <com.funo.appmarket.view.RatingView
+            android:id="@+id/ratingView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/rate_star_01" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:src="@drawable/rate_star_01" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/rate_star_01" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:src="@drawable/rate_star_01" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/rate_star_02" />
-        </LinearLayout>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/order_tv"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:background="@drawable/order_img_01"
         android:padding="10dp"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
         android:text="1"
-        android:background="@drawable/order_img_01" />
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

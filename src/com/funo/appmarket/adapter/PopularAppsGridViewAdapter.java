@@ -9,6 +9,7 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ViewHolderUtils;
+import com.funo.appmarket.view.RatingView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import android.content.Context;
@@ -48,11 +49,15 @@ public class PopularAppsGridViewAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = View.inflate(mContext, R.layout.gridview_item_popular_apps, null);
 		}
+		TextView size_downloadnum = ViewHolderUtils.get(convertView, R.id.size_downloadnum);
+		RatingView ratingView = ViewHolderUtils.get(convertView, R.id.ratingView);
 		RoundedImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
 		AppBean appBean = getItem(position);
 		appName.setText(appBean.getAppName());
 		convertView.setBackgroundColor(CommonUtils.getRandomColor());
+		ratingView.setScore(appBean.getScore());
+		size_downloadnum.setText(appBean.getAppSize() + "MB | " + appBean.getDownnum() + "万");
 		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
 		return convertView;
 	}

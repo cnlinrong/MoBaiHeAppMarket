@@ -69,11 +69,11 @@ public class ModelBeanConverter {
 		return appModel;
 	}
 	
-	public static List<AppBean> appModels2Beans(List<AppModel> appInfos) {
+	public static List<AppBean> appModels2Beans(List<AppModel> appModels) {
 		List<AppBean> appBeans = null;
-		if (appInfos != null) {
+		if (appModels != null) {
 			appBeans = new ArrayList<AppBean>();
-			for (AppModel appModel : appInfos) {
+			for (AppModel appModel : appModels) {
 				appBeans.add(appModel2Bean(appModel));
 			}
 		}
