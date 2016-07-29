@@ -41,7 +41,7 @@ public class GetTopAppService extends BaseService {
 				GetTopAppBusinessBean getTopAppBusinessBean = handleResponse(response, GetTopAppBusinessBean.class);
 				if (getTopAppBusinessBean != null) {
 					if (getTopAppCallback != null) {
-						getTopAppCallback.doCallback(getTopAppBusinessBean.getResponseData());
+						getTopAppCallback.doCallback(getTopAppBusinessBean.getResponseData(), getTopAppBusinessBean.getTotalPage());
 					}
 				}
 			}
@@ -50,7 +50,7 @@ public class GetTopAppService extends BaseService {
 			public void onFailure(Call<ResponseBody> call, Throwable t) {
 				reportError(SHOW_ERROR_TOAST, t.getMessage());
 				if (getTopAppCallback != null) {
-					getTopAppCallback.doCallback(null);
+					getTopAppCallback.doCallback(null, 0);
 				}
 			}
 
@@ -59,7 +59,7 @@ public class GetTopAppService extends BaseService {
 
 	public interface GetTopAppCallback {
 
-		public void doCallback(List<AppBean> appBeans);
+		public void doCallback(List<AppBean> appBeans, int pageCount);
 
 	}
 

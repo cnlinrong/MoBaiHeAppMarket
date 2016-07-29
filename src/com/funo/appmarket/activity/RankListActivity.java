@@ -1,8 +1,14 @@
 package com.funo.appmarket.activity;
 
+import java.util.List;
+
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.RankListViewPagerAdapter;
+import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.business.GetTopAppService;
+import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
+import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
 import com.funo.appmarket.util.AnimationUtils;
 
 import android.content.Intent;
@@ -22,6 +28,8 @@ public class RankListActivity extends BaseActivity {
 	private float targetHeight = 1.4f;
 	private long duration = 200;
 	
+	private GetTopAppService getTopAppService;
+	
 	private TextView btn_hot;
 	private TextView btn_new;
 	private View search;
@@ -30,19 +38,20 @@ public class RankListActivity extends BaseActivity {
 	private ViewPager rankListViewPager;
 	private RankListViewPagerAdapter rankListViewPagerAdapter;
 	
+	private int pageSize = 15;
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		getTopAppService = new GetTopAppService(getContext());
+		
 		setContentView(R.layout.activity_rank_list);
 		
 		pager_bar = (TextView) findViewById(R.id.pager_bar);
 		
 		rankListViewPager = (ViewPager) findViewById(R.id.rankListViewPager);
-		rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0);
-		pager_bar.setText("1/" + rankListViewPagerAdapter.getCount());
 		rankListViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
@@ -61,7 +70,6 @@ public class RankListActivity extends BaseActivity {
 			}
 			
 		});
-		rankListViewPager.setAdapter(rankListViewPagerAdapter);
 		
 		search = findViewById(R.id.search);
 		search.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -105,9 +113,7 @@ public class RankListActivity extends BaseActivity {
 				btn_hot.setTextSize(22);
 				btn_new.setTextSize(17);
 				
-				rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0);
-				rankListViewPager.setAdapter(rankListViewPagerAdapter);
-				pager_bar.setText("1/" + rankListViewPagerAdapter.getCount());
+				refreshData(0);
 			}
 			
 		});
@@ -132,13 +138,33 @@ public class RankListActivity extends BaseActivity {
 				btn_hot.setTextSize(17);
 				btn_new.setTextSize(22);
 				
-				rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 1);
-				rankListViewPager.setAdapter(rankListViewPagerAdapter);
-				pager_bar.setText("1/" + rankListViewPagerAdapter.getCount());
+				refreshData(1);
 			}
 			
 		});
 		
+		refreshData(0);
+		
+		rankListViewPager.requestFocus();
 	}
 
+	private void refreshData(int orderType) {
+		GetTopAppParam getTopAppParam = new GetTopAppParam();
+		getTopAppParam.orderType = orderType;
+		getTopAppParam.pageSize = pageSize;
+		getTopAppParam.currentPage = 1;
+		getTopAppService.getTopApp(getTopAppParam,  new GetTopAppCallback() {
+			
+			@Override
+			public void doCallback(List<AppBean> appBeans, int pageCount) {
+				if (appBeans != null) {
+					rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), pageCount, 0);
+					rankListViewPager.setAdapter(rankListViewPagerAdapter);
+					pager_bar.setText("1/" + rankListViewPagerAdapter.getCount());
+				}
+			}
+			
+		});
+	}
+	
 }

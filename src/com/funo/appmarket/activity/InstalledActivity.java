@@ -81,6 +81,8 @@ public class InstalledActivity extends BaseActivity {
 			}
 			
 		});
+		
+		installedViewPager.requestFocus();
 	}
 
 	@Override

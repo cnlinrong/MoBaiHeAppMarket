@@ -10,6 +10,7 @@ import com.funo.appmarket.business.SearchAppByTypeService.SearchAppByTypeCallbac
 import com.funo.appmarket.business.define.ISearchAppByTypeService.SearchAppByTypeParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -97,7 +100,19 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 
 				@Override
 				public void onNothingSelected(AdapterView<?> parent) {
-					
+					mainUpView1.setUnFocusView(mOldView);
+					mainUpView1.setVisibility(View.GONE);
+				}
+				
+			});
+			apps_list.setOnFocusChangeListener(new OnFocusChangeListener() {
+				
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					if (!hasFocus) {
+						mainUpView1.setUnFocusView(mOldView);
+						mainUpView1.setVisibility(View.GONE);
+					}
 				}
 				
 			});
@@ -110,8 +125,9 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 			searchAppByTypeService.searchAppByType(searchAppByTypeParam, new SearchAppByTypeCallback() {
 				
 				@Override
-				public void doCallback(List<AppBean> appBeans) {
+				public void doCallback(List<AppBean> appBeans, int pageCount) {
 					if (appBeans != null) {
+						AppsViewPagerAdapter.this.pageCount = pageCount;
 						final AppsGridViewAdapter appsGridViewAdapter = new AppsGridViewAdapter(getContext(), appBeans);
 						apps_list.setAdapter(appsGridViewAdapter);
 						apps_list.setOnItemClickListener(new OnItemClickListener() {
@@ -128,6 +144,24 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 				}
 				
 			});
+			
+			// 在布局加咱完成后，设置选中第一个 (test)
+			apps_list.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+
+				@Override
+				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
+						int oldRight, int oldBottom) {
+					if (apps_list.hasFocus() && apps_list.getChildCount() > 0) {
+						apps_list.setSelection(0);
+						View newView = apps_list.getChildAt(0);
+						newView.bringToFront();
+						mainUpView1.setFocusView(newView, 1.1f);
+						mOldView = apps_list.getChildAt(0);
+					}
+				}
+
+			});
+			
 			return rootView;
 		}
 		

@@ -27,6 +27,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.View.OnLayoutChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -99,10 +100,31 @@ public class SearchActivity extends BaseActivity {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				mainUpView1.setVisibility(View.INVISIBLE);
+				mainUpView1.setUnFocusView(mOldView);
+				mainUpView1.setVisibility(View.GONE);
 			}
 			
 		});
+		popular_apps.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					if (popular_apps.getChildCount() > 0) {
+						popular_apps.setSelection(0);
+						View newView = popular_apps.getChildAt(0);
+						newView.bringToFront();
+						mainUpView1.setFocusView(newView, 1.05f);
+						mOldView = popular_apps.getChildAt(0);
+					}
+				} else {
+					mainUpView1.setUnFocusView(mOldView);
+					mainUpView1.setVisibility(View.GONE);
+				}
+			}
+			
+		});
+		
 		search_input = (EditText) findViewById(R.id.search_input);
 		search_input.addTextChangedListener(new TextWatcher() {
 			

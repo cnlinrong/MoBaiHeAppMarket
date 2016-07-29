@@ -18,6 +18,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnLayoutChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -84,7 +86,19 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 
 				@Override
 				public void onNothingSelected(AdapterView<?> parent) {
-					
+					mainUpView1.setUnFocusView(mOldView);
+					mainUpView1.setVisibility(View.GONE);
+				}
+				
+			});
+			installed_list.setOnFocusChangeListener(new OnFocusChangeListener() {
+				
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					if (!hasFocus) {
+						mainUpView1.setUnFocusView(mOldView);
+						mainUpView1.setVisibility(View.GONE);
+					}
 				}
 				
 			});
@@ -105,6 +119,23 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 
 				});
 			}
+			
+			// 在布局加咱完成后，设置选中第一个 (test)
+			installed_list.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+
+				@Override
+				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
+						int oldRight, int oldBottom) {
+					if (installed_list.hasFocus() && installed_list.getChildCount() > 0) {
+						installed_list.setSelection(0);
+						View newView = installed_list.getChildAt(0);
+						newView.bringToFront();
+						mainUpView1.setFocusView(newView, 1.1f);
+						mOldView = installed_list.getChildAt(0);
+					}
+				}
+
+			});
 			
 			return rootView;
 		}

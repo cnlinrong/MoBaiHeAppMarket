@@ -1,8 +1,14 @@
 package com.funo.appmarket.activity;
 
+import java.util.List;
+
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.AppsViewPagerAdapter;
+import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.business.SearchAppByTypeService;
+import com.funo.appmarket.business.SearchAppByTypeService.SearchAppByTypeCallback;
+import com.funo.appmarket.business.define.ISearchAppByTypeService.SearchAppByTypeParam;
 import com.funo.appmarket.util.AnimationUtils;
 
 import android.content.Intent;
@@ -22,6 +28,8 @@ public class AppsActivity extends BaseActivity {
 	private float targetHeight = 1.4f;
 	private long duration = 200;
 	
+	private SearchAppByTypeService searchAppByTypeService;
+	
 	private TextView btn_hot;
 	private TextView btn_new;
 	private TextView sub_parent_label;
@@ -34,10 +42,14 @@ public class AppsActivity extends BaseActivity {
 	private String subParentLabel;
 	private String subParentId;
 	
+	private int pageSize = 15;
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		searchAppByTypeService = new SearchAppByTypeService(getContext());
 		
 		setContentView(R.layout.activity_apps);
 		
@@ -51,8 +63,6 @@ public class AppsActivity extends BaseActivity {
 		sub_parent_label.setText(subParentLabel);
 		
 		appsViewPager = (ViewPager) findViewById(R.id.appsViewPager);
-		appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0, subParentId);
-		pager_bar.setText("1/" + appsViewPagerAdapter.getCount());
 		appsViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
@@ -71,7 +81,6 @@ public class AppsActivity extends BaseActivity {
 			}
 			
 		});
-		appsViewPager.setAdapter(appsViewPagerAdapter);
 		
 		search = findViewById(R.id.search);
 		search.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -115,9 +124,7 @@ public class AppsActivity extends BaseActivity {
 				btn_hot.setTextSize(22);
 				btn_new.setTextSize(17);
 				
-				appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0, subParentId);
-				appsViewPager.setAdapter(appsViewPagerAdapter);
-				pager_bar.setText("1/" + appsViewPagerAdapter.getCount());
+				refreshData(0);
 			}
 			
 		});
@@ -142,9 +149,31 @@ public class AppsActivity extends BaseActivity {
 				btn_hot.setTextSize(17);
 				btn_new.setTextSize(22);
 				
-				appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 1, subParentId);
-				appsViewPager.setAdapter(appsViewPagerAdapter);
-				pager_bar.setText("1/" + appsViewPagerAdapter.getCount());
+				refreshData(1);
+			}
+			
+		});
+		
+		refreshData(0);
+		
+		appsViewPager.requestFocus();
+	}
+	
+	private void refreshData(int orderType) {
+		SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam();
+		searchAppByTypeParam.smallTypeId = subParentId;
+		searchAppByTypeParam.orderType = orderType;
+		searchAppByTypeParam.pageSize = pageSize;
+		searchAppByTypeParam.currentPage = 1;
+		searchAppByTypeService.searchAppByType(searchAppByTypeParam, new SearchAppByTypeCallback() {
+			
+			@Override
+			public void doCallback(List<AppBean> appBeans, int pageCount) {
+				if (appBeans != null) {
+					appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), pageCount, 0, subParentId);
+					appsViewPager.setAdapter(appsViewPagerAdapter);
+					pager_bar.setText("1/" + pageCount);
+				}
 			}
 			
 		});

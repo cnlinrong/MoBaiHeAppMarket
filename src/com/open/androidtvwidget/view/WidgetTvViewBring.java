@@ -15,7 +15,6 @@ public class WidgetTvViewBring {
 	private int position = 0;
 
 	public WidgetTvViewBring() {
-		
 	}
 
 	public WidgetTvViewBring(ViewGroup vg) {

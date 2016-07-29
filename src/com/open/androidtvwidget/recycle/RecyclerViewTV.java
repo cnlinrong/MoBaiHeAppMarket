@@ -11,19 +11,16 @@ public class RecyclerViewTV extends RecyclerView {
 
 	public RecyclerViewTV(Context context) {
 		super(context);
-		
 		init(context);
 	}
 
 	public RecyclerViewTV(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
 		init(context);
 	}
 
 	public RecyclerViewTV(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		
 		init(context);
 	}
 

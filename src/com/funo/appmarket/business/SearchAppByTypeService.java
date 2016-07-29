@@ -41,7 +41,7 @@ public class SearchAppByTypeService extends BaseService {
 				SearchAppByTypeBusinessBean searchAppByTypeBusinessBean = handleResponse(response, SearchAppByTypeBusinessBean.class);
 				if (searchAppByTypeBusinessBean != null) {
 					if (searchAppByTypeCallback != null) {
-						searchAppByTypeCallback.doCallback(searchAppByTypeBusinessBean.getResponseData());
+						searchAppByTypeCallback.doCallback(searchAppByTypeBusinessBean.getResponseData(), searchAppByTypeBusinessBean.getTotalPage());
 					}
 				}
 			}
@@ -50,7 +50,7 @@ public class SearchAppByTypeService extends BaseService {
 			public void onFailure(Call<ResponseBody> call, Throwable t) {
 				reportError(SHOW_ERROR_TOAST, t.getMessage());
 				if (searchAppByTypeCallback != null) {
-					searchAppByTypeCallback.doCallback(null);
+					searchAppByTypeCallback.doCallback(null, 0);
 				}
 			}
 
@@ -59,7 +59,7 @@ public class SearchAppByTypeService extends BaseService {
 
 	public interface SearchAppByTypeCallback {
 
-		public void doCallback(List<AppBean> appBeans);
+		public void doCallback(List<AppBean> appBeans, int pageCount);
 
 	}
 

@@ -47,7 +47,7 @@ public class InstalledAppsGridViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = View.inflate(mContext, R.layout.gridview_item_apps, null);
+			convertView = View.inflate(mContext, R.layout.gridview_item_installed_apps, null);
 		}
 		RatingView ratingView = ViewHolderUtils.get(convertView, R.id.ratingView);
 		ImageView tag_img = ViewHolderUtils.get(convertView, R.id.tag_img);

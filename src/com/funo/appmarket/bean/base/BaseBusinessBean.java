@@ -9,6 +9,7 @@ public class BaseBusinessBean<T> {
 	private String msg;
 	private List<T> responseData;
 	private String time;
+	private int totalPage;
 
 	public String getCode() {
 		return code;
@@ -48,6 +49,14 @@ public class BaseBusinessBean<T> {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public int getTotalPage() {
+		return totalPage;
+	}
+
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
 	}
 
 }
