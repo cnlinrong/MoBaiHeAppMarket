@@ -5,7 +5,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.bumptech.glide.Glide;
@@ -15,7 +18,9 @@ import com.funo.appmarket.adapter.AppImgsViewPagerAdapter;
 import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.business.AppScoreUpdateService;
 import com.funo.appmarket.business.AppScoreUpdateService.AppScoreUpdateCallback;
+import com.funo.appmarket.business.SyncAppDownService;
 import com.funo.appmarket.business.define.IAppScoreUpdateService.AppScoreUpdateParam;
+import com.funo.appmarket.business.define.ISyncAppDownService.SyncAppDownParam;
 import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.db.AppModelDB;
 import com.funo.appmarket.util.InstallUtils;
@@ -28,7 +33,7 @@ import com.funo.appmarket.view.RatingView;
 import com.funo.appmarket.view.SliderIndicatorBarView;
 import com.hellobird.circleseekbar.CircleSeekBar;
 import com.tencent.bugly.crashreport.CrashReport;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
@@ -54,6 +59,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
 	private int slider_interval_time = 3000;
 	
+	private SyncAppDownService syncAppDownService;
 	private AppScoreUpdateService appScoreUpdateService;
 	
 	private View root_view;
@@ -104,6 +110,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
 	private String downloadUrl;
 	
+	@SuppressLint("SimpleDateFormat")
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +119,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		product_model = SystemProperties.get("ro.product.model", "");
 		product_serialnum = SystemProperties.get("ro.product.stb.serialnum", "");
 		
+		syncAppDownService = new SyncAppDownService(getContext());
 		appScoreUpdateService = new AppScoreUpdateService(getContext());
 		
 		setContentView(R.layout.activity_app_detail);
@@ -138,11 +146,20 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		
 		Glide.with(getContext()).load(Constants.IMAGE_URL + selectedApp.getAppLogo()).into(app_logo);
 		app_name.setText(selectedApp.getAppName());
-		download_count.setText(selectedApp.getDownnum() + "次下载");
+		download_count.setText(selectedApp.getDownnum() + "下载");
 		app_type.setText("应用类型：" + selectedApp.getAppSubType());
 		app_version.setText("当前版本：" + selectedApp.getAppVersion() + "版");
 		app_size.setText("应用大小：" + selectedApp.getAppSize() + "M");
-		update_time.setText("更新时间：" + selectedApp.getUpdateTime());
+		if (!TextUtils.isEmpty(selectedApp.getUpdateTime())) {
+			try {
+				SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+				Date updateTime = simpleDateFormat1.parse(selectedApp.getUpdateTime());
+				update_time.setText("更新时间：" + simpleDateFormat2.format(updateTime));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 		app_desc.setText(selectedApp.getAppIntro());
 		ratingView.setScore(selectedApp.getScore());
 		
@@ -270,6 +287,12 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.btn_download:
 			ToastUtils.showShortToast(getContext(), "开始下载");
+			
+			SyncAppDownParam syncAppDownParam = new SyncAppDownParam();
+			syncAppDownParam.eqNo = "abc123";
+			syncAppDownParam.appId = selectedApp.getAppId();
+			syncAppDownService.syncAppDown(syncAppDownParam, null);
+			
 			new Thread(new Runnable() {
 
 				@Override

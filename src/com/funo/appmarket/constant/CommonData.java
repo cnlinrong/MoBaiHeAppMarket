@@ -46,7 +46,7 @@ public class CommonData {
 	/**
 	 * Bugly
 	 */
-	public static final String BUGLY_APP_ID = "900028690";
+	public static final String BUGLY_APP_ID = "900037894";
 
 	/**
 	 * 信鸽推送

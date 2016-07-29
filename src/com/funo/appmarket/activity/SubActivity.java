@@ -78,7 +78,8 @@ public class SubActivity extends BaseActivity {
 
 		setContentView(R.layout.activity_sub);
 		
-		templateUsedId = sys_sp.getInt("templateUsedId", 1);
+//		templateUsedId = sys_sp.getInt("templateUsedId", 1);
+		templateUsedId = 3;
 		
 		Intent intent = getIntent();
 		parentLabel = intent.getStringExtra("parentLabel");

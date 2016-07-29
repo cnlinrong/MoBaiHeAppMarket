@@ -65,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="愤怒的小鸟"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="25sp" />
 
@@ -80,7 +80,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
-                            android:text="4605次下载"
+                            android:text="0次下载"
                             android:textColor="@android:color/white" />
 
                         <com.funo.appmarket.view.RatingView
@@ -96,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="应用类型：启蒙教育"
+                android:text="应用类型："
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="应用大小：3.5M"
+                android:text="应用大小：0.0M"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
@@ -123,7 +123,7 @@
                 android:id="@+id/update_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="更新时间：2016-6-1"
+                android:text="更新时间："
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
         </LinearLayout>

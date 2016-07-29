@@ -1,10 +1,13 @@
 package com.funo.appmarket.model;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
+
+import android.text.TextUtils;
 
 @Table(name = "AppInfo")
 public class AppModel implements Serializable {
@@ -141,6 +144,18 @@ public class AppModel implements Serializable {
 	}
 
 	public String getDownnum() {
+		if (!TextUtils.isEmpty(downnum)) {
+			try {
+				int download_num = Integer.parseInt(downnum);
+				if (download_num > 10000) {
+					return download_num / 10000.0 + "万";
+				} else {
+					return download_num + "次";
+				}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
 		return downnum;
 	}
 
@@ -221,7 +236,9 @@ public class AppModel implements Serializable {
 	}
 
 	public float getAppSize() {
-		return appSize;
+		DecimalFormat decimalFormat = new DecimalFormat();
+		decimalFormat.setMaximumFractionDigits(2);
+		return Float.valueOf(decimalFormat.format(appSize / 1024));
 	}
 
 	public void setAppSize(float appSize) {

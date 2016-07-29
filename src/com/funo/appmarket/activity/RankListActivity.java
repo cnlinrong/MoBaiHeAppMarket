@@ -8,6 +8,7 @@ import com.funo.appmarket.util.AnimationUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -23,20 +24,43 @@ public class RankListActivity extends BaseActivity {
 	
 	private TextView btn_hot;
 	private TextView btn_new;
+	private View search;
+	private TextView pager_bar;
 	
 	private ViewPager rankListViewPager;
 	private RankListViewPagerAdapter rankListViewPagerAdapter;
 	
-	private View search;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_rank_list);
 		
+		pager_bar = (TextView) findViewById(R.id.pager_bar);
+		
 		rankListViewPager = (ViewPager) findViewById(R.id.rankListViewPager);
 		rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0);
+		pager_bar.setText("1/" + rankListViewPagerAdapter.getCount());
+		rankListViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				pager_bar.setText((position + 1) + "/" + rankListViewPagerAdapter.getCount());
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				
+			}
+			
+		});
 		rankListViewPager.setAdapter(rankListViewPagerAdapter);
 		
 		search = findViewById(R.id.search);
@@ -81,7 +105,9 @@ public class RankListActivity extends BaseActivity {
 				btn_hot.setTextSize(22);
 				btn_new.setTextSize(17);
 				
-				refreshData(0);
+				rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0);
+				rankListViewPager.setAdapter(rankListViewPagerAdapter);
+				pager_bar.setText("1/" + rankListViewPagerAdapter.getCount());
 			}
 			
 		});
@@ -106,18 +132,13 @@ public class RankListActivity extends BaseActivity {
 				btn_hot.setTextSize(17);
 				btn_new.setTextSize(22);
 				
-				refreshData(1);
+				rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 1);
+				rankListViewPager.setAdapter(rankListViewPagerAdapter);
+				pager_bar.setText("1/" + rankListViewPagerAdapter.getCount());
 			}
 			
 		});
 		
 	}
 
-	/**
-	 * @param orderType 根据最热或最新排序 0:最热 1:最新
-	 */
-	private void refreshData(int orderType) {
-		
-	}
-	
 }

@@ -76,7 +76,8 @@ public class MainActivity extends BaseActivity {
 
 		setContentView(R.layout.activity_main);
 
-		templateUsedId = sys_sp.getInt("templateUsedId", 1);
+//		templateUsedId = sys_sp.getInt("templateUsedId", 1);
+		templateUsedId = 2;
 		
 		initView();
 

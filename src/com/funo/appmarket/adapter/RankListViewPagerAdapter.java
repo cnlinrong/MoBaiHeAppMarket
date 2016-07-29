@@ -10,7 +10,7 @@ import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
 import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +34,8 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 	private int orderType;
 	
 	private View mOldView;
+	
+	private int pageSize = 15;
 	
 	public RankListViewPagerAdapter(FragmentManager fm, Context context, int pageCount, int orderType) {
 		super(fm);
@@ -63,6 +65,7 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 			this.position = position;
 		}
 		
+		@SuppressLint("InflateParams")
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_apps_view_pager, null);
@@ -99,8 +102,8 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 			
 			GetTopAppParam getTopAppParam = new GetTopAppParam();
 			getTopAppParam.orderType = orderType;
-			getTopAppParam.pageSize = 15;
-			getTopAppParam.currentPage = 1;
+			getTopAppParam.pageSize = pageSize;
+			getTopAppParam.currentPage = position + 1;
 			getTopAppService.getTopApp(getTopAppParam,  new GetTopAppCallback() {
 				
 				@Override

@@ -3,6 +3,7 @@ package com.funo.appmarket.app;
 import org.xutils.DbManager;
 import org.xutils.x;
 
+import com.funo.appmarket.constant.CommonData;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import android.app.Application;
@@ -20,7 +21,7 @@ public class MyApplication extends Application {
 
 		myApplication = this;
 
-		CrashReport.initCrashReport(getApplicationContext(), "900037894", true);
+		CrashReport.initCrashReport(getApplicationContext(), CommonData.BUGLY_APP_ID, true);
 
 		x.Ext.init(this);// xutils 初始化
 		daoConfig = new DbManager.DaoConfig().setDbName("mobaihe.db")// 创建数据库的名称

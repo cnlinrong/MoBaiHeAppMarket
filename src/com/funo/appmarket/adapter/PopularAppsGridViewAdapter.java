@@ -57,7 +57,7 @@ public class PopularAppsGridViewAdapter extends BaseAdapter {
 		appName.setText(appBean.getAppName());
 		convertView.setBackgroundColor(CommonUtils.getRandomColor());
 		ratingView.setScore(appBean.getScore());
-		size_downloadnum.setText(appBean.getAppSize() + "MB | " + appBean.getDownnum() + "万");
+		size_downloadnum.setText(appBean.getAppSize() + "MB | " + appBean.getDownnum());
 		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
 		return convertView;
 	}

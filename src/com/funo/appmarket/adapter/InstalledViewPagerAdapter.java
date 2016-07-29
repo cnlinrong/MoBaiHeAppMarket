@@ -29,10 +29,12 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 	
 	private View mOldView;
 	
-	public InstalledViewPagerAdapter(FragmentManager fm, int pageCount) {
+	private int pageSize = 15;
+	
+	public InstalledViewPagerAdapter(FragmentManager fm) {
 		super(fm);
 		
-		this.pageCount = pageCount;
+		this.pageCount = AppModelDB.getInstalledAppsPageCount(pageSize);
 	}
 
 	@Override
@@ -87,7 +89,7 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 				
 			});
 			
-			List<AppModel> appModels = AppModelDB.getAllInstalledApps();
+			List<AppModel> appModels = AppModelDB.getAllInstalledApps(position + 1, pageSize);
 			if (appModels != null) {
 				final InstalledAppsGridViewAdapter installedAppsGridViewAdapter = new InstalledAppsGridViewAdapter(getContext(), appModels);
 				installed_list.setAdapter(installedAppsGridViewAdapter);

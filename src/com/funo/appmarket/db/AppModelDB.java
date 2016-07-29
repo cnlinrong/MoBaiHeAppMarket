@@ -37,6 +37,39 @@ public class AppModelDB {
 	}
 
 	/**
+	 * 分页查询所有已安装应用
+	 * 
+	 * @param pageNo
+	 * @param pageSize
+	 * 
+	 * @return
+	 */
+	public static List<AppModel> getAllInstalledApps(int pageNo, int pageSize) {
+		List<AppModel> appModels = null;
+		try {
+			appModels = getDbManager().selector(AppModel.class).where("installed_flag", "=", true)
+					.orderBy("createdDate", true).limit(pageSize).offset((pageNo - 1) * pageSize).findAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			CrashReport.postCatchedException(e);
+		}
+		return appModels;
+	}
+
+	/**
+	 * 获取已安装应用的总页数
+	 * 
+	 * @param pageSize
+	 * 
+	 * @return
+	 */
+	public static int getInstalledAppsPageCount(int pageSize) {
+		List<AppModel> appModels = getAllInstalledApps();
+		return (int) Math.ceil((float) appModels.size() / pageSize);
+	}
+	
+	/**
 	 * 查询所有应用
 	 * 
 	 * @return
@@ -86,8 +119,7 @@ public class AppModelDB {
 	public static List<AppModel> findAppsByPinyin(String pinyin) {
 		List<AppModel> appModels = null;
 		try {
-			appModels = getDbManager().selector(AppModel.class).where("appPy", "like", "%" + pinyin + "%")
-					.findAll();
+			appModels = getDbManager().selector(AppModel.class).where("appPy", "like", "%" + pinyin + "%").findAll();
 		} catch (DbException e) {
 			e.printStackTrace();
 
@@ -95,7 +127,7 @@ public class AppModelDB {
 		}
 		return appModels;
 	}
-	
+
 	/**
 	 * 保存应用信息
 	 * 

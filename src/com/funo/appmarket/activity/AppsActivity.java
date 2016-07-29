@@ -8,6 +8,7 @@ import com.funo.appmarket.util.AnimationUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -23,9 +24,9 @@ public class AppsActivity extends BaseActivity {
 	
 	private TextView btn_hot;
 	private TextView btn_new;
-	
 	private TextView sub_parent_label;
 	private View search;
+	private TextView pager_bar;
 	
 	private ViewPager appsViewPager;
 	private AppsViewPagerAdapter appsViewPagerAdapter;
@@ -33,12 +34,14 @@ public class AppsActivity extends BaseActivity {
 	private String subParentLabel;
 	private String subParentId;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_apps);
 		
+		pager_bar = (TextView) findViewById(R.id.pager_bar);		
 		sub_parent_label = (TextView) findViewById(R.id.sub_parent_label);
 		
 		Intent intent = getIntent();
@@ -49,6 +52,25 @@ public class AppsActivity extends BaseActivity {
 		
 		appsViewPager = (ViewPager) findViewById(R.id.appsViewPager);
 		appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0, subParentId);
+		pager_bar.setText("1/" + appsViewPagerAdapter.getCount());
+		appsViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				pager_bar.setText((position + 1) + "/" + appsViewPagerAdapter.getCount());
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				
+			}
+			
+		});
 		appsViewPager.setAdapter(appsViewPagerAdapter);
 		
 		search = findViewById(R.id.search);
@@ -93,7 +115,9 @@ public class AppsActivity extends BaseActivity {
 				btn_hot.setTextSize(22);
 				btn_new.setTextSize(17);
 				
-				refreshData(0);
+				appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 0, subParentId);
+				appsViewPager.setAdapter(appsViewPagerAdapter);
+				pager_bar.setText("1/" + appsViewPagerAdapter.getCount());
 			}
 			
 		});
@@ -118,17 +142,12 @@ public class AppsActivity extends BaseActivity {
 				btn_hot.setTextSize(17);
 				btn_new.setTextSize(22);
 				
-				refreshData(1);
+				appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), 2, 1, subParentId);
+				appsViewPager.setAdapter(appsViewPagerAdapter);
+				pager_bar.setText("1/" + appsViewPagerAdapter.getCount());
 			}
 			
 		});
-	}
-
-	/**
-	 * @param orderType 根据最热或最新排序 0:最热 1:最新
-	 */
-	private void refreshData(int orderType) {
-		
 	}
 	
 }

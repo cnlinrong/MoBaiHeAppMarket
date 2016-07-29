@@ -10,7 +10,7 @@ import com.funo.appmarket.business.SearchAppByTypeService.SearchAppByTypeCallbac
 import com.funo.appmarket.business.define.ISearchAppByTypeService.SearchAppByTypeParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,6 +35,8 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 	private String subParentId;
 	
 	private View mOldView;
+	
+	private int pageSize = 15;
 	
 	public AppsViewPagerAdapter(FragmentManager fm, Context context, int pageCount, int orderType, String subParentId) {
 		super(fm);
@@ -65,6 +67,7 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 			this.position = position;
 		}
 		
+		@SuppressLint("InflateParams")
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_apps_view_pager, null);
@@ -102,8 +105,8 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 			SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam();
 			searchAppByTypeParam.smallTypeId = subParentId;
 			searchAppByTypeParam.orderType = orderType;
-			searchAppByTypeParam.pageSize = 15;
-			searchAppByTypeParam.currentPage = 1;
+			searchAppByTypeParam.pageSize = pageSize;
+			searchAppByTypeParam.currentPage = position + 1;
 			searchAppByTypeService.searchAppByType(searchAppByTypeParam, new SearchAppByTypeCallback() {
 				
 				@Override

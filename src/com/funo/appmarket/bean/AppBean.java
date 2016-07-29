@@ -1,6 +1,9 @@
 package com.funo.appmarket.bean;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+
+import android.text.TextUtils;
 
 public class AppBean implements Serializable {
 
@@ -78,6 +81,18 @@ public class AppBean implements Serializable {
 	}
 
 	public String getDownnum() {
+		if (!TextUtils.isEmpty(downnum)) {
+			try {
+				int download_num = Integer.parseInt(downnum);
+				if (download_num > 10000) {
+					return download_num / 10000.0 + "万";
+				} else {
+					return download_num + "次";
+				}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
 		return downnum;
 	}
 
@@ -158,7 +173,9 @@ public class AppBean implements Serializable {
 	}
 
 	public float getAppSize() {
-		return appSize;
+		DecimalFormat decimalFormat = new DecimalFormat();
+		decimalFormat.setMaximumFractionDigits(2);
+		return Float.valueOf(decimalFormat.format(appSize / 1024));
 	}
 
 	public void setAppSize(float appSize) {

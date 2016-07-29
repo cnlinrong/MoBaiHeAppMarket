@@ -8,9 +8,11 @@ import com.funo.appmarket.util.AnimationUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.widget.TextView;
 
 public class InstalledActivity extends BaseActivity {
 
@@ -20,19 +22,42 @@ public class InstalledActivity extends BaseActivity {
 	private float targetHeight = 1.4f;
 	private long duration = 200;
 	
+	private TextView pager_bar;
 	private View search;
 	
 	private ViewPager installedViewPager;
 	private InstalledViewPagerAdapter installedViewPagerAdapter;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_installed);
 		
+		pager_bar = (TextView) findViewById(R.id.pager_bar);
+		
 		installedViewPager = (ViewPager) findViewById(R.id.installedViewPager);
-		installedViewPagerAdapter = new InstalledViewPagerAdapter(getSupportFragmentManager(), 2);
+		installedViewPagerAdapter = new InstalledViewPagerAdapter(getSupportFragmentManager());
+		pager_bar.setText("1/" + installedViewPagerAdapter.getCount());
+		installedViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				pager_bar.setText((position + 1) + "/" + installedViewPagerAdapter.getCount());
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				
+			}
+			
+		});
 		installedViewPager.setAdapter(installedViewPagerAdapter);
 		
 		search = findViewById(R.id.search);
