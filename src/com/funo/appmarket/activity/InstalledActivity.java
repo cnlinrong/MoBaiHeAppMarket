@@ -38,8 +38,6 @@ public class InstalledActivity extends BaseActivity {
 		pager_bar = (TextView) findViewById(R.id.pager_bar);
 		
 		installedViewPager = (ViewPager) findViewById(R.id.installedViewPager);
-		installedViewPagerAdapter = new InstalledViewPagerAdapter(getSupportFragmentManager());
-		pager_bar.setText("1/" + installedViewPagerAdapter.getCount());
 		installedViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
@@ -58,7 +56,6 @@ public class InstalledActivity extends BaseActivity {
 			}
 			
 		});
-		installedViewPager.setAdapter(installedViewPagerAdapter);
 		
 		search = findViewById(R.id.search);
 		search.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -82,13 +79,29 @@ public class InstalledActivity extends BaseActivity {
 			
 		});
 		
-		installedViewPager.requestFocus();
+		installedViewPager.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				installedViewPager.requestFocus();
+			}
+			
+		});
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
+		refreshData();
+	}
+	
+	private void refreshData() {
+		installedViewPagerAdapter = new InstalledViewPagerAdapter(getSupportFragmentManager(), getContext());
+		if (installedViewPagerAdapter.getCount() > 0) {
+			pager_bar.setText("1/" + installedViewPagerAdapter.getCount());
+		}
+		installedViewPager.setAdapter(installedViewPagerAdapter);
 	}
 	
 }

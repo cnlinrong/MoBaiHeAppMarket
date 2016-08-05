@@ -32,7 +32,6 @@
                         android:id="@+id/app_logo"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:src="@drawable/icon"
                         app:riv_border_width="0dip"
                         app:riv_corner_radius="25dip"
                         app:riv_mutate_background="true"
@@ -205,9 +204,9 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/app_imgs"
                 android:layout_width="match_parent"
+                android:background="#55000000"
                 android:layout_height="270dp"
-                android:layout_marginTop="60dp"
-                android:background="#ddd" />
+                android:layout_marginTop="60dp" />
 
             <com.funo.appmarket.view.SliderIndicatorBarView
                 android:id="@+id/slider_bar"
@@ -223,7 +222,6 @@
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="20dp"
                 android:lineSpacingExtra="3dp"
-                android:text="《愤怒的小鸟》是由索尼影业出品的动画电影，由费格尓·雷利、克雷·卡提斯指导，乔恩·维迪编剧，杰森·苏戴奇斯、乔什·盖德、丹尼·麦克布耐德等参与配音。该片改编自同名手游，讲述了一群不会飞的小鸟挤在一座热带小岛上..."
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
         </LinearLayout>

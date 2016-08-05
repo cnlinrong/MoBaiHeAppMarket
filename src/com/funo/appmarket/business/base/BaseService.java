@@ -49,19 +49,19 @@ public class BaseService {
 		}
 	}
 	
-	protected <T extends BaseBusinessBean<?>> T handleResponse(Response<ResponseBody> response, Class<T> clz) {
+	protected <T extends BaseBusinessBean<?>> T handleResponse(Response<ResponseBody> response, Class<T> clz, boolean showToast) {
 		T t = null;
 		try {
 			String json = response.body().string();
-//			Log.e("JSON", json);
+			Log.e("JSON", json);
 			t = gson.fromJson(json, clz);
 			if (!TextUtils.equals(REQUEST_CODE_SUCCESS, t.getCode())) {
-				reportError(SHOW_ERROR_TOAST, t.getMsg());
+				reportError(showToast, t.getMsg());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			reportError(SHOW_ERROR_TOAST, e.getMessage());
+			reportError(showToast, e.getMessage());
 		}
 		return t;
 	}

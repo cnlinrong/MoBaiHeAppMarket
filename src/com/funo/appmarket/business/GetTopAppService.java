@@ -38,7 +38,7 @@ public class GetTopAppService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				GetTopAppBusinessBean getTopAppBusinessBean = handleResponse(response, GetTopAppBusinessBean.class);
+				GetTopAppBusinessBean getTopAppBusinessBean = handleResponse(response, GetTopAppBusinessBean.class, SHOW_ERROR_TOAST);
 				if (getTopAppBusinessBean != null) {
 					if (getTopAppCallback != null) {
 						getTopAppCallback.doCallback(getTopAppBusinessBean.getResponseData(), getTopAppBusinessBean.getTotalPage());

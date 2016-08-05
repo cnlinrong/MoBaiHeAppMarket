@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/holo_purple" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
         android:layout_width="0dp"
@@ -16,7 +15,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginRight="50dp"
-            android:src="@drawable/icon"
             app:riv_border_width="0dip"
             app:riv_corner_radius="25dip"
             app:riv_mutate_background="true"
@@ -38,7 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:text="室内设计"
             android:textColor="@android:color/white"
             android:textSize="17sp" />
 
@@ -51,8 +48,7 @@
             android:id="@+id/size_downloadnum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="40MB | 45万" />
+            android:layout_marginTop="5dp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -38,7 +38,7 @@ public class RecAppInfoService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				RecAppInfoBusinessBean recAppInfoBusinessBean = handleResponse(response, RecAppInfoBusinessBean.class);
+				RecAppInfoBusinessBean recAppInfoBusinessBean = handleResponse(response, RecAppInfoBusinessBean.class, SHOW_ERROR_TOAST);
 				if (recAppInfoBusinessBean != null) {
 					if (getLawyersCallback != null) {
 						getLawyersCallback.doCallback(recAppInfoBusinessBean.getResponseData());

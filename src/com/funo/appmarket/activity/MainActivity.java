@@ -24,8 +24,10 @@ import com.funo.appmarket.datasource.HomeTemplate1;
 import com.funo.appmarket.datasource.HomeTemplate2;
 import com.funo.appmarket.datasource.HomeTemplate3;
 import com.funo.appmarket.datasource.IHomeTemplate;
+import com.funo.appmarket.db.NavModelDB;
 import com.funo.appmarket.util.AnimationUtils;
 import com.funo.appmarket.util.CommonUtils;
+import com.funo.appmarket.util.ModelBeanConverter;
 import com.gridbuilder.GridBuilder;
 import com.gridbuilder.GridItem;
 import com.gridbuilder.GridViewHolder;
@@ -74,46 +76,15 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		appBigTypeService = new AppBigTypeService(getContext());
+		recAppInfoService = new RecAppInfoService(getContext());
+		
 		setContentView(R.layout.activity_main);
 
-//		templateUsedId = sys_sp.getInt("templateUsedId", 1);
-		templateUsedId = 2;
+		templateUsedId = sys_sp.getInt("templateUsedId", 1);
+//		templateUsedId = 2;
 		
 		initView();
-
-		appBigTypeService = new AppBigTypeService(getContext());
-		AppBigTypeParam appBigTypeParam = new AppBigTypeParam();
-		appBigTypeParam.bigTypeValue = null;
-		appBigTypeService.app_bigType(appBigTypeParam, new AppBigTypeCallback() {
-			
-			@Override
-			public void doCallback(List<NavItem> appBigTypes) {
-				if (appBigTypes != null) {
-					navItems = appBigTypes;
-					if (navListAdapter != null) {
-						navListAdapter.notifyDataSetChanged();
-					}
-				}
-			}
-			
-		});
-		
-		recAppInfoService = new RecAppInfoService(getContext());
-		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
-		recAppInfoReqParam.type = 0;// 0：首页推荐 1：分类页推荐
-		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
-		recAppInfoReqParam.currentPage = 1;
-		recAppInfoService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
-
-			@Override
-			public void doCallback(List<AppBean> appData) {
-				if (appData != null) {
-					appBeans = appData;
-				}
-				refreshGridData();
-			}
-
-		});
 
 		search = findViewById(R.id.search);
 		search.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -207,21 +178,103 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void run() {
+				search.setFocusable(true);
+				search.setFocusableInTouchMode(true);
+				ranklist.setFocusable(true);
+				ranklist.setFocusableInTouchMode(true);
+				installed.setFocusable(true);
+				installed.setFocusableInTouchMode(true);
+				
+				gl_gridlayout.setFocusable(true);
+				gl_gridlayout.setFocusableInTouchMode(true);
+				
+				BorderView border = new BorderView(getContext());
+				border.setBackgroundResource(R.drawable.test_rectangle);
+				border.attachTo(gl_gridlayout);
+				
 				navList.requestFocus();
 			}
 
 		});
+		
+		initData();
 	}
 
 	private void initView() {
 		hsv = (TvHorizontalScrollView) findViewById(R.id.hsv);
 		gl_gridlayout = (GridLayout) findViewById(R.id.gl_gridlayout);
-
-		BorderView border = new BorderView(this);
-		border.setBackgroundResource(R.drawable.test_rectangle);
-		border.attachTo(gl_gridlayout);
 	}
 
+	private void initData() {
+		boolean isTypeChage = sys_sp.getBoolean("isTypeChage", true);
+		if (isTypeChage) {
+			AppBigTypeParam appBigTypeParam = new AppBigTypeParam();
+			appBigTypeParam.bigTypeValue = null;
+			appBigTypeService.app_bigType(appBigTypeParam, new AppBigTypeCallback() {
+				
+				@Override
+				public void doCallback(List<NavItem> appBigTypes) {
+					if (appBigTypes != null) {
+						navItems = appBigTypes;
+						
+						NavModelDB.batchInsertNavItems(ModelBeanConverter.navBeans2Models(navItems, -1));
+					}
+					if (navItems == null || navItems.isEmpty()) {
+						navItems = new ArrayList<NavItem>();
+						navItems.add(new NavItem());
+					}
+					
+					if (navListAdapter != null) {
+						navListAdapter.setData(navItems);
+					}
+				}
+				
+			});
+		} else {
+			this.navItems = ModelBeanConverter.navModels2Beans(NavModelDB.getNavItemsByParentId(-1));
+			if (this.navItems == null || this.navItems.isEmpty()) {
+				AppBigTypeParam appBigTypeParam = new AppBigTypeParam();
+				appBigTypeParam.bigTypeValue = null;
+				appBigTypeService.app_bigType(appBigTypeParam, new AppBigTypeCallback() {
+					
+					@Override
+					public void doCallback(List<NavItem> appBigTypes) {
+						if (appBigTypes != null) {
+							navItems = appBigTypes;
+							
+							NavModelDB.batchInsertNavItems(ModelBeanConverter.navBeans2Models(navItems, -1));
+						}
+						if (navItems == null || navItems.isEmpty()) {
+							navItems = new ArrayList<NavItem>();
+							navItems.add(new NavItem());
+						}
+						
+						if (navListAdapter != null) {
+							navListAdapter.setData(navItems);
+						}
+					}
+					
+				});
+			}
+		}
+		
+		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
+		recAppInfoReqParam.type = 0;// 0：首页推荐 1：分类页推荐
+		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
+		recAppInfoReqParam.currentPage = 1;
+		recAppInfoService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
+
+			@Override
+			public void doCallback(List<AppBean> appData) {
+				if (appData != null) {
+					appBeans = appData;
+				}
+				refreshGridData();
+			}
+
+		});
+	}
+	
 	private void refreshGridData() {
 		hsv.post(new Runnable() {
 
@@ -258,7 +311,7 @@ public class MainActivity extends BaseActivity {
 						View v = null;
 						if (null == convertView) {
 							if (gridItem.getView_type() == 0) {
-								v = View.inflate(getContext(), R.layout.gridlayout_item, null);
+								v = View.inflate(getContext(), R.layout.gridlayout_item1, null);
 							} else if (gridItem.getView_type() == 1) {
 								v = View.inflate(getContext(), R.layout.gridlayout_item2, null);
 							} else if (gridItem.getView_type() == 2) {

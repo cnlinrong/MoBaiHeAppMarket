@@ -44,6 +44,8 @@ public class AppsActivity extends BaseActivity {
 	
 	private int pageSize = 15;
 	
+	private boolean isHot = true;
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,10 +123,14 @@ public class AppsActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				btn_hot.setTextSize(22);
-				btn_new.setTextSize(17);
-				
-				refreshData(0);
+				if (!isHot) {
+					isHot = true;
+					
+					btn_hot.setTextSize(22);
+					btn_new.setTextSize(17);
+					
+					refreshData(0);
+				}
 			}
 			
 		});
@@ -146,17 +152,28 @@ public class AppsActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				btn_hot.setTextSize(17);
-				btn_new.setTextSize(22);
-				
-				refreshData(1);
+				if (isHot) {
+					isHot = false;
+					
+					btn_hot.setTextSize(17);
+					btn_new.setTextSize(22);
+					
+					refreshData(1);
+				}
 			}
 			
 		});
 		
 		refreshData(0);
 		
-		appsViewPager.requestFocus();
+		appsViewPager.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				appsViewPager.requestFocus();
+			}
+			
+		});
 	}
 	
 	private void refreshData(int orderType) {
@@ -172,7 +189,9 @@ public class AppsActivity extends BaseActivity {
 				if (appBeans != null) {
 					appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), pageCount, 0, subParentId);
 					appsViewPager.setAdapter(appsViewPagerAdapter);
-					pager_bar.setText("1/" + pageCount);
+					if (pageCount > 0) {
+						pager_bar.setText("1/" + pageCount);
+					}
 				}
 			}
 			

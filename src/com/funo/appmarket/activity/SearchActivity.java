@@ -9,8 +9,8 @@ import com.funo.appmarket.adapter.KeyboardGridViewAdapter;
 import com.funo.appmarket.adapter.PopularAppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.business.RecAppInfoService;
-import com.funo.appmarket.business.SearchAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
+import com.funo.appmarket.business.SearchAppInfoService;
 import com.funo.appmarket.business.SearchAppInfoService.SearchAppInfoCallback;
 import com.funo.appmarket.business.base.BaseService;
 import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
@@ -27,7 +27,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnLayoutChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -82,6 +81,30 @@ public class SearchActivity extends BaseActivity {
         label_tv = (TextView) findViewById(R.id.label_tv);
         
 		keyboard = (GridView) findViewById(R.id.keyboard);
+		keyboard.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+			
+		});
+		keyboard.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					mainUpView1.setUnFocusView(mOldView);
+					mainUpView1.setVisibility(View.GONE);
+				}
+			}
+			
+		});
 		popular_apps = (GridView) findViewById(R.id.popular_apps);
 		popular_apps.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -91,11 +114,11 @@ public class SearchActivity extends BaseActivity {
 				 * 这里注意要加判断是否为NULL.
 				 * 因为在重新加载数据以后会出问题.
 				 */
-				if (view != null) {
+				if (view != null && parent.isFocused() && mOldView != view) {
 					view.bringToFront();
 					mainUpView1.setFocusView(view, mOldView, 1.05f);
+					mOldView = view;
 				}
-				mOldView = view;
 			}
 
 			@Override
@@ -182,7 +205,9 @@ public class SearchActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				search_input.setText(null);
+				if (!TextUtils.isEmpty(search_input.getText())) {
+					search_input.setText(null);
+				}
 			}
 			
 		});
@@ -220,19 +245,6 @@ public class SearchActivity extends BaseActivity {
 			}
 			
 		});
-		
-		AppBean appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
-		appBean = new AppBean("室内设计", "暂无内容");
-		appData.add(appBean);
 		
 		popularAppsGridViewAdapter = new PopularAppsGridViewAdapter(getContext(), appData);
 		popular_apps.setAdapter(popularAppsGridViewAdapter);

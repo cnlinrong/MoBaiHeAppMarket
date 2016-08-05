@@ -15,6 +15,7 @@ import com.funo.appmarket.db.AppModelDB;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemProperties;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -28,9 +29,15 @@ public class LoadingActivity extends BaseActivity {
 	private StatusChangeNotifyService statusChangeNotifyService;
 	private SyncEquipmentInfoService syncEquipmentInfoService;
 	
+	private String product_model;
+	private String product_serialnum;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		product_model = SystemProperties.get("ro.product.model", "");
+		product_serialnum = SystemProperties.get("ro.product.stb.serialnum", "");
 		
 		AppModelDB.clearUninstalledApps();
 		
@@ -55,15 +62,8 @@ public class LoadingActivity extends BaseActivity {
 		
 		syncEquipmentInfoService = new SyncEquipmentInfoService(getContext());
 		SyncEquipmentInfoParam syncEquipmentInfoParam = new SyncEquipmentInfoParam();
-		syncEquipmentInfoParam.eqNo = "1";
-		syncEquipmentInfoService.syncEquipmentInfo(syncEquipmentInfoParam, new SyncEquipmentInfoCallback() {
-			
-			@Override
-			public void doCallback() {
-				
-			}
-			
-		});
+		syncEquipmentInfoParam.eqNo = product_model + product_serialnum;
+		syncEquipmentInfoService.syncEquipmentInfo(syncEquipmentInfoParam, null);
 		
 		setContentView(R.layout.activity_loading);
 		

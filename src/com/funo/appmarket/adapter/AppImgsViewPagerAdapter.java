@@ -51,7 +51,13 @@ public class AppImgsViewPagerAdapter extends FragmentPagerAdapter {
 
 		int position;
 		
+		public MyFragment() {
+			super();
+		}
+		
 		public MyFragment(int position) {
+			super();
+			
 			this.position = position;
 		}
 		

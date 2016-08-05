@@ -26,7 +26,9 @@ public class NavListAdapter extends BaseAdapter {
 	
 	public NavListAdapter(Context context, List<NavItem> navItems, int itemHeight) {
 		this.mContext = context;
-		this.navItems = navItems;
+		if (navItems != null) {
+			this.navItems = navItems;
+		}
 		this.itemHeight = itemHeight;
 	}
 	
@@ -59,4 +61,9 @@ public class NavListAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	public void setData(List<NavItem> navItems) {
+		this.navItems = navItems;
+		notifyDataSetChanged();
+	}
+	
 }

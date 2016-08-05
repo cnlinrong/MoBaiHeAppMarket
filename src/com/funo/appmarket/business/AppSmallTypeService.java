@@ -38,7 +38,7 @@ public class AppSmallTypeService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				AppSmallTypeBusinessBean appSmallTypeBusinessBean = handleResponse(response, AppSmallTypeBusinessBean.class);
+				AppSmallTypeBusinessBean appSmallTypeBusinessBean = handleResponse(response, AppSmallTypeBusinessBean.class, SHOW_ERROR_TOAST);
 				if (appSmallTypeBusinessBean != null) {
 					if (appSmallTypeCallback != null) {
 						appSmallTypeCallback.doCallback(appSmallTypeBusinessBean.getResponseData());

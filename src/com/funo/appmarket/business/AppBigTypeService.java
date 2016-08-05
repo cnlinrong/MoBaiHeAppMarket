@@ -38,7 +38,7 @@ public class AppBigTypeService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				AppBigTypeBusinessBean appBigTypeBusinessBean = handleResponse(response, AppBigTypeBusinessBean.class);
+				AppBigTypeBusinessBean appBigTypeBusinessBean = handleResponse(response, AppBigTypeBusinessBean.class, SHOW_ERROR_TOAST);
 				if (appBigTypeBusinessBean != null) {
 					if (appBigTypeCallback != null) {
 						appBigTypeCallback.doCallback(appBigTypeBusinessBean.getResponseData());

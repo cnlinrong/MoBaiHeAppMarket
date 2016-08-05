@@ -38,7 +38,7 @@ public class SearchAppInfoService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				SearchAppInfoBusinessBean searchAppInfoBusinessBean = handleResponse(response, SearchAppInfoBusinessBean.class);
+				SearchAppInfoBusinessBean searchAppInfoBusinessBean = handleResponse(response, SearchAppInfoBusinessBean.class, SHOW_ERROR_TOAST);
 				if (searchAppInfoBusinessBean != null) {
 					if (searchAppInfoCallback != null) {
 						searchAppInfoCallback.doCallback(searchAppInfoBusinessBean.getResponseData());

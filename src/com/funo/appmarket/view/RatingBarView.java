@@ -147,4 +147,10 @@ public class RatingBarView extends LinearLayout implements OnClickListener {
 		
 	}
 	
+	public void reset() {
+		removeAllViews();
+		init();
+		focused_index = 1;
+	}
+	
 }

@@ -35,7 +35,7 @@ public class SyncAppDownService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				BaseBusinessBean<?> baseBusinessBean = handleResponse(response, BaseBusinessBean.class);
+				BaseBusinessBean<?> baseBusinessBean = handleResponse(response, BaseBusinessBean.class, SHOW_ERROR_TOAST);
 				if (baseBusinessBean != null) {
 					if (syncAppDownCallback != null) {
 						syncAppDownCallback.doCallback();

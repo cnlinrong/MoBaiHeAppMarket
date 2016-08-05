@@ -38,7 +38,7 @@ public class SearchAppByTypeService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				SearchAppByTypeBusinessBean searchAppByTypeBusinessBean = handleResponse(response, SearchAppByTypeBusinessBean.class);
+				SearchAppByTypeBusinessBean searchAppByTypeBusinessBean = handleResponse(response, SearchAppByTypeBusinessBean.class, SHOW_ERROR_TOAST);
 				if (searchAppByTypeBusinessBean != null) {
 					if (searchAppByTypeCallback != null) {
 						searchAppByTypeCallback.doCallback(searchAppByTypeBusinessBean.getResponseData(), searchAppByTypeBusinessBean.getTotalPage());

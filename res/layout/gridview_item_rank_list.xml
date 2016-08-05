@@ -17,7 +17,6 @@
             android:id="@+id/appLogo"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/icon"
             app:riv_border_width="0dip"
             app:riv_corner_radius="15dip"
             app:riv_mutate_background="true"
@@ -29,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:text="室内设计"
             android:textColor="@android:color/white"
             android:textSize="17sp" />
 
@@ -43,9 +41,7 @@
         android:id="@+id/order_tv"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:background="@drawable/order_img_01"
         android:padding="10dp"
-        android:text="1"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textStyle="bold" />

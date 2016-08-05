@@ -4,12 +4,16 @@ import java.util.List;
 
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.AppDetailActivity;
+import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.business.InstalledAppInfoService;
+import com.funo.appmarket.business.InstalledAppInfoService.InstalledAppInfoCallback;
+import com.funo.appmarket.business.define.IInstalledAppInfoService.InstalledAppInfoParam;
 import com.funo.appmarket.db.AppModelDB;
 import com.funo.appmarket.model.AppModel;
-import com.funo.appmarket.util.ModelBeanConverter;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,9 +21,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLayoutChangeListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -33,10 +37,14 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 	
 	private int pageSize = 15;
 	
-	public InstalledViewPagerAdapter(FragmentManager fm) {
+	private InstalledAppInfoService installedAppInfoService;
+	
+	public InstalledViewPagerAdapter(FragmentManager fm, Context context) {
 		super(fm);
 		
 		this.pageCount = AppModelDB.getInstalledAppsPageCount(pageSize);
+		
+		installedAppInfoService = new InstalledAppInfoService(context);
 	}
 
 	@Override
@@ -52,6 +60,10 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 	class MyFragment extends Fragment {
 
 		int position;
+		
+		public MyFragment() {
+			super();
+		}
 		
 		public MyFragment(int position) {
 			this.position = position;
@@ -77,7 +89,7 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 					 * 这里注意要加判断是否为NULL.
 					 * 因为在重新加载数据以后会出问题.
 					 */
-					if (view != null) {
+					if (view != null && parent.isFocused()) {
 						view.bringToFront();
 						mainUpView1.setFocusView(view, mOldView, 1.1f);
 					}
@@ -104,19 +116,39 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 			});
 			
 			List<AppModel> appModels = AppModelDB.getAllInstalledApps(position + 1, pageSize);
-			if (appModels != null) {
-				final InstalledAppsGridViewAdapter installedAppsGridViewAdapter = new InstalledAppsGridViewAdapter(getContext(), appModels);
-				installed_list.setAdapter(installedAppsGridViewAdapter);
-				installed_list.setOnItemClickListener(new OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-						Intent intent = new Intent(getContext(), AppDetailActivity.class);
-						intent.putExtra("selectedApp",
-								ModelBeanConverter.appModel2Bean(installedAppsGridViewAdapter.getItem(position)));
-						startActivity(intent);
+			if (appModels != null && !appModels.isEmpty()) {
+				StringBuilder appIds = new StringBuilder();
+				for (int i = 0; i < appModels.size(); i++) {
+					if (i != appModels.size() - 1) {
+						appIds.append(appModels.get(i).getAppId() + ",");
+					} else {
+						appIds.append(appModels.get(i).getAppId() + "");
 					}
-
+				}
+				InstalledAppInfoParam installedAppInfoParam = new InstalledAppInfoParam();
+				installedAppInfoParam.appId = appIds.toString();
+				installedAppInfoParam.pageSize = Integer.MAX_VALUE;
+				installedAppInfoParam.currentPage = 1;
+				installedAppInfoService.installedAppInfo(installedAppInfoParam, new InstalledAppInfoCallback() {
+					
+					@Override
+					public void doCallback(List<AppBean> appBeans) {
+						if (appBeans != null) {
+							final InstalledAppsGridViewAdapter installedAppsGridViewAdapter = new InstalledAppsGridViewAdapter(getContext(), appBeans);
+							installed_list.setAdapter(installedAppsGridViewAdapter);
+							installed_list.setOnItemClickListener(new OnItemClickListener() {
+								
+								@Override
+								public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+									Intent intent = new Intent(getContext(), AppDetailActivity.class);
+									intent.putExtra("selectedApp", installedAppsGridViewAdapter.getItem(position));
+									startActivity(intent);
+								}
+								
+							});
+						}
+					}
+					
 				});
 			}
 			

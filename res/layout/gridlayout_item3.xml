@@ -14,7 +14,6 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_purple"
             android:gravity="center" >
 
             <LinearLayout
@@ -27,7 +26,6 @@
                     android:id="@+id/app_logo"
                     android:layout_width="77dp"
                     android:layout_height="77dp"
-                    android:src="@drawable/icon"
                     app:riv_border_width="0dip"
                     app:riv_corner_radius="25dip"
                     app:riv_mutate_background="true"
@@ -44,7 +42,6 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="多彩百科全书"
                     android:textColor="@android:color/white"
                     android:textSize="25sp" />
 
@@ -53,7 +50,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="童话故事里的"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
             </LinearLayout>

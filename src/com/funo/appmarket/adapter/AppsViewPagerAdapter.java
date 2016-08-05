@@ -66,6 +66,10 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 
 		int position;
 		
+		public MyFragment() {
+			super();
+		}
+		
 		public MyFragment(int position) {
 			this.position = position;
 		}
@@ -91,7 +95,7 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 					 * 这里注意要加判断是否为NULL.
 					 * 因为在重新加载数据以后会出问题.
 					 */
-					if (view != null) {
+					if (view != null && parent.isFocused()) {
 						view.bringToFront();
 						mainUpView1.setFocusView(view, mOldView, 1.1f);
 					}

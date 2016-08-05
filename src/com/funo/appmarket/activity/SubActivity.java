@@ -24,8 +24,10 @@ import com.funo.appmarket.datasource.HomeTemplate1;
 import com.funo.appmarket.datasource.HomeTemplate2;
 import com.funo.appmarket.datasource.HomeTemplate3;
 import com.funo.appmarket.datasource.IHomeTemplate;
+import com.funo.appmarket.db.NavModelDB;
 import com.funo.appmarket.util.AnimationUtils;
 import com.funo.appmarket.util.CommonUtils;
+import com.funo.appmarket.util.ModelBeanConverter;
 import com.gridbuilder.GridBuilder;
 import com.gridbuilder.GridItem;
 import com.gridbuilder.GridViewHolder;
@@ -39,8 +41,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -76,10 +78,13 @@ public class SubActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		appSmallTypeService = new AppSmallTypeService(getContext());
+		recAppInfoService = new RecAppInfoService(getContext());
+		
 		setContentView(R.layout.activity_sub);
 		
-//		templateUsedId = sys_sp.getInt("templateUsedId", 1);
-		templateUsedId = 3;
+		templateUsedId = sys_sp.getInt("templateUsedId", 1);
+//		templateUsedId = 3;
 		
 		Intent intent = getIntent();
 		parentLabel = intent.getStringExtra("parentLabel");
@@ -87,40 +92,6 @@ public class SubActivity extends BaseActivity {
 		
 		initView();
 
-		appSmallTypeService = new AppSmallTypeService(getContext());
-		AppSmallTypeParam appSmallTypeParam = new AppSmallTypeParam();
-		appSmallTypeParam.smallTypeValue = parentId;
-		appSmallTypeService.app_smallType(appSmallTypeParam, new AppSmallTypeCallback() {
-			
-			@Override
-			public void doCallback(List<NavItem> appSmallTypes) {
-				if (appSmallTypes != null) {
-					navItems = appSmallTypes;
-					if (navListAdapter != null) {
-						navListAdapter.notifyDataSetChanged();
-					}
-				}
-			}
-			
-		});
-		
-		recAppInfoService = new RecAppInfoService(getContext());
-		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
-		recAppInfoReqParam.type = 1;// 0：首页推荐 1：分类页推荐
-		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
-		recAppInfoReqParam.currentPage = 1;
-		recAppInfoService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
-
-			@Override
-			public void doCallback(List<AppBean> appData) {
-				if (appData != null) {
-					appBeans = appData;
-				}
-				refreshGridData();
-			}
-
-		});
-		
 		search = findViewById(R.id.search);
 		search.setOnFocusChangeListener(new OnFocusChangeListener() {
 			
@@ -171,10 +142,22 @@ public class SubActivity extends BaseActivity {
 
 			@Override
 			public void run() {
+				search.setFocusable(true);
+				search.setFocusableInTouchMode(true);
+				
+				gl_gridlayout.setFocusable(true);
+				gl_gridlayout.setFocusableInTouchMode(true);
+				
+				BorderView border = new BorderView(getContext());
+				border.setBackgroundResource(R.drawable.test_rectangle);
+				border.attachTo(gl_gridlayout);
+				
 				navList.requestFocus();
 			}
 
 		});
+		
+		initData();
 	}
 
 	private void initView() {
@@ -183,12 +166,79 @@ public class SubActivity extends BaseActivity {
 		gl_gridlayout = (GridLayout) findViewById(R.id.gl_gridlayout);
 
 		parent_label.setText(parentLabel);
-		
-		BorderView border = new BorderView(this);
-		border.setBackgroundResource(R.drawable.test_rectangle);
-		border.attachTo(gl_gridlayout);
 	}
 
+	private void initData() {
+		boolean isTypeChage = sys_sp.getBoolean("isTypeChage", true);
+		if (isTypeChage) {
+			AppSmallTypeParam appSmallTypeParam = new AppSmallTypeParam();
+			appSmallTypeParam.smallTypeValue = parentId;
+			appSmallTypeService.app_smallType(appSmallTypeParam, new AppSmallTypeCallback() {
+				
+				@Override
+				public void doCallback(List<NavItem> appSmallTypes) {
+					if (appSmallTypes != null) {
+						navItems = appSmallTypes;
+						
+						NavModelDB.batchInsertNavItems(ModelBeanConverter.navBeans2Models(navItems, Integer.parseInt(parentId)));
+					}
+					if (navItems == null || navItems.isEmpty()) {
+						navItems = new ArrayList<NavItem>();
+						navItems.add(new NavItem());
+					}
+					
+					if (navListAdapter != null) {
+						navListAdapter.setData(navItems);
+					}
+				}
+				
+			});
+		} else {
+			this.navItems = ModelBeanConverter.navModels2Beans(NavModelDB.getNavItemsByParentId(Integer.parseInt(parentId)));
+			if (this.navItems == null || this.navItems.isEmpty()) {
+				AppSmallTypeParam appSmallTypeParam = new AppSmallTypeParam();
+				appSmallTypeParam.smallTypeValue = parentId;
+				appSmallTypeService.app_smallType(appSmallTypeParam, new AppSmallTypeCallback() {
+					
+					@Override
+					public void doCallback(List<NavItem> appSmallTypes) {
+						if (appSmallTypes != null) {
+							navItems = appSmallTypes;
+							
+							NavModelDB.batchInsertNavItems(ModelBeanConverter.navBeans2Models(navItems, Integer.parseInt(parentId)));
+						}
+						if (navItems == null || navItems.isEmpty()) {
+							navItems = new ArrayList<NavItem>();
+							navItems.add(new NavItem());
+						}
+						
+						if (navListAdapter != null) {
+							navListAdapter.setData(navItems);
+						}
+					}
+					
+				});
+				
+			}
+		}
+		
+		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
+		recAppInfoReqParam.type = 1;// 0：首页推荐 1：分类页推荐
+		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
+		recAppInfoReqParam.currentPage = 1;
+		recAppInfoService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {
+
+			@Override
+			public void doCallback(List<AppBean> appData) {
+				if (appData != null) {
+					appBeans = appData;
+				}
+				refreshGridData();
+			}
+
+		});
+	}
+	
 	private void refreshGridData() {
 		hsv.post(new Runnable() {
 
@@ -225,7 +275,7 @@ public class SubActivity extends BaseActivity {
 						View v = null;
 						if (null == convertView) {
 							if (gridItem.getView_type() == 0) {
-								v = View.inflate(getContext(), R.layout.gridlayout_item, null);
+								v = View.inflate(getContext(), R.layout.gridlayout_item1, null);
 							} else if (gridItem.getView_type() == 1) {
 								v = View.inflate(getContext(), R.layout.gridlayout_item2, null);
 							} else if (gridItem.getView_type() == 2) {

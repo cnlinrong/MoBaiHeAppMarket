@@ -24,7 +24,7 @@ public interface ISyncEquipmentInfoService {
 
 	public class SyncEquipmentInfoParam {
 
-		public String eqNo;// 评分
+		public String eqNo;// 设备号
 		
 	}
 

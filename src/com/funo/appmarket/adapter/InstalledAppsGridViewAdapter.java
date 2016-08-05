@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.bumptech.glide.Glide;
 import com.funo.appmarket.R;
+import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.constant.Constants;
-import com.funo.appmarket.model.AppModel;
 import com.funo.appmarket.util.CommonUtils;
 import com.funo.appmarket.util.ViewHolderUtils;
 import com.funo.appmarket.view.RatingView;
@@ -22,21 +22,21 @@ public class InstalledAppsGridViewAdapter extends BaseAdapter {
 
 	private Context mContext;
 	
-	private List<AppModel> appModels = new ArrayList<AppModel>();
+	private List<AppBean> appBeans = new ArrayList<AppBean>();
 	
-	public InstalledAppsGridViewAdapter(Context context, List<AppModel> appModels) {
+	public InstalledAppsGridViewAdapter(Context context, List<AppBean> appBeans) {
 		this.mContext = context;
-		this.appModels = appModels;
+		this.appBeans = appBeans;
 	}
 	
 	@Override
 	public int getCount() {
-		return appModels.size();
+		return appBeans.size();
 	}
 
 	@Override
-	public AppModel getItem(int position) {
-		return appModels.get(position);
+	public AppBean getItem(int position) {
+		return appBeans.get(position);
 	}
 
 	@Override
@@ -53,14 +53,14 @@ public class InstalledAppsGridViewAdapter extends BaseAdapter {
 		ImageView tag_img = ViewHolderUtils.get(convertView, R.id.tag_img);
 		ImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
-		AppModel appModel = getItem(position);
-		Glide.with(mContext).load(Constants.IMAGE_URL + appModel.getAppLogo()).into(appLogo);
-		appName.setText(appModel.getAppName());
-		ratingView.setScore(appModel.getScore());
+		AppBean appBean = getItem(position);
+		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
+		appName.setText(appBean.getAppName());
+		ratingView.setScore(appBean.getScore());
 		convertView.setBackgroundColor(CommonUtils.getRandomColor());
 		int tag = 0;
 		try {
-			tag = Integer.parseInt(appModel.getTag());
+			tag = Integer.parseInt(appBean.getTag());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
@@ -84,8 +84,8 @@ public class InstalledAppsGridViewAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	public void setData(List<AppModel> appInfos) {
-		this.appModels = appInfos;
+	public void setData(List<AppBean> appInfos) {
+		this.appBeans = appInfos;
 		notifyDataSetChanged();
 	}
 	

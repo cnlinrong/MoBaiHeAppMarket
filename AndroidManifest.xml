@@ -47,6 +47,7 @@
         </activity>
         <activity
             android:name=".activity.AppDetailActivity"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="landscape" >
         </activity>
         <activity

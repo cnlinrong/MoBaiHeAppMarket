@@ -38,7 +38,7 @@ public class StatusChangeNotifyService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				StatusChangeNotifyBusinessBean statusChangeNotifyBusinessBean = handleResponse(response, StatusChangeNotifyBusinessBean.class);
+				StatusChangeNotifyBusinessBean statusChangeNotifyBusinessBean = handleResponse(response, StatusChangeNotifyBusinessBean.class, HIDE_ERROR_TOAST);
 				if (statusChangeNotifyBusinessBean != null) {
 					if (statusChangeNotifyCallback != null) {
 						statusChangeNotifyCallback.doCallback(statusChangeNotifyBusinessBean.getResponseData());

@@ -66,7 +66,10 @@ public class AppModelDB {
 	 */
 	public static int getInstalledAppsPageCount(int pageSize) {
 		List<AppModel> appModels = getAllInstalledApps();
-		return (int) Math.ceil((float) appModels.size() / pageSize);
+		if (appModels != null) {
+			return (int) Math.ceil((float) appModels.size() / pageSize);
+		}
+		return 0;
 	}
 	
 	/**
@@ -135,11 +138,13 @@ public class AppModelDB {
 	 */
 	public static void saveApp(AppModel appModel) {
 		try {
-			AppModel model = getAppByPackageName(appModel.getPkgname());
-			if (model != null) {
-				appModel.setId(model.getId());
+			if (appModel != null) {
+				AppModel model = getAppByPackageName(appModel.getPkgname());
+				if (model != null) {
+					appModel.setId(model.getId());
+				}
+				getDbManager().saveOrUpdate(appModel);
 			}
-			getDbManager().saveOrUpdate(appModel);
 		} catch (DbException e) {
 			e.printStackTrace();
 
@@ -150,12 +155,14 @@ public class AppModelDB {
 	/**
 	 * 批量插入应用数据
 	 * 
-	 * @param appInfos
+	 * @param appModels
 	 */
 	public static void batchInsertApps(List<AppModel> appModels) {
 		try {
-			for (AppModel appModel : appModels) {
-				getDbManager().save(appModel);
+			if (appModels != null) {
+				for (AppModel appModel : appModels) {
+					getDbManager().save(appModel);
+				}
 			}
 		} catch (DbException e) {
 			e.printStackTrace();
