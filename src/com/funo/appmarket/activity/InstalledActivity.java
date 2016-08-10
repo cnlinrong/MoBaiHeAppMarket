@@ -79,6 +79,8 @@ public class InstalledActivity extends BaseActivity {
 			
 		});
 		
+		refreshData();
+		
 		installedViewPager.post(new Runnable() {
 			
 			@Override
@@ -87,13 +89,6 @@ public class InstalledActivity extends BaseActivity {
 			}
 			
 		});
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		refreshData();
 	}
 	
 	private void refreshData() {

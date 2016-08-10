@@ -36,6 +36,7 @@ import com.gridbuilder.listener.OnViewCreateCallBack;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayout;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,6 +72,8 @@ public class MainActivity extends BaseActivity {
 	private List<NavItem> navItems = new ArrayList<NavItem>();
 
 	private int templateUsedId = 1;// 首页模板
+	
+	private SparseIntArray colorMap = new SparseIntArray();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +203,16 @@ public class MainActivity extends BaseActivity {
 		initData();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		AppBean appBean = new AppBean("测试测试", "测试测试测试测试");
+		appBeans.add(appBean);
+		
+		refreshGridData();
+	}
+	
 	private void initView() {
 		hsv = (TvHorizontalScrollView) findViewById(R.id.hsv);
 		gl_gridlayout = (GridLayout) findViewById(R.id.gl_gridlayout);
@@ -257,7 +270,9 @@ public class MainActivity extends BaseActivity {
 				});
 			}
 		}
-		
+	}
+	
+	private void refreshGridData() {
 		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
 		recAppInfoReqParam.type = 0;// 0：首页推荐 1：分类页推荐
 		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
@@ -269,106 +284,113 @@ public class MainActivity extends BaseActivity {
 				if (appData != null) {
 					appBeans = appData;
 				}
-				refreshGridData();
-			}
-
-		});
-	}
-	
-	private void refreshGridData() {
-		hsv.post(new Runnable() {
-
-			@Override
-			public void run() {
-				GridViewHolder holder = new GridViewHolder(gl_gridlayout);
-
-				IHomeTemplate homeTemplate = null;
-				switch (templateUsedId) {
-				case 1:
-					homeTemplate = new HomeTemplate1(appBeans, hsv.getHeight());
-					break;
-				case 2:
-					homeTemplate = new HomeTemplate2(appBeans, hsv.getHeight());
-					break;
-				case 3:
-					homeTemplate = new HomeTemplate3(appBeans, hsv.getHeight());
-					break;
-				default:
-					homeTemplate = new HomeTemplate1(appBeans, hsv.getHeight());
-					break;
-				}
-				GridBuilder.newInstance(getContext(), gl_gridlayout).setScaleAnimationDuration(200)
-						.setOrientation(homeTemplate.getOrientation())
-						.setRowCount(homeTemplate.getRowCount())
-						.setMargin(5).setColumnCount(homeTemplate.getColumnCount())
-						.setGridItemList(homeTemplate.getGridData()).setViewHolder(holder)
-						.setOnCreateViewCallBack(new OnViewCreateCallBack() {
+				
+				gl_gridlayout.removeAllViews();
+				
+				hsv.post(new Runnable() {
 
 					@Override
-					public View onViewCreate(LayoutInflater inflater, View convertView, GridItem gridItem) {
-						final AppBean appBean = (AppBean) gridItem.getData();
+					public void run() {
+						GridViewHolder holder = new GridViewHolder(gl_gridlayout);
 
-						View v = null;
-						if (null == convertView) {
-							if (gridItem.getView_type() == 0) {
-								v = View.inflate(getContext(), R.layout.gridlayout_item1, null);
-							} else if (gridItem.getView_type() == 1) {
-								v = View.inflate(getContext(), R.layout.gridlayout_item2, null);
-							} else if (gridItem.getView_type() == 2) {
-								v = View.inflate(getContext(), R.layout.gridlayout_item3, null);
-							}
-							v.setOnClickListener(new OnClickListener() {
+						IHomeTemplate homeTemplate = null;
+						switch (templateUsedId) {
+						case 1:
+							homeTemplate = new HomeTemplate1(appBeans, hsv.getHeight());
+							break;
+						case 2:
+							homeTemplate = new HomeTemplate2(appBeans, hsv.getHeight());
+							break;
+						case 3:
+							homeTemplate = new HomeTemplate3(appBeans, hsv.getHeight());
+							break;
+						default:
+							homeTemplate = new HomeTemplate1(appBeans, hsv.getHeight());
+							break;
+						}
+						GridBuilder.newInstance(getContext(), gl_gridlayout).setScaleAnimationDuration(200)
+								.setOrientation(homeTemplate.getOrientation())
+								.setRowCount(homeTemplate.getRowCount())
+								.setMargin(5).setColumnCount(homeTemplate.getColumnCount())
+								.setGridItemList(homeTemplate.getGridData()).setViewHolder(holder)
+								.setOnCreateViewCallBack(new OnViewCreateCallBack() {
 
-								@Override
-								public void onClick(View v) {
-									Intent intent = new Intent(getContext(), AppDetailActivity.class);
-									intent.putExtra("selectedApp", appBean);
-									startActivity(intent);
+							@Override
+							public View onViewCreate(LayoutInflater inflater, View convertView, GridItem gridItem) {
+								final AppBean appBean = (AppBean) gridItem.getData();
+
+								View v = null;
+								if (null == convertView) {
+									if (gridItem.getView_type() == 0) {
+										v = View.inflate(getContext(), R.layout.gridlayout_item1, null);
+									} else if (gridItem.getView_type() == 1) {
+										v = View.inflate(getContext(), R.layout.gridlayout_item2, null);
+									} else if (gridItem.getView_type() == 2) {
+										v = View.inflate(getContext(), R.layout.gridlayout_item3, null);
+									}
+									v.setOnClickListener(new OnClickListener() {
+
+										@Override
+										public void onClick(View v) {
+											Intent intent = new Intent(getContext(), AppDetailActivity.class);
+											intent.putExtra("selectedApp", appBean);
+											startActivity(intent);
+										}
+
+									});
+								} else {
+									v = convertView;
 								}
+								if (appBean != null) {
+									ImageView tag_img = (ImageView) v.findViewById(R.id.tag_img);
+									int tag = 0;
+									try {
+										tag = Integer.parseInt(appBean.getTag());
+									} catch (NumberFormatException e) {
+										e.printStackTrace();
+									}
+									switch (tag) {// 标签类型 0:无标签 1:精品 2:NEW 3:HOT
+									case 0:
+										tag_img.setVisibility(View.GONE);
+										break;
+									case 1:
+										tag_img.setVisibility(View.VISIBLE);
+										tag_img.setImageResource(R.drawable.recommend_best);
+										break;
+									case 2:
+										tag_img.setVisibility(View.VISIBLE);
+										tag_img.setImageResource(R.drawable.recommend_new);
+										break;
+									case 3:
+										tag_img.setVisibility(View.VISIBLE);
+										tag_img.setImageResource(R.drawable.recommend_hot);
+										break;
+									}
+									TextView title = (TextView) v.findViewById(R.id.title);
+									title.setText(appBean.getAppName());
+									ImageView app_logo = (ImageView) v.findViewById(R.id.app_logo);
+									Glide.with(getContext()).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(app_logo);
+									if (gridItem.getView_type() == 0 || gridItem.getView_type() == 2) {
+										((TextView) v.findViewById(R.id.sub_title)).setText(appBean.getAppInfo());
+									}
+								}
+								int appId = (int) appBean.getAppId();
+								int color = colorMap.get(appId, -1);
+								if (color == -1) {
+									int randomColor = CommonUtils.getRandomColor();
+									v.findViewById(R.id.content).setBackgroundColor(randomColor);
+									colorMap.append(appId, randomColor);
+								} else {
+									v.findViewById(R.id.content).setBackgroundColor(color);
+								}
+								v.setFocusable(true);
+								return v;
+							}
 
-							});
-						} else {
-							v = convertView;
-						}
-						if (appBean != null) {
-							ImageView tag_img = (ImageView) v.findViewById(R.id.tag_img);
-							int tag = 0;
-							try {
-								tag = Integer.parseInt(appBean.getTag());
-							} catch (NumberFormatException e) {
-								e.printStackTrace();
-							}
-							switch (tag) {// 标签类型 0:无标签 1:精品 2:NEW 3:HOT
-							case 0:
-								tag_img.setVisibility(View.GONE);
-								break;
-							case 1:
-								tag_img.setVisibility(View.VISIBLE);
-								tag_img.setImageResource(R.drawable.recommend_best);
-								break;
-							case 2:
-								tag_img.setVisibility(View.VISIBLE);
-								tag_img.setImageResource(R.drawable.recommend_new);
-								break;
-							case 3:
-								tag_img.setVisibility(View.VISIBLE);
-								tag_img.setImageResource(R.drawable.recommend_hot);
-								break;
-							}
-							TextView title = (TextView) v.findViewById(R.id.title);
-							title.setText(appBean.getAppName());
-							ImageView app_logo = (ImageView) v.findViewById(R.id.app_logo);
-							Glide.with(getContext()).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(app_logo);
-							if (gridItem.getView_type() == 0 || gridItem.getView_type() == 2) {
-								((TextView) v.findViewById(R.id.sub_title)).setText(appBean.getAppInfo());
-							}
-						}
-						v.findViewById(R.id.content).setBackgroundColor(CommonUtils.getRandomColor());
-						v.setFocusable(true);
-						return v;
+						}).build();
 					}
 
-				}).build();
+				});
 			}
 
 		});

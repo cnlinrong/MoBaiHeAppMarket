@@ -33,7 +33,7 @@
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         app:riv_border_width="0dip"
-                        app:riv_corner_radius="25dip"
+                        app:riv_corner_radius="10dip"
                         app:riv_mutate_background="true"
                         app:riv_oval="false" />
 

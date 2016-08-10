@@ -57,6 +57,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
@@ -138,10 +139,10 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		
 		Intent intent = getIntent();
 		selectedApp = (AppBean) intent.getSerializableExtra("selectedApp");
-		packageName = selectedApp.getPkgname();
-//		packageName = "com.cemobile.schoolble";
-		downloadUrl = Constants.IMAGE_URL + selectedApp.getUrl();
-//		downloadUrl = Constants.TEST_DOWNLOAD_URL;
+//		packageName = selectedApp.getPkgname();
+		packageName = "com.cemobile.schoolble";
+//		downloadUrl = Constants.IMAGE_URL + selectedApp.getUrl();
+		downloadUrl = Constants.TEST_DOWNLOAD_URL;
 		apk_name = downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1);
 		apkPath = mSavePath + "/" + apk_name;
 		if (new File(apkPath).exists()) {
@@ -236,7 +237,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 				ratingBarView.setRatingCallback(new RatingCallback() {
 					
 					@Override
-					public void rate(int rating) {
+					public void rate(final int rating) {
 						AppScoreUpdateParam appScoreUpdateParam = new AppScoreUpdateParam();
 						appScoreUpdateParam.appId = selectedApp.getAppId();
 						appScoreUpdateParam.eqId = product_model + product_serialnum;
@@ -245,11 +246,12 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 							
 							@Override
 							public void doCallback() {
-								ToastUtils.showShortToast(getContext(), "你的评分");
 								if (popupWindow != null && popupWindow.isShowing()) {
 									popupWindow.dismiss();
 									
 									ratingBarView.reset();
+									
+									rateToast(rating);
 								}
 							}
 							
@@ -566,6 +568,17 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			return;
 		}
 		super.onBackPressed();
+	}
+	
+	public void rateToast(float score) {
+		Toast toast = new Toast(getContext());
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.setDuration(Toast.LENGTH_SHORT);
+		View view = LayoutInflater.from(getContext()).inflate(R.layout.common_info_tips, null);
+		RatingView ratingView = (RatingView) view.findViewById(R.id.ratingView);
+		ratingView.setScore(score);
+		toast.setView(view);
+		toast.show();
 	}
 	
 }

@@ -12,6 +12,7 @@ import com.funo.appmarket.util.ViewHolderUtils;
 import com.funo.appmarket.view.RatingView;
 
 import android.content.Context;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -24,9 +25,10 @@ public class InstalledAppsGridViewAdapter extends BaseAdapter {
 	
 	private List<AppBean> appBeans = new ArrayList<AppBean>();
 	
-	public InstalledAppsGridViewAdapter(Context context, List<AppBean> appBeans) {
+	private SparseIntArray colorMap = new SparseIntArray();
+	
+	public InstalledAppsGridViewAdapter(Context context) {
 		this.mContext = context;
-		this.appBeans = appBeans;
 	}
 	
 	@Override
@@ -57,7 +59,17 @@ public class InstalledAppsGridViewAdapter extends BaseAdapter {
 		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
 		appName.setText(appBean.getAppName());
 		ratingView.setScore(appBean.getScore());
-		convertView.setBackgroundColor(CommonUtils.getRandomColor());
+		
+		int appId = (int) appBean.getAppId();
+		int color = colorMap.get(appId, -1);
+		if (color == -1) {
+			int randomColor = CommonUtils.getRandomColor();
+			convertView.setBackgroundColor(randomColor);
+			colorMap.append(appId, randomColor);
+		} else {
+			convertView.setBackgroundColor(color);
+		}
+		
 		int tag = 0;
 		try {
 			tag = Integer.parseInt(appBean.getTag());

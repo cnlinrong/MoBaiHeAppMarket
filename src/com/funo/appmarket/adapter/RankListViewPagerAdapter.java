@@ -10,6 +10,7 @@ import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
 import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +20,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLayoutChangeListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -63,9 +64,9 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 
 		int position;
 		
-		public MyFragment() {
-			super();
-		}
+		GridView apps_list;
+		
+		RankListGridViewAdapter rankListGridViewAdapter;
 		
 		public MyFragment(int position) {
 			this.position = position;
@@ -83,7 +84,7 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 	        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
 	        mainUpView1.setDrawUpRectPadding(2);
 	        
-			final GridView apps_list = (GridView) rootView.findViewById(R.id.apps_list);
+			apps_list = (GridView) rootView.findViewById(R.id.apps_list);
 			apps_list.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 				@Override
@@ -118,33 +119,6 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 				
 			});
 			
-			GetTopAppParam getTopAppParam = new GetTopAppParam();
-			getTopAppParam.orderType = orderType;
-			getTopAppParam.pageSize = pageSize;
-			getTopAppParam.currentPage = position + 1;
-			getTopAppService.getTopApp(getTopAppParam,  new GetTopAppCallback() {
-				
-				@Override
-				public void doCallback(List<AppBean> appBeans, int pageCount) {
-					if (appBeans != null) {
-						RankListViewPagerAdapter.this.pageCount = pageCount;
-						final RankListGridViewAdapter rankListGridViewAdapter = new RankListGridViewAdapter(getContext(), appBeans);
-						apps_list.setAdapter(rankListGridViewAdapter);
-						apps_list.setOnItemClickListener(new OnItemClickListener() {
-
-							@Override
-							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-								Intent intent = new Intent(getContext(), AppDetailActivity.class);
-								intent.putExtra("selectedApp", rankListGridViewAdapter.getItem(position));
-								startActivity(intent);
-							}
-							
-						});
-					}
-				}
-				
-			});
-			
 			// 在布局加咱完成后，设置选中第一个 (test)
 			apps_list.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
@@ -162,7 +136,41 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 
 			});
 			
+			rankListGridViewAdapter = new RankListGridViewAdapter(getContext());
+			apps_list.setAdapter(rankListGridViewAdapter);
+			apps_list.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Intent intent = new Intent(getContext(), AppDetailActivity.class);
+					intent.putExtra("selectedApp", rankListGridViewAdapter.getItem(position));
+					startActivity(intent);
+				}
+				
+			});
+			
 			return rootView;
+		}
+		
+		@Override
+		public void onResume() {
+			super.onResume();
+			
+			GetTopAppParam getTopAppParam = new GetTopAppParam();
+			getTopAppParam.orderType = orderType;
+			getTopAppParam.pageSize = pageSize;
+			getTopAppParam.currentPage = position + 1;
+			getTopAppService.getTopApp(getTopAppParam,  new GetTopAppCallback() {
+				
+				@Override
+				public void doCallback(List<AppBean> appBeans, int pageCount) {
+					if (appBeans != null) {
+						RankListViewPagerAdapter.this.pageCount = pageCount;
+						rankListGridViewAdapter.setData(appBeans);
+					}
+				}
+				
+			});
 		}
 		
 	}

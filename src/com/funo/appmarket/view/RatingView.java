@@ -86,7 +86,7 @@ public class RatingView extends LinearLayout {
 		if (Math.ceil(score) > 5) {
 			score = 5;
 		}
-		if (index <= score) {
+		if ((index + 1) <= (int) score) {
 			return R.drawable.rate_star_01;
 		} else {
 			return R.drawable.rate_star_02;

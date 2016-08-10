@@ -43,6 +43,10 @@ public class StatusChangeNotifyService extends BaseService {
 					if (statusChangeNotifyCallback != null) {
 						statusChangeNotifyCallback.doCallback(statusChangeNotifyBusinessBean.getResponseData());
 					}
+				} else {
+					if (statusChangeNotifyCallback != null) {
+						statusChangeNotifyCallback.doCallback(null);
+					}
 				}
 			}
 

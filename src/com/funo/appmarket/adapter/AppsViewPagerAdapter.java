@@ -66,9 +66,9 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 
 		int position;
 		
-		public MyFragment() {
-			super();
-		}
+		GridView apps_list;
+		
+		AppsGridViewAdapter appsGridViewAdapter;
 		
 		public MyFragment(int position) {
 			this.position = position;
@@ -86,7 +86,7 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 	        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
 	        mainUpView1.setDrawUpRectPadding(2);
 	        
-			final GridView apps_list = (GridView) rootView.findViewById(R.id.apps_list);
+			apps_list = (GridView) rootView.findViewById(R.id.apps_list);
 			apps_list.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 				@Override
@@ -121,34 +121,6 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 				
 			});
 			
-			SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam();
-			searchAppByTypeParam.smallTypeId = subParentId;
-			searchAppByTypeParam.orderType = orderType;
-			searchAppByTypeParam.pageSize = pageSize;
-			searchAppByTypeParam.currentPage = position + 1;
-			searchAppByTypeService.searchAppByType(searchAppByTypeParam, new SearchAppByTypeCallback() {
-				
-				@Override
-				public void doCallback(List<AppBean> appBeans, int pageCount) {
-					if (appBeans != null) {
-						AppsViewPagerAdapter.this.pageCount = pageCount;
-						final AppsGridViewAdapter appsGridViewAdapter = new AppsGridViewAdapter(getContext(), appBeans);
-						apps_list.setAdapter(appsGridViewAdapter);
-						apps_list.setOnItemClickListener(new OnItemClickListener() {
-
-							@Override
-							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-								Intent intent = new Intent(getContext(), AppDetailActivity.class);
-								intent.putExtra("selectedApp", appsGridViewAdapter.getItem(position));
-								startActivity(intent);
-							}
-							
-						});
-					}
-				}
-				
-			});
-			
 			// 在布局加咱完成后，设置选中第一个 (test)
 			apps_list.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
@@ -166,7 +138,42 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 
 			});
 			
+			appsGridViewAdapter = new AppsGridViewAdapter(getContext());
+			apps_list.setAdapter(appsGridViewAdapter);
+			apps_list.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Intent intent = new Intent(getContext(), AppDetailActivity.class);
+					intent.putExtra("selectedApp", appsGridViewAdapter.getItem(position));
+					startActivity(intent);
+				}
+				
+			});
+			
 			return rootView;
+		}
+		
+		@Override
+		public void onResume() {
+			super.onResume();
+			
+			SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam();
+			searchAppByTypeParam.smallTypeId = subParentId;
+			searchAppByTypeParam.orderType = orderType;
+			searchAppByTypeParam.pageSize = pageSize;
+			searchAppByTypeParam.currentPage = position + 1;
+			searchAppByTypeService.searchAppByType(searchAppByTypeParam, new SearchAppByTypeCallback() {
+				
+				@Override
+				public void doCallback(List<AppBean> appBeans, int pageCount) {
+					if (appBeans != null) {
+						AppsViewPagerAdapter.this.pageCount = pageCount;
+						appsGridViewAdapter.setData(appBeans);
+					}
+				}
+				
+			});
 		}
 		
 	}

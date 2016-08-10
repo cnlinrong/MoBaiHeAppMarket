@@ -22,7 +22,7 @@
                 android:layout_width="77dp"
                 android:layout_height="77dp"
                 app:riv_border_width="0dip"
-                app:riv_corner_radius="25dip"
+                app:riv_corner_radius="10dip"
                 app:riv_mutate_background="true"
                 app:riv_oval="false" />
 
@@ -30,6 +30,7 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:layout_marginTop="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />

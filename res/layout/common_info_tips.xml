@@ -1,21 +1,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bg_tips_ll"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="15dp"
-    android:padding="15dp"
-    android:background="@drawable/_black_circle_bak"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="@drawable/info_box"
+    android:gravity="center" >
 
     <TextView
-        android:id="@+id/common_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:text="你的评分"
         android:textColor="@color/white"
-        android:textSize="@dimen/textSize_normal_down" />
+        android:textSize="17sp" />
+
+    <com.funo.appmarket.view.RatingView
+        android:id="@+id/ratingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

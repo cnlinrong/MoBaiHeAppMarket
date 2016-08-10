@@ -31,8 +31,6 @@ import android.widget.GridView;
 
 public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 
-	private int pageCount;
-	
 	private View mOldView;
 	
 	private int pageSize = 15;
@@ -41,8 +39,6 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 	
 	public InstalledViewPagerAdapter(FragmentManager fm, Context context) {
 		super(fm);
-		
-		this.pageCount = AppModelDB.getInstalledAppsPageCount(pageSize);
 		
 		installedAppInfoService = new InstalledAppInfoService(context);
 	}
@@ -54,16 +50,16 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public int getCount() {
-		return pageCount;
+		return AppModelDB.getInstalledAppsPageCount(pageSize);
 	}
 
 	class MyFragment extends Fragment {
 
 		int position;
 		
-		public MyFragment() {
-			super();
-		}
+		GridView installed_list;
+		
+		InstalledAppsGridViewAdapter installedAppsGridViewAdapter;
 		
 		public MyFragment(int position) {
 			this.position = position;
@@ -80,7 +76,7 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 	        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
 	        mainUpView1.setDrawUpRectPadding(2);
 	        
-			final GridView installed_list = (GridView) rootView.findViewById(R.id.apps_list);
+			installed_list = (GridView) rootView.findViewById(R.id.apps_list);
 			installed_list.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 				@Override
@@ -115,6 +111,43 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 				
 			});
 			
+			// 在布局加咱完成后，设置选中第一个 (test)
+			installed_list.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+
+				@Override
+				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
+						int oldRight, int oldBottom) {
+					if (installed_list.hasFocus() && installed_list.getChildCount() > 0) {
+						installed_list.setSelection(0);
+						View newView = installed_list.getChildAt(0);
+						newView.bringToFront();
+						mainUpView1.setFocusView(newView, 1.1f);
+						mOldView = installed_list.getChildAt(0);
+					}
+				}
+
+			});
+			
+			installedAppsGridViewAdapter = new InstalledAppsGridViewAdapter(getContext());
+			installed_list.setAdapter(installedAppsGridViewAdapter);
+			installed_list.setOnItemClickListener(new OnItemClickListener() {
+				
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Intent intent = new Intent(getContext(), AppDetailActivity.class);
+					intent.putExtra("selectedApp", installedAppsGridViewAdapter.getItem(position));
+					startActivity(intent);
+				}
+				
+			});
+			
+			return rootView;
+		}
+		
+		@Override
+		public void onResume() {
+			super.onResume();
+			
 			List<AppModel> appModels = AppModelDB.getAllInstalledApps(position + 1, pageSize);
 			if (appModels != null && !appModels.isEmpty()) {
 				StringBuilder appIds = new StringBuilder();
@@ -134,42 +167,12 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 					@Override
 					public void doCallback(List<AppBean> appBeans) {
 						if (appBeans != null) {
-							final InstalledAppsGridViewAdapter installedAppsGridViewAdapter = new InstalledAppsGridViewAdapter(getContext(), appBeans);
-							installed_list.setAdapter(installedAppsGridViewAdapter);
-							installed_list.setOnItemClickListener(new OnItemClickListener() {
-								
-								@Override
-								public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-									Intent intent = new Intent(getContext(), AppDetailActivity.class);
-									intent.putExtra("selectedApp", installedAppsGridViewAdapter.getItem(position));
-									startActivity(intent);
-								}
-								
-							});
+							installedAppsGridViewAdapter.setData(appBeans);
 						}
 					}
 					
 				});
 			}
-			
-			// 在布局加咱完成后，设置选中第一个 (test)
-			installed_list.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-
-				@Override
-				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
-						int oldRight, int oldBottom) {
-					if (installed_list.hasFocus() && installed_list.getChildCount() > 0) {
-						installed_list.setSelection(0);
-						View newView = installed_list.getChildAt(0);
-						newView.bringToFront();
-						mainUpView1.setFocusView(newView, 1.1f);
-						mOldView = installed_list.getChildAt(0);
-					}
-				}
-
-			});
-			
-			return rootView;
 		}
 		
 	}
