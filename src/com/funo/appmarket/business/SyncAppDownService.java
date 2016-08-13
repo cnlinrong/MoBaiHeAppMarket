@@ -1,6 +1,9 @@
 package com.funo.appmarket.business;
 
-import com.funo.appmarket.bean.base.BaseBusinessBean;
+import java.util.List;
+
+import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.bean.SyncAppDownBusinessBean;
 import com.funo.appmarket.business.base.BaseService;
 import com.funo.appmarket.business.define.ISyncAppDownService;
 import com.funo.appmarket.business.define.ISyncAppDownService.SyncAppDownParam;
@@ -35,10 +38,10 @@ public class SyncAppDownService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				BaseBusinessBean<?> baseBusinessBean = handleResponse(response, BaseBusinessBean.class, SHOW_ERROR_TOAST);
-				if (baseBusinessBean != null) {
+				SyncAppDownBusinessBean syncAppDownBusinessBean = handleResponse(response, SyncAppDownBusinessBean.class, SHOW_ERROR_TOAST);
+				if (syncAppDownBusinessBean != null) {
 					if (syncAppDownCallback != null) {
-						syncAppDownCallback.doCallback();
+						syncAppDownCallback.doCallback(syncAppDownBusinessBean.getResponseData());
 					}
 				}
 			}
@@ -47,7 +50,7 @@ public class SyncAppDownService extends BaseService {
 			public void onFailure(Call<ResponseBody> call, Throwable t) {
 				reportError(SHOW_ERROR_TOAST, t.getMessage());
 				if (syncAppDownCallback != null) {
-					syncAppDownCallback.doCallback();
+					syncAppDownCallback.doCallback(null);
 				}
 			}
 
@@ -56,7 +59,7 @@ public class SyncAppDownService extends BaseService {
 
 	public interface SyncAppDownCallback {
 
-		public void doCallback();
+		public void doCallback(List<AppBean> appBeans);
 
 	}
 

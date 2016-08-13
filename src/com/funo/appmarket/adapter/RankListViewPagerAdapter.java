@@ -43,6 +43,13 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 	public RankListViewPagerAdapter(FragmentManager fm, Context context, int pageCount, int orderType) {
 		super(fm);
 		
+		List<Fragment> fragments = fm.getFragments();
+		if (fragments != null && !fragments.isEmpty()) {
+			for (Fragment fragment : fragments) {
+				fm.beginTransaction().remove(fragment).commit();
+			}
+		}
+		
 		this.mContext = context;
 		this.pageCount = pageCount;
 		this.orderType = orderType;

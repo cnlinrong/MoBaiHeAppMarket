@@ -62,7 +62,8 @@ public class LoadingActivity extends BaseActivity {
 		
 		syncEquipmentInfoService = new SyncEquipmentInfoService(getContext());
 		SyncEquipmentInfoParam syncEquipmentInfoParam = new SyncEquipmentInfoParam();
-		syncEquipmentInfoParam.eqNo = product_model + product_serialnum;
+		String brand = android.os.Build.BRAND;
+		syncEquipmentInfoParam.eqNo = brand + product_model + product_serialnum;
 		syncEquipmentInfoService.syncEquipmentInfo(syncEquipmentInfoParam, null);
 		
 		setContentView(R.layout.activity_loading);

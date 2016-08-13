@@ -25,6 +25,7 @@ public interface IRecAppInfoService {
 	public class RecAppInfoReqParam {
 
 		public int type;// 0：首页推荐 1：分类页推荐
+		public String smallTypeId;
 		public int pageSize;
 		public int currentPage;
 

@@ -19,6 +19,7 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.business.AppScoreUpdateService;
 import com.funo.appmarket.business.AppScoreUpdateService.AppScoreUpdateCallback;
 import com.funo.appmarket.business.SyncAppDownService;
+import com.funo.appmarket.business.SyncAppDownService.SyncAppDownCallback;
 import com.funo.appmarket.business.define.IAppScoreUpdateService.AppScoreUpdateParam;
 import com.funo.appmarket.business.define.ISyncAppDownService.SyncAppDownParam;
 import com.funo.appmarket.constant.Constants;
@@ -93,6 +94,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 	private AppImgsViewPagerAdapter appImgsViewPagerAdapter;
 	
 	private PopupWindow popupWindow;
+	private RatingBarView ratingBarView;
 	
 	private List<String> appImgs = new ArrayList<String>();
 	
@@ -139,10 +141,10 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		
 		Intent intent = getIntent();
 		selectedApp = (AppBean) intent.getSerializableExtra("selectedApp");
-//		packageName = selectedApp.getPkgname();
-		packageName = "com.cemobile.schoolble";
-//		downloadUrl = Constants.IMAGE_URL + selectedApp.getUrl();
-		downloadUrl = Constants.TEST_DOWNLOAD_URL;
+		packageName = selectedApp.getPkgname();
+//		packageName = "com.cemobile.schoolble";
+		downloadUrl = Constants.IMAGE_URL + selectedApp.getUrl();
+//		downloadUrl = Constants.TEST_DOWNLOAD_URL;
 		apk_name = downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1);
 		apkPath = mSavePath + "/" + apk_name;
 		if (new File(apkPath).exists()) {
@@ -233,25 +235,31 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void run() {
 				View rootView = LayoutInflater.from(getContext()).inflate(R.layout.popupwindow_rate, null);
-				final RatingBarView ratingBarView = (com.funo.appmarket.view.RatingBarView) rootView.findViewById(R.id.ratingBarView);
+				ratingBarView = (com.funo.appmarket.view.RatingBarView) rootView.findViewById(R.id.ratingBarView);
 				ratingBarView.setRatingCallback(new RatingCallback() {
 					
 					@Override
 					public void rate(final int rating) {
 						AppScoreUpdateParam appScoreUpdateParam = new AppScoreUpdateParam();
 						appScoreUpdateParam.appId = selectedApp.getAppId();
-						appScoreUpdateParam.eqId = product_model + product_serialnum;
+						String brand = android.os.Build.BRAND;
+						appScoreUpdateParam.eqId = brand + product_model + product_serialnum;
 						appScoreUpdateParam.score = rating;
 						appScoreUpdateService.appScoreUpdate(appScoreUpdateParam, new AppScoreUpdateCallback() {
 							
 							@Override
-							public void doCallback() {
+							public void doCallback(List<AppBean> appBeans) {
 								if (popupWindow != null && popupWindow.isShowing()) {
 									popupWindow.dismiss();
 									
 									ratingBarView.reset();
 									
 									rateToast(rating);
+									
+									if (appBeans != null && !appBeans.isEmpty()) {
+										AppBean appBean = appBeans.get(0);
+										ratingView.setScore(appBean.getScore());
+									}
 								}
 							}
 							
@@ -327,9 +335,20 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 				ToastUtils.showShortToast(getContext(), "开始下载");
 				
 				SyncAppDownParam syncAppDownParam = new SyncAppDownParam();
-				syncAppDownParam.eqNo = product_model + product_serialnum;
+				String brand = android.os.Build.BRAND;
+				syncAppDownParam.eqNo = brand + product_model + product_serialnum;
 				syncAppDownParam.appId = selectedApp.getAppId();
-				syncAppDownService.syncAppDown(syncAppDownParam, null);
+				syncAppDownService.syncAppDown(syncAppDownParam, new SyncAppDownCallback() {
+					
+					@Override
+					public void doCallback(List<AppBean> appBeans) {
+						if (appBeans != null && !appBeans.isEmpty()) {
+							AppBean appBean = appBeans.get(0);
+							download_count.setText(appBean.getDownnum() + "下载");
+						}
+					}
+					
+				});
 				
 				new Thread(new Runnable() {
 
@@ -566,6 +585,9 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		if (popupWindow != null && popupWindow.isShowing()) {
 			popupWindow.dismiss();
 			return;
+		}
+		if (ratingBarView != null) {
+			ratingBarView.reset();
 		}
 		super.onBackPressed();
 	}

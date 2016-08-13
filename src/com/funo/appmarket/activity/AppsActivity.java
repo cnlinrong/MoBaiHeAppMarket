@@ -176,7 +176,7 @@ public class AppsActivity extends BaseActivity {
 		});
 	}
 	
-	private void refreshData(int orderType) {
+	private void refreshData(final int orderType) {
 		SearchAppByTypeParam searchAppByTypeParam = new SearchAppByTypeParam();
 		searchAppByTypeParam.smallTypeId = subParentId;
 		searchAppByTypeParam.orderType = orderType;
@@ -187,7 +187,7 @@ public class AppsActivity extends BaseActivity {
 			@Override
 			public void doCallback(List<AppBean> appBeans, int pageCount) {
 				if (appBeans != null) {
-					appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), pageCount, 0, subParentId);
+					appsViewPagerAdapter = new AppsViewPagerAdapter(getSupportFragmentManager(), getContext(), pageCount, orderType, subParentId);
 					appsViewPager.setAdapter(appsViewPagerAdapter);
 					if (pageCount > 0) {
 						pager_bar.setText("1/" + pageCount);

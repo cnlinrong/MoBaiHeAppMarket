@@ -165,7 +165,7 @@ public class RankListActivity extends BaseActivity {
 		});
 	}
 
-	private void refreshData(int orderType) {
+	private void refreshData(final int orderType) {
 		GetTopAppParam getTopAppParam = new GetTopAppParam();
 		getTopAppParam.orderType = orderType;
 		getTopAppParam.pageSize = pageSize;
@@ -175,7 +175,7 @@ public class RankListActivity extends BaseActivity {
 			@Override
 			public void doCallback(List<AppBean> appBeans, int pageCount) {
 				if (appBeans != null) {
-					rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), pageCount, 0);
+					rankListViewPagerAdapter = new RankListViewPagerAdapter(getSupportFragmentManager(), getContext(), pageCount, orderType);
 					rankListViewPager.setAdapter(rankListViewPagerAdapter);
 					if (pageCount > 0) {
 						pager_bar.setText("1/" + pageCount);

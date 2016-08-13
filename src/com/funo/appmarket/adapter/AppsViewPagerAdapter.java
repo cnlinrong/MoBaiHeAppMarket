@@ -44,6 +44,13 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 	public AppsViewPagerAdapter(FragmentManager fm, Context context, int pageCount, int orderType, String subParentId) {
 		super(fm);
 		
+		List<Fragment> fragments = fm.getFragments();
+		if (fragments != null && !fragments.isEmpty()) {
+			for (Fragment fragment : fragments) {
+				fm.beginTransaction().remove(fragment).commit();
+			}
+		}
+		
 		this.mContext = context;
 		this.pageCount = pageCount;
 		this.orderType = orderType;

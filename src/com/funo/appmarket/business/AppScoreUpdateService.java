@@ -1,6 +1,9 @@
 package com.funo.appmarket.business;
 
-import com.funo.appmarket.bean.base.BaseBusinessBean;
+import java.util.List;
+
+import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.bean.AppScoreUpdateBusinessBean;
 import com.funo.appmarket.business.base.BaseService;
 import com.funo.appmarket.business.define.IAppScoreUpdateService;
 import com.funo.appmarket.business.define.IAppScoreUpdateService.AppScoreUpdateParam;
@@ -35,10 +38,10 @@ public class AppScoreUpdateService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				BaseBusinessBean<?> baseBusinessBean = handleResponse(response, BaseBusinessBean.class, SHOW_ERROR_TOAST);
-				if (baseBusinessBean != null) {
+				AppScoreUpdateBusinessBean appScoreUpdateBusinessBean = handleResponse(response, AppScoreUpdateBusinessBean.class, SHOW_ERROR_TOAST);
+				if (appScoreUpdateBusinessBean != null) {
 					if (appScoreUpdateCallback != null) {
-						appScoreUpdateCallback.doCallback();
+						appScoreUpdateCallback.doCallback(appScoreUpdateBusinessBean.getResponseData());
 					}
 				}
 			}
@@ -47,7 +50,7 @@ public class AppScoreUpdateService extends BaseService {
 			public void onFailure(Call<ResponseBody> call, Throwable t) {
 				reportError(SHOW_ERROR_TOAST, t.getMessage());
 				if (appScoreUpdateCallback != null) {
-					appScoreUpdateCallback.doCallback();
+					appScoreUpdateCallback.doCallback(null);
 				}
 			}
 
@@ -56,7 +59,7 @@ public class AppScoreUpdateService extends BaseService {
 
 	public interface AppScoreUpdateCallback {
 
-		public void doCallback();
+		public void doCallback(List<AppBean> appBeans);
 
 	}
 

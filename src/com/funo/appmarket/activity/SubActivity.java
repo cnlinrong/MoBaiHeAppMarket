@@ -161,13 +161,15 @@ public class SubActivity extends BaseActivity {
 		});
 		
 		initData();
+		
+		refreshGridData();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		refreshGridData();
+//		refreshGridData();
 	}
 	
 	private void initView() {
@@ -236,6 +238,7 @@ public class SubActivity extends BaseActivity {
 	private void refreshGridData() {
 		RecAppInfoReqParam recAppInfoReqParam = new RecAppInfoReqParam();
 		recAppInfoReqParam.type = 1;// 0：首页推荐 1：分类页推荐
+		recAppInfoReqParam.smallTypeId = parentId;
 		recAppInfoReqParam.pageSize = BaseService.PAGE_SIZE;
 		recAppInfoReqParam.currentPage = 1;
 		recAppInfoService.recAppInfo(recAppInfoReqParam, new RecAppInfoCallback() {

@@ -201,16 +201,18 @@ public class MainActivity extends BaseActivity {
 		});
 		
 		initData();
+		
+		refreshGridData();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		AppBean appBean = new AppBean("测试测试", "测试测试测试测试");
-		appBeans.add(appBean);
+//		AppBean appBean = new AppBean("测试测试", "测试测试测试测试");
+//		appBeans.add(appBean);
 		
-		refreshGridData();
+//		refreshGridData();
 	}
 	
 	private void initView() {
