@@ -57,6 +57,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -270,6 +271,16 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 				popupWindow = new PopupWindow(rootView, LayoutParams.MATCH_PARENT, root_view.getHeight() / 2, true);
 				popupWindow.setBackgroundDrawable(new BitmapDrawable());
 				popupWindow.setOutsideTouchable(true);
+				popupWindow.setOnDismissListener(new OnDismissListener() {
+					
+					@Override
+					public void onDismiss() {
+						if (ratingBarView != null) {
+							ratingBarView.reset();
+						}
+					}
+					
+				});
 			}
 			
 		});
@@ -578,18 +589,6 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			}
 
 		}).start();
-	}
-	
-	@Override
-	public void onBackPressed() {
-		if (popupWindow != null && popupWindow.isShowing()) {
-			popupWindow.dismiss();
-			return;
-		}
-		if (ratingBarView != null) {
-			ratingBarView.reset();
-		}
-		super.onBackPressed();
 	}
 	
 	public void rateToast(float score) {

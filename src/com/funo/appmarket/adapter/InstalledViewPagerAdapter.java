@@ -31,7 +31,7 @@ import android.widget.GridView;
 
 public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 
-	private View mOldView;
+	private View mOldView = null;
 	
 	private int pageSize = 15;
 	
@@ -85,11 +85,11 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 					 * 这里注意要加判断是否为NULL.
 					 * 因为在重新加载数据以后会出问题.
 					 */
-					if (view != null && parent.isFocused()) {
+					if (view != null && parent.isFocused() && mOldView != view) {
 						view.bringToFront();
 						mainUpView1.setFocusView(view, mOldView, 1.1f);
+						mOldView = view;
 					}
-					mOldView = view;
 				}
 
 				@Override
@@ -117,7 +117,7 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 				@Override
 				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
 						int oldRight, int oldBottom) {
-					if (installed_list.hasFocus() && installed_list.getChildCount() > 0) {
+					if (installed_list.hasFocus() && installed_list.getChildCount() > 0 && mOldView == null) {
 						installed_list.setSelection(0);
 						View newView = installed_list.getChildAt(0);
 						newView.bringToFront();

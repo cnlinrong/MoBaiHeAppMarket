@@ -85,7 +85,8 @@ public class SearchActivity extends BaseActivity {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				
+				mainUpView1.setUnFocusView(mOldView);
+				mainUpView1.setVisibility(View.GONE);
 			}
 
 			@Override

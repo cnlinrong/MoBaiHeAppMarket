@@ -100,11 +100,11 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 					 * 这里注意要加判断是否为NULL.
 					 * 因为在重新加载数据以后会出问题.
 					 */
-					if (view != null && parent.isFocused()) {
+					if (view != null && parent.isFocused() && mOldView != view) {
 						view.bringToFront();
 						mainUpView1.setFocusView(view, mOldView, 1.1f);
+						mOldView = view;
 					}
-					mOldView = view;
 				}
 
 				@Override
@@ -132,12 +132,12 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 				@Override
 				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
 						int oldRight, int oldBottom) {
-					if (apps_list.hasFocus() && apps_list.getChildCount() > 0) {
+					if (apps_list.hasFocus() && apps_list.getChildCount() > 0 && mOldView == null) {
 						apps_list.setSelection(0);
 						View newView = apps_list.getChildAt(0);
 						newView.bringToFront();
 						mainUpView1.setFocusView(newView, 1.1f);
-						mOldView = apps_list.getChildAt(0);
+						mOldView = newView;
 					}
 				}
 
