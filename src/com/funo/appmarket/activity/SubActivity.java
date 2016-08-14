@@ -14,10 +14,13 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.bean.NavItem;
 import com.funo.appmarket.business.AppSmallTypeService;
 import com.funo.appmarket.business.AppSmallTypeService.AppSmallTypeCallback;
+import com.funo.appmarket.business.InstalledAppInfoService;
+import com.funo.appmarket.business.InstalledAppInfoService.InstalledAppInfoCallback;
 import com.funo.appmarket.business.RecAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
 import com.funo.appmarket.business.base.BaseService;
 import com.funo.appmarket.business.define.IAppSmallTypeService.AppSmallTypeParam;
+import com.funo.appmarket.business.define.IInstalledAppInfoService.InstalledAppInfoParam;
 import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
 import com.funo.appmarket.constant.Constants;
 import com.funo.appmarket.datasource.HomeTemplate1;
@@ -57,6 +60,7 @@ public class SubActivity extends BaseActivity {
 	
 	private AppSmallTypeService appSmallTypeService;
 	private RecAppInfoService recAppInfoService;
+	private InstalledAppInfoService installedAppInfoService;
 	
 	private TextView parent_label;
 	private TvHorizontalScrollView hsv;
@@ -83,11 +87,11 @@ public class SubActivity extends BaseActivity {
 
 		appSmallTypeService = new AppSmallTypeService(getContext());
 		recAppInfoService = new RecAppInfoService(getContext());
+		installedAppInfoService = new InstalledAppInfoService(getContext());
 		
 		setContentView(R.layout.activity_sub);
 		
 		templateUsedId = sys_sp.getInt("templateUsedId", 1);
-//		templateUsedId = 3;
 		
 		Intent intent = getIntent();
 		parentLabel = intent.getStringExtra("parentLabel");
@@ -169,7 +173,30 @@ public class SubActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		
-//		refreshGridData();
+		if (appBeans != null && !appBeans.isEmpty()) {
+			StringBuilder appIds = new StringBuilder();
+			for (int i = 0; i < appBeans.size(); i++) {
+				if (i != appBeans.size() - 1) {
+					appIds.append(appBeans.get(i).getAppId() + ",");
+				} else {
+					appIds.append(appBeans.get(i).getAppId() + "");
+				}
+			}
+			InstalledAppInfoParam installedAppInfoParam = new InstalledAppInfoParam();
+			installedAppInfoParam.appId = appIds.toString();
+			installedAppInfoParam.pageSize = Integer.MAX_VALUE;
+			installedAppInfoParam.currentPage = 1;
+			installedAppInfoService.installedAppInfo(installedAppInfoParam, new InstalledAppInfoCallback() {
+				
+				@Override
+				public void doCallback(List<AppBean> appBeans) {
+					if (appBeans != null) {
+						SubActivity.this.appBeans = appBeans;
+					}
+				}
+				
+			});
+		}
 	}
 	
 	private void initView() {
@@ -297,7 +324,12 @@ public class SubActivity extends BaseActivity {
 										@Override
 										public void onClick(View v) {
 											Intent intent = new Intent(getContext(), AppDetailActivity.class);
-											intent.putExtra("selectedApp", appBean);
+											for (AppBean bean : appBeans) {
+												if (bean.getAppId() == appBean.getAppId()) {
+													intent.putExtra("selectedApp", bean);
+													break;
+												}
+											}
 											startActivity(intent);
 										}
 
