@@ -250,16 +250,20 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 							
 							@Override
 							public void doCallback(List<AppBean> appBeans) {
-								if (popupWindow != null && popupWindow.isShowing()) {
-									popupWindow.dismiss();
-									
-									ratingBarView.reset();
-									
-									rateToast(rating);
-									
-									if (appBeans != null && !appBeans.isEmpty()) {
+								if (appBeans != null && !appBeans.isEmpty()) {
+									if (popupWindow != null && popupWindow.isShowing()) {
+										popupWindow.dismiss();
+										
+										ratingBarView.reset();
+										
+										rateToast(rating);
+										
 										AppBean appBean = appBeans.get(0);
 										ratingView.setScore(appBean.getScore());
+										
+										btn_rate.setText("已评价");
+										btn_rate.setClickable(false);
+										btn_rate.setBackgroundResource(android.R.color.darker_gray);
 									}
 								}
 							}
