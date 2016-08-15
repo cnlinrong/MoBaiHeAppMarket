@@ -210,6 +210,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="270dp"
                     android:layout_marginTop="60dp"
+                    android:padding="2dp"
                     android:background="#55000000" />
 
                 <com.funo.appmarket.view.SliderIndicatorBarView
