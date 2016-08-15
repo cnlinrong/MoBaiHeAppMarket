@@ -38,7 +38,7 @@ public class AppScoreUpdateService extends BaseService {
 
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				AppScoreUpdateBusinessBean appScoreUpdateBusinessBean = handleResponse(response, AppScoreUpdateBusinessBean.class, SHOW_ERROR_TOAST);
+				AppScoreUpdateBusinessBean appScoreUpdateBusinessBean = handleResponse(response, AppScoreUpdateBusinessBean.class, HIDE_ERROR_TOAST);
 				if (appScoreUpdateBusinessBean != null) {
 					if (appScoreUpdateCallback != null) {
 						appScoreUpdateCallback.doCallback(appScoreUpdateBusinessBean.getResponseData());

@@ -40,6 +40,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -53,6 +54,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -127,12 +129,24 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		
 		initViews();
 		
-		String sdPath = Environment.getExternalStorageDirectory() + "/";
+		String sdPath = null;
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			sdPath = Environment.getExternalStorageDirectory() + "/";
+		} else {
+			sdPath = Environment.getDownloadCacheDirectory() + "/";
+		}
 		mSavePath = sdPath + "mobaihe-cache";
 		
 		File dir = new File(mSavePath);
-		if (!dir.exists())
-			dir.mkdir();
+		if (!dir.exists()) {
+			if (!dir.mkdir()) {
+				if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+					mSavePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+				} else {
+					mSavePath = Environment.getDownloadCacheDirectory().getAbsolutePath();
+				}
+			}
+		}
 		
 		product_model = SystemProperties.get("ro.product.model", "");
 		product_serialnum = SystemProperties.get("ro.product.stb.serialnum", "");
@@ -177,6 +191,19 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		btn_uninstall.setOnClickListener(this);
 		
 		app_imgs = (ViewPager) findViewById(R.id.app_imgs);
+		app_imgs.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					app_imgs.setBackgroundResource(R.drawable.test_rectangle);
+				} else {
+					app_imgs.setBackgroundColor(Color.parseColor("#55000000"));
+				}
+			}
+			
+		});
+		
 		if (!TextUtils.isEmpty(selectedApp.getAppImg1())) {
 			appImgs.add(selectedApp.getAppImg1());
 		}
@@ -265,6 +292,18 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 										btn_rate.setClickable(false);
 										btn_rate.setBackgroundResource(android.R.color.darker_gray);
 									}
+								} else {
+									if (popupWindow != null && popupWindow.isShowing()) {
+										popupWindow.dismiss();
+										
+										ratingBarView.reset();
+										
+										ToastUtils.showShortToast(getContext(), "该应用已评价过");
+										
+										btn_rate.setText("已评价");
+										btn_rate.setClickable(false);
+										btn_rate.setBackgroundResource(android.R.color.darker_gray);
+									}
 								}
 							}
 							
@@ -335,6 +374,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		case R.id.btn_download:
 			if (new File(apkPath).exists()) {
 				btn_download.setText("安装中");
+				btn_download.setClickable(false);
+				btn_download.setBackgroundResource(android.R.color.darker_gray);
 
 				if (PackageUtils.isSystemApplication(getContext()) || ShellUtils.checkRootPermission()) {
 					installSilent();
@@ -370,36 +411,33 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 					@Override
 					public void run() {
 						try {
-							if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-								// 下载文件
-								HttpURLConnection conn = (HttpURLConnection) new URL(downloadUrl).openConnection();
-								conn.setRequestMethod("POST");
-								InputStream is = conn.getInputStream();
-								int length = conn.getContentLength();
-
-								File apkFile = new File(apkPath);
-								FileOutputStream fos = new FileOutputStream(apkFile);
-
-								int count = 0;
-								byte[] buffer = new byte[1024];
-								while (true) {
-									int numread = is.read(buffer);
-									count += numread;
-									// 计算进度条的当前位置
-									mProgress = ((float) count / length) * 100;
-									// 更新进度条
-									mUpdateProgressHandler.sendEmptyMessage(DOWNLOADING);
-
-									// 下载完成
-									if (numread < 0) {
-										mUpdateProgressHandler.sendEmptyMessage(DOWNLOAD_FINISH);
-										break;
-									}
-									fos.write(buffer, 0, numread);
+							HttpURLConnection conn = (HttpURLConnection) new URL(downloadUrl).openConnection();
+							conn.setRequestMethod("POST");
+							InputStream is = conn.getInputStream();
+							int length = conn.getContentLength();
+							
+							File apkFile = new File(apkPath);
+							FileOutputStream fos = new FileOutputStream(apkFile);
+							
+							int count = 0;
+							byte[] buffer = new byte[1024];
+							while (true) {
+								int numread = is.read(buffer);
+								count += numread;
+								// 计算进度条的当前位置
+								mProgress = ((float) count / length) * 100;
+								// 更新进度条
+								mUpdateProgressHandler.sendEmptyMessage(DOWNLOADING);
+								
+								// 下载完成
+								if (numread < 0) {
+									mUpdateProgressHandler.sendEmptyMessage(DOWNLOAD_FINISH);
+									break;
 								}
-								fos.close();
-								is.close();
+								fos.write(buffer, 0, numread);
 							}
+							fos.close();
+							is.close();
 						} catch (Exception e) {
 							e.printStackTrace();
 							
@@ -460,7 +498,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 						});
 					}
 					
-				});
+				}).start();
 	        } else {
 	        	if (!PackageUtils.uninstallNormal(getContext(), packageName)) {
 	        		ToastUtils.showShortToast(getContext(), "卸载失败");
@@ -483,7 +521,9 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 				circleSeekBar.setVisibility(View.GONE);
 
 				btn_download.setText("安装中");
-
+				btn_download.setClickable(false);
+				btn_download.setBackgroundResource(android.R.color.darker_gray);
+				
 				if (PackageUtils.isSystemApplication(getContext()) || ShellUtils.checkRootPermission()) {
 					installSilent();
 				} else {
@@ -505,7 +545,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		if (!PackageUtils.installNormal(getContext(), apkPath)) {
 			ToastUtils.showShortToast(getContext(), "安装失败");
 			if (new File(apkPath).exists()) {
-				btn_download.setText("重新安装");
+				btn_download.setText("安装");
 				btn_download.setClickable(true);
 				btn_download.setOnClickListener(new OnClickListener() {
 					
@@ -523,7 +563,7 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			btn_download.setBackgroundResource(R.drawable.selector_app_detail_btn);
 		} else {
 			if (new File(apkPath).exists()) {
-				btn_download.setText("重新安装");
+				btn_download.setText("安装");
 				btn_download.setClickable(true);
 				btn_download.setOnClickListener(new OnClickListener() {
 					
@@ -559,7 +599,11 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 							appModel.setInstalled_flag(true);
 							AppModelDB.saveApp(appModel);
 							
-							btn_download.setText("下载");
+							if (new File(apkPath).exists()) {
+								btn_download.setText("安装");
+							} else {
+								btn_download.setText("下载");
+							}
 							btn_download.setClickable(true);
 							btn_download.setOnClickListener(AppDetailActivity.this);
 							btn_download.setBackgroundResource(R.drawable.selector_app_detail_btn);
@@ -568,24 +612,27 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 							btn_uninstall.setVisibility(View.VISIBLE);
 							btn_download.setVisibility(View.GONE);
 						} else {
-							ToastUtils.showShortToast(getContext(), "安装失败");
-							if (new File(apkPath).exists()) {
-								btn_download.setText("重新安装");
-								btn_download.setClickable(true);
-								btn_download.setOnClickListener(new OnClickListener() {
-									
-									@Override
-									public void onClick(View v) {
-										installSilent();
-									}
-									
-								});
-							} else {
-								btn_download.setText("下载");
-								btn_download.setClickable(true);
-								btn_download.setOnClickListener(AppDetailActivity.this);
-							}
-							btn_download.setBackgroundResource(R.drawable.selector_app_detail_btn);
+							AppModelDB.saveApp(ModelBeanConverter.appBean2Model(selectedApp));
+							installNormal();
+							
+//							ToastUtils.showShortToast(getContext(), "安装失败");
+//							if (new File(apkPath).exists()) {
+//								btn_download.setText("安装");
+//								btn_download.setClickable(true);
+//								btn_download.setOnClickListener(new OnClickListener() {
+//									
+//									@Override
+//									public void onClick(View v) {
+//										installSilent();
+//									}
+//									
+//								});
+//							} else {
+//								btn_download.setText("下载");
+//								btn_download.setClickable(true);
+//								btn_download.setOnClickListener(AppDetailActivity.this);
+//							}
+//							btn_download.setBackgroundResource(R.drawable.selector_app_detail_btn);
 						}
 					}
 
