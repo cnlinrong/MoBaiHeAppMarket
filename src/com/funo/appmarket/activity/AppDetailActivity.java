@@ -361,10 +361,14 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 			btn_start.setVisibility(View.VISIBLE);
 			btn_uninstall.setVisibility(View.VISIBLE);
 			btn_download.setVisibility(View.GONE);
+			
+			btn_start.requestFocus();
 		} else {
 			btn_start.setVisibility(View.GONE);
 			btn_uninstall.setVisibility(View.GONE);
 			btn_download.setVisibility(View.VISIBLE);
+			
+			btn_download.requestFocus();
 		}
 	}
 	

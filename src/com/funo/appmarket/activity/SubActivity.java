@@ -149,12 +149,6 @@ public class SubActivity extends BaseActivity {
 
 			@Override
 			public void run() {
-				search.setFocusable(true);
-				search.setFocusableInTouchMode(true);
-				
-				gl_gridlayout.setFocusable(true);
-				gl_gridlayout.setFocusableInTouchMode(true);
-				
 				BorderView border = new BorderView(getContext());
 				border.setBackgroundResource(R.drawable.test_rectangle);
 				border.attachTo(gl_gridlayout);

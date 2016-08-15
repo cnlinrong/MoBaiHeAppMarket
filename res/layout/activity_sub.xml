@@ -8,10 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
+        android:layout_marginTop="40dp"
         android:clipToPadding="false"
-        android:layout_marginTop="40dp" >
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp" >
 
         <TextView
             android:id="@+id/parent_label"
@@ -27,6 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center_vertical" >
 
             <ImageView
@@ -83,8 +85,6 @@
 
                 <android.support.v7.widget.GridLayout
                     android:id="@+id/gl_gridlayout"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </org.evilbinary.tv.widget.TvHorizontalScrollView>

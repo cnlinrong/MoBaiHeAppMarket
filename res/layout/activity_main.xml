@@ -8,10 +8,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="40dp"
+        android:layout_marginTop="40dp"
         android:clipToPadding="false"
-        android:paddingRight="40dp"
-        android:layout_marginTop="40dp" >
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,6 +42,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="35dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center_vertical" >
 
             <ImageView
@@ -66,6 +68,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="35dp"
             android:layout_toLeftOf="@+id/installed"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center_vertical" >
 
             <ImageView
@@ -89,6 +93,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/ranklist"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center_vertical" >
 
             <ImageView
@@ -146,8 +152,6 @@
                 <android.support.v7.widget.GridLayout
                     android:id="@+id/gl_gridlayout"
                     android:layout_width="wrap_content"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:layout_height="wrap_content" />
             </org.evilbinary.tv.widget.TvHorizontalScrollView>
         </RelativeLayout>

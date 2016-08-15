@@ -185,16 +185,6 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void run() {
-				search.setFocusable(true);
-				search.setFocusableInTouchMode(true);
-				ranklist.setFocusable(true);
-				ranklist.setFocusableInTouchMode(true);
-				installed.setFocusable(true);
-				installed.setFocusableInTouchMode(true);
-				
-				gl_gridlayout.setFocusable(true);
-				gl_gridlayout.setFocusableInTouchMode(true);
-				
 				BorderView border = new BorderView(getContext());
 				border.setBackgroundResource(R.drawable.test_rectangle);
 				border.attachTo(gl_gridlayout);
