@@ -14,7 +14,7 @@ public class HomeTemplate3 implements IHomeTemplate {
 	private int baseItemHeight = 0;
 	private int baseItemWidth = 0;
 	
-	private int spacing = 10;// 每个子项直接的间隔
+	private int spacing = 20;// 每个子项直接的间隔
 	
 	private int orientation = GridLayout.VERTICAL;
 	

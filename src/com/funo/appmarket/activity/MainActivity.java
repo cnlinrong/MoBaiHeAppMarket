@@ -186,7 +186,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void run() {
 				BorderView border = new BorderView(getContext());
-				border.setBackgroundResource(R.drawable.test_rectangle);
+//				border.setBackgroundResource(R.drawable.test_rectangle);
 				border.attachTo(gl_gridlayout);
 				
 				navList.requestFocus();
@@ -327,7 +327,7 @@ public class MainActivity extends BaseActivity {
 						GridBuilder.newInstance(getContext(), gl_gridlayout).setScaleAnimationDuration(200)
 								.setOrientation(homeTemplate.getOrientation())
 								.setRowCount(homeTemplate.getRowCount())
-								.setMargin(5).setColumnCount(homeTemplate.getColumnCount())
+								.setMargin(10).setColumnCount(homeTemplate.getColumnCount())
 								.setGridItemList(homeTemplate.getGridData()).setViewHolder(holder)
 								.setOnCreateViewCallBack(new OnViewCreateCallBack() {
 
@@ -404,7 +404,20 @@ public class MainActivity extends BaseActivity {
 								} else {
 									v.findViewById(R.id.content).setBackgroundColor(color);
 								}
-								v.setFocusable(true);
+								v.setOnFocusChangeListener(new OnFocusChangeListener() {
+									
+									@Override
+									public void onFocusChange(View v, boolean hasFocus) {
+										if (hasFocus) {
+											v.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
+											v.setPadding(3, 3, 3, 3);
+										} else {
+											v.setBackgroundResource(android.R.color.transparent);
+											v.setPadding(0, 0, 0, 0);
+										}
+									}
+									
+								});
 								return v;
 							}
 
