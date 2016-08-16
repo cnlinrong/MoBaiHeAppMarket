@@ -119,6 +119,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
 	private String downloadUrl;
 	
+	private boolean install_finished = true;
+	
 	@SuppressLint("SimpleDateFormat")
 	@SuppressWarnings("deprecation")
 	@Override
@@ -290,6 +292,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 										
 										btn_rate.setText("已评价");
 										btn_rate.setClickable(false);
+										btn_rate.setFocusable(false);
+										btn_rate.setFocusableInTouchMode(false);
 										btn_rate.setBackgroundResource(android.R.color.darker_gray);
 									}
 								} else {
@@ -302,6 +306,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 										
 										btn_rate.setText("已评价");
 										btn_rate.setClickable(false);
+										btn_rate.setFocusable(false);
+										btn_rate.setFocusableInTouchMode(false);
 										btn_rate.setBackgroundResource(android.R.color.darker_gray);
 									}
 								}
@@ -377,11 +383,13 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.btn_download:
 			if (new File(apkPath).exists()) {
+				
 				btn_download.setText("安装中");
 				btn_download.setClickable(false);
 				btn_download.setBackgroundResource(android.R.color.darker_gray);
 
 				if (PackageUtils.isSystemApplication(getContext()) || ShellUtils.checkRootPermission()) {
+					install_finished = false;
 					installSilent();
 				} else {
 					AppModelDB.saveApp(ModelBeanConverter.appBean2Model(selectedApp));
@@ -523,12 +531,13 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 				break;
 			case DOWNLOAD_FINISH:
 				circleSeekBar.setVisibility(View.GONE);
-
+				
 				btn_download.setText("安装中");
 				btn_download.setClickable(false);
 				btn_download.setBackgroundResource(android.R.color.darker_gray);
 				
 				if (PackageUtils.isSystemApplication(getContext()) || ShellUtils.checkRootPermission()) {
+					install_finished = false;
 					installSilent();
 				} else {
 					AppModelDB.saveApp(ModelBeanConverter.appBean2Model(selectedApp));
@@ -596,6 +605,8 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 
 					@Override
 					public void run() {
+						install_finished = true;
+						
 						if (result == PackageUtils.INSTALL_SUCCEEDED) {
 							ToastUtils.showShortToast(getContext(), "安装成功");
 							
@@ -655,6 +666,15 @@ public class AppDetailActivity extends BaseActivity implements OnClickListener {
 		ratingView.setScore(score);
 		toast.setView(view);
 		toast.show();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (install_finished) {
+			finish();
+		} else {
+			ToastUtils.showShortToast(getContext(), "正在安装中，请稍后...");
+		}
 	}
 	
 }

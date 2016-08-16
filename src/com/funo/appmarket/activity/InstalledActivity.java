@@ -42,6 +42,8 @@ public class InstalledActivity extends BaseActivity {
 			
 			@Override
 			public void onPageSelected(int position) {
+				installedViewPagerAdapter.resetOldView();
+				
 				pager_bar.setText((position + 1) + "/" + installedViewPagerAdapter.getCount());
 			}
 			

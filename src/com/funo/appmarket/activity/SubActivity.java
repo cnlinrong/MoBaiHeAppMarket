@@ -296,7 +296,7 @@ public class SubActivity extends BaseActivity {
 						GridBuilder.newInstance(getContext(), gl_gridlayout).setScaleAnimationDuration(200)
 								.setOrientation(homeTemplate.getOrientation())
 								.setRowCount(homeTemplate.getRowCount())
-								.setMargin(10).setColumnCount(homeTemplate.getColumnCount())
+								.setMargin(6).setColumnCount(homeTemplate.getColumnCount())
 								.setGridItemList(homeTemplate.getGridData()).setViewHolder(holder)
 								.setOnCreateViewCallBack(new OnViewCreateCallBack() {
 
@@ -379,7 +379,7 @@ public class SubActivity extends BaseActivity {
 									public void onFocusChange(View v, boolean hasFocus) {
 										if (hasFocus) {
 											v.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
-											v.setPadding(3, 3, 3, 3);
+											v.setPadding(2, 2, 2, 2);
 										} else {
 											v.setBackgroundResource(android.R.color.transparent);
 											v.setPadding(0, 0, 0, 0);

@@ -78,31 +78,6 @@ public class InstalledSearchActivity extends BaseActivity {
         label_tv = (TextView) findViewById(R.id.label_tv);
         
 		keyboard = (GridView) findViewById(R.id.keyboard);
-		keyboard.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				mainUpView1.setUnFocusView(mOldView);
-				mainUpView1.setVisibility(View.GONE);
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				
-			}
-			
-		});
-		keyboard.setOnFocusChangeListener(new OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
-					mainUpView1.setUnFocusView(mOldView);
-					mainUpView1.setVisibility(View.GONE);
-				}
-			}
-			
-		});
 		popular_apps = (GridView) findViewById(R.id.popular_apps);
 		popular_apps.setOnItemSelectedListener(new OnItemSelectedListener() {
 

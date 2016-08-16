@@ -133,6 +133,10 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
 						int oldRight, int oldBottom) {
 					if (apps_list.hasFocus() && apps_list.getChildCount() > 0 && mOldView == null) {
+						apps_list.getSelectedView().setNextFocusUpId(View.NO_ID);
+						apps_list.getSelectedView().setNextFocusLeftId(View.NO_ID);
+						apps_list.getSelectedView().setNextFocusRightId(View.NO_ID);
+						apps_list.getSelectedView().setNextFocusDownId(View.NO_ID);
 						apps_list.setSelection(0);
 						View newView = apps_list.getChildAt(0);
 						newView.bringToFront();
@@ -180,6 +184,10 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 			});
 		}
 		
+	}
+	
+	public void resetOldView() {
+		mOldView = null;
 	}
 	
 }
