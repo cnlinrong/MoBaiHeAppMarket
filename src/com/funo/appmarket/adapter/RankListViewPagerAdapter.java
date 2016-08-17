@@ -1,5 +1,6 @@
 package com.funo.appmarket.adapter;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import com.funo.appmarket.R;
@@ -9,6 +10,7 @@ import com.funo.appmarket.business.GetTopAppService;
 import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
 import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
+import com.open.androidtvwidget.view.GridViewTV;
 import com.open.androidtvwidget.view.MainUpView;
 
 import android.annotation.SuppressLint;
@@ -121,6 +123,8 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 					if (!hasFocus) {
 						mainUpView1.setUnFocusView(mOldView);
 						mainUpView1.setVisibility(View.GONE);
+						
+						apps_list.setSelection(0);
 					}
 				}
 				
@@ -133,10 +137,6 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
 						int oldRight, int oldBottom) {
 					if (apps_list.hasFocus() && apps_list.getChildCount() > 0 && mOldView == null) {
-						apps_list.getSelectedView().setNextFocusUpId(View.NO_ID);
-						apps_list.getSelectedView().setNextFocusLeftId(View.NO_ID);
-						apps_list.getSelectedView().setNextFocusRightId(View.NO_ID);
-						apps_list.getSelectedView().setNextFocusDownId(View.NO_ID);
 						apps_list.setSelection(0);
 						View newView = apps_list.getChildAt(0);
 						newView.bringToFront();

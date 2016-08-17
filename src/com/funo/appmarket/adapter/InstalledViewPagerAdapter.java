@@ -106,6 +106,8 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 					if (!hasFocus) {
 						mainUpView1.setUnFocusView(mOldView);
 						mainUpView1.setVisibility(View.GONE);
+						
+						installed_list.setSelection(0);
 					}
 				}
 				
@@ -118,10 +120,6 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
 						int oldRight, int oldBottom) {
 					if (installed_list.hasFocus() && installed_list.getChildCount() > 0 && mOldView == null) {
-						installed_list.getSelectedView().setNextFocusUpId(View.NO_ID);
-						installed_list.getSelectedView().setNextFocusLeftId(View.NO_ID);
-						installed_list.getSelectedView().setNextFocusRightId(View.NO_ID);
-						installed_list.getSelectedView().setNextFocusDownId(View.NO_ID);
 						installed_list.setSelection(0);
 						View newView = installed_list.getChildAt(0);
 						newView.bringToFront();
