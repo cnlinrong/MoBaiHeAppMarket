@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -34,6 +35,8 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 	private View mOldView = null;
 	
 	private int pageSize = 15;
+	
+	private SparseArray<GridView> gridViews = new SparseArray<GridView>();
 	
 	private InstalledAppInfoService installedAppInfoService;
 	
@@ -106,8 +109,6 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 					if (!hasFocus) {
 						mainUpView1.setUnFocusView(mOldView);
 						mainUpView1.setVisibility(View.GONE);
-						
-						installed_list.setSelection(0);
 					}
 				}
 				
@@ -181,6 +182,14 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 	
 	public void resetOldView() {
 		mOldView = null;
+	}
+	
+	public void resetGridViews(int selectedPosition) {
+		for (int i = 0; i < gridViews.size(); i++) {
+			if (selectedPosition != i) {
+				gridViews.get(i).setSelection(0);
+			}
+		}
 	}
 	
 }

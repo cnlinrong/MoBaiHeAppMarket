@@ -59,6 +59,7 @@ public class RankListActivity extends BaseActivity {
 			@Override
 			public void onPageSelected(int position) {
 				rankListViewPagerAdapter.resetOldView();
+				rankListViewPagerAdapter.resetGridViews(position);
 				
 				pager_bar.setText((position + 1) + "/" + rankListViewPagerAdapter.getCount());
 			}

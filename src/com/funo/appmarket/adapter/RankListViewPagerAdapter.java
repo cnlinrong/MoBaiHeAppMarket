@@ -1,6 +1,5 @@
 package com.funo.appmarket.adapter;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import com.funo.appmarket.R;
@@ -10,7 +9,6 @@ import com.funo.appmarket.business.GetTopAppService;
 import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
 import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
-import com.open.androidtvwidget.view.GridViewTV;
 import com.open.androidtvwidget.view.MainUpView;
 
 import android.annotation.SuppressLint;
@@ -20,6 +18,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -41,6 +40,8 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 	private View mOldView;
 	
 	private int pageSize = 15;
+	
+	private SparseArray<GridView> gridViews = new SparseArray<GridView>();
 	
 	public RankListViewPagerAdapter(FragmentManager fm, Context context, int pageCount, int orderType) {
 		super(fm);
@@ -123,8 +124,6 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 					if (!hasFocus) {
 						mainUpView1.setUnFocusView(mOldView);
 						mainUpView1.setVisibility(View.GONE);
-						
-						apps_list.setSelection(0);
 					}
 				}
 				
@@ -160,6 +159,8 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 				
 			});
 			
+			gridViews.put(position, apps_list);
+			
 			return rootView;
 		}
 		
@@ -188,6 +189,14 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 	
 	public void resetOldView() {
 		mOldView = null;
+	}
+	
+	public void resetGridViews(int selectedPosition) {
+		for (int i = 0; i < gridViews.size(); i++) {
+			if (selectedPosition != i) {
+				gridViews.get(i).setSelection(0);
+			}
+		}
 	}
 	
 }
