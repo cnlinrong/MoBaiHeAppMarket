@@ -106,7 +106,13 @@ public class InstalledViewPagerAdapter extends FragmentPagerAdapter {
 				
 				@Override
 				public void onFocusChange(View v, boolean hasFocus) {
-					if (!hasFocus) {
+					if (hasFocus) {
+						View selectedView = installed_list.getSelectedView();
+						if (selectedView != null) {
+							selectedView.bringToFront();
+							mainUpView1.setFocusView(selectedView, 1.1f);
+						}
+					} else {
 						mainUpView1.setUnFocusView(mOldView);
 						mainUpView1.setVisibility(View.GONE);
 					}

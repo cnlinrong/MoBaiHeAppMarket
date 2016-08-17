@@ -8,6 +8,7 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.business.GetTopAppService;
 import com.funo.appmarket.business.GetTopAppService.GetTopAppCallback;
 import com.funo.appmarket.business.define.IGetTopAppService.GetTopAppParam;
+import com.funo.appmarket.util.ToastUtils;
 import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
 import com.open.androidtvwidget.view.MainUpView;
 
@@ -121,7 +122,13 @@ public class RankListViewPagerAdapter extends FragmentPagerAdapter {
 				
 				@Override
 				public void onFocusChange(View v, boolean hasFocus) {
-					if (!hasFocus) {
+					if (hasFocus) {
+						View selectedView = apps_list.getSelectedView();
+						if (selectedView != null) {
+							selectedView.bringToFront();
+							mainUpView1.setFocusView(selectedView, 1.1f);
+						}
+					} else {
 						mainUpView1.setUnFocusView(mOldView);
 						mainUpView1.setVisibility(View.GONE);
 					}
