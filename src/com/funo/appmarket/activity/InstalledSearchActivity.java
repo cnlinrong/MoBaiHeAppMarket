@@ -72,7 +72,7 @@ public class InstalledSearchActivity extends BaseActivity {
 		EffectNoDrawBridge effectNoDrawBridge = new EffectNoDrawBridge();
         effectNoDrawBridge.setTranDurAnimTime(200);
         mainUpView1.setEffectBridge(effectNoDrawBridge); // 4.3以下版本边框移动.
-        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
+//        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
         mainUpView1.setDrawUpRectPadding(2);
 		
         label_tv = (TextView) findViewById(R.id.label_tv);
@@ -88,9 +88,17 @@ public class InstalledSearchActivity extends BaseActivity {
 				 * 因为在重新加载数据以后会出问题.
 				 */
 				if (view != null && parent.isFocused() && mOldView != view) {
+					if (mOldView != null) {
+						mOldView.setBackgroundResource(android.R.color.transparent);
+						mOldView.setPadding(0, 0, 0, 0);
+					}
+					
 					view.bringToFront();
 					mainUpView1.setFocusView(view, mOldView, 1.05f);
 					mOldView = view;
+					
+					view.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
+					view.setPadding(2, 2, 2, 2);
 				}
 			}
 
@@ -98,6 +106,11 @@ public class InstalledSearchActivity extends BaseActivity {
 			public void onNothingSelected(AdapterView<?> parent) {
 				mainUpView1.setUnFocusView(mOldView);
 				mainUpView1.setVisibility(View.GONE);
+				
+				if (mOldView != null) {
+					mOldView.setBackgroundResource(android.R.color.transparent);
+					mOldView.setPadding(0, 0, 0, 0);
+				}
 			}
 			
 		});
@@ -106,16 +119,23 @@ public class InstalledSearchActivity extends BaseActivity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					if (popular_apps.getChildCount() > 0) {
-						popular_apps.setSelection(0);
-						View newView = popular_apps.getChildAt(0);
-						newView.bringToFront();
-						mainUpView1.setFocusView(newView, 1.05f);
-						mOldView = popular_apps.getChildAt(0);
+					View selectedView = popular_apps.getSelectedView();
+					if (selectedView != null) {
+						selectedView.bringToFront();
+						mainUpView1.setFocusView(selectedView, 1.1f);
+						mOldView = selectedView;
+						
+						selectedView.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
+						selectedView.setPadding(2, 2, 2, 2);
 					}
 				} else {
 					mainUpView1.setUnFocusView(mOldView);
 					mainUpView1.setVisibility(View.GONE);
+					
+					if (mOldView != null) {
+						mOldView.setBackgroundResource(android.R.color.transparent);
+						mOldView.setPadding(0, 0, 0, 0);
+					}
 				}
 			}
 			

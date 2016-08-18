@@ -69,9 +69,6 @@ public class AppsActivity extends BaseActivity {
 			
 			@Override
 			public void onPageSelected(int position) {
-				appsViewPagerAdapter.resetOldView();
-				appsViewPagerAdapter.resetGridViews(position);
-				
 				pager_bar.setText((position + 1) + "/" + appsViewPagerAdapter.getCount());
 			}
 			

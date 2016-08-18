@@ -53,9 +53,10 @@ public class PopularAppsGridViewAdapter extends BaseAdapter {
 		RatingView ratingView = ViewHolderUtils.get(convertView, R.id.ratingView);
 		RoundedImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
+		View contentView = ViewHolderUtils.get(convertView, R.id.contentView);
 		AppBean appBean = getItem(position);
 		appName.setText(appBean.getAppName());
-		convertView.setBackgroundColor(CommonUtils.getRandomColor());
+		contentView.setBackgroundColor(CommonUtils.getRandomColor());
 		ratingView.setScore(appBean.getScore());
 		size_downloadnum.setText(appBean.getAppSize() + "MB | " + appBean.getDownnum());
 		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);

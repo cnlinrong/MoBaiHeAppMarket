@@ -2,13 +2,13 @@ package com.funo.appmarket.activity;
 
 import java.util.List;
 
+import com.bumptech.glide.Glide;
 import com.funo.appmarket.R;
 import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.bean.StatusChangeNotify;
 import com.funo.appmarket.business.StatusChangeNotifyService;
 import com.funo.appmarket.business.StatusChangeNotifyService.StatusChangeNotifyCallback;
 import com.funo.appmarket.business.SyncEquipmentInfoService;
-import com.funo.appmarket.business.SyncEquipmentInfoService.SyncEquipmentInfoCallback;
 import com.funo.appmarket.business.define.IStatusChangeNotifyService.StatusChangeNotifyParam;
 import com.funo.appmarket.business.define.ISyncEquipmentInfoService.SyncEquipmentInfoParam;
 import com.funo.appmarket.db.AppModelDB;
@@ -25,6 +25,8 @@ public class LoadingActivity extends BaseActivity {
 	private TextView tv;
 	
 	private boolean statusChangeNotifyFlag = false;// 调用状态改变通知接口是否完成
+	
+	private boolean clearImageCacheFinished = false;// 是否已经清除图片缓存
 	
 	private StatusChangeNotifyService statusChangeNotifyService;
 	private SyncEquipmentInfoService syncEquipmentInfoService;
@@ -71,6 +73,27 @@ public class LoadingActivity extends BaseActivity {
 		pb = (ProgressBar) findViewById(R.id.pb);
 		tv = (TextView) findViewById(R.id.tv);
 		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// 必须在后台线程中调用，建议同时clearMemory()
+				Glide.get(getContext()).clearDiskCache();
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						// 必须在UI线程中调用
+						Glide.get(getContext()).clearMemory();
+						
+						clearImageCacheFinished = true;
+					}
+
+				});
+			}
+
+		}).start();
+		
 		Runnable r = new Runnable() {
 			
 			@Override
@@ -78,7 +101,7 @@ public class LoadingActivity extends BaseActivity {
 				if (pb.getProgress() < 100) {
 					pb.setProgress(pb.getProgress() + 2);
 				}
-				if (pb.getProgress() == 100 && statusChangeNotifyFlag) {
+				if (pb.getProgress() == 100 && statusChangeNotifyFlag && clearImageCacheFinished) {
 					startActivity(new Intent(getContext(), MainActivity.class));
 					finish();
 				} else {

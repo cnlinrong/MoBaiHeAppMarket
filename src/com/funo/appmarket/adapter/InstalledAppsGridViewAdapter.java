@@ -55,6 +55,7 @@ public class InstalledAppsGridViewAdapter extends BaseAdapter {
 		ImageView tag_img = ViewHolderUtils.get(convertView, R.id.tag_img);
 		ImageView appLogo = ViewHolderUtils.get(convertView, R.id.appLogo);
 		TextView appName = ViewHolderUtils.get(convertView, R.id.appName);
+		View contentView = ViewHolderUtils.get(convertView, R.id.contentView);
 		AppBean appBean = getItem(position);
 		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);
 		appName.setText(appBean.getAppName());
@@ -64,10 +65,10 @@ public class InstalledAppsGridViewAdapter extends BaseAdapter {
 		int color = colorMap.get(appId, -1);
 		if (color == -1) {
 			int randomColor = CommonUtils.getRandomColor();
-			convertView.setBackgroundColor(randomColor);
+			contentView.setBackgroundColor(randomColor);
 			colorMap.append(appId, randomColor);
 		} else {
-			convertView.setBackgroundColor(color);
+			contentView.setBackgroundColor(color);
 		}
 		
 		int tag = 0;
