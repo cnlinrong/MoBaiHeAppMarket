@@ -1,5 +1,12 @@
 package org.evilbinary.tv.widget;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.evilbinary.tv.widget.BorderView.Effect;
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -13,13 +20,6 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-
-import org.evilbinary.tv.widget.BorderView.Effect;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 作者:evilbinary on 3/26/16. 邮箱:rootdebug@163.com
@@ -58,7 +58,7 @@ public class BorderEffect implements Effect {
 	protected List<Animator.AnimatorListener> mAnimatorListener = new ArrayList<Animator.AnimatorListener>(1);
 
 	public FocusListener focusScaleListener = new FocusListener() {
-		
+
 		@Override
 		public void onFocusChanged(View oldFocus, View newFocus) {
 			mAnimatorList.addAll(getScaleAnimator(newFocus, true));
@@ -66,11 +66,11 @@ public class BorderEffect implements Effect {
 				mAnimatorList.addAll(getScaleAnimator(oldFocus, false));
 			}
 		}
-		
+
 	};
-	
+
 	public FocusListener focusPlayListener = new FocusListener() {
-		
+
 		@Override
 		public void onFocusChanged(View oldFocus, View newFocus) {
 			try {
@@ -94,11 +94,11 @@ public class BorderEffect implements Effect {
 				ex.printStackTrace();
 			}
 		}
-		
+
 	};
-	
+
 	public FocusListener focusMoveListener = new FocusListener() {
-		
+
 		@Override
 		public void onFocusChanged(View oldFocus, View newFocus) {
 			if (newFocus == null)
@@ -109,7 +109,7 @@ public class BorderEffect implements Effect {
 				ex.printStackTrace();
 			}
 		}
-		
+
 	};
 
 	public FocusListener absListViewFocusListener = new FocusListener() {
@@ -126,6 +126,7 @@ public class BorderEffect implements Effect {
 							mTarget.setVisibility(View.INVISIBLE);
 							if (mFirstFocus) {
 								absListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+									
 									@Override
 									public void onLayoutChange(View v, int left, int top, int right, int bottom,
 											int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -136,10 +137,8 @@ public class BorderEffect implements Effect {
 											View firstView = (View) absListView.getSelectedView();
 											firstView.getLocalVisibleRect(rect);
 											if (Math.abs(rect.left - rect.right) > firstView.getMeasuredWidth()) {
-												factorX = (Math.abs(rect.left - rect.right)
-														- firstView.getMeasuredWidth()) / 2 - 1;
-												factorY = (Math.abs(rect.top - rect.bottom)
-														- firstView.getMeasuredHeight()) / 2;
+												factorX = (Math.abs(rect.left - rect.right) - firstView.getMeasuredWidth()) / 2 - 1;
+												factorY = (Math.abs(rect.top - rect.bottom) - firstView.getMeasuredHeight()) / 2;
 											}
 											List<Animator> animatorList = new ArrayList<Animator>(3);
 											animatorList.addAll(getScaleAnimator(firstView, true));
@@ -153,22 +152,19 @@ public class BorderEffect implements Effect {
 											ex.printStackTrace();
 										}
 									}
+									
 								});
-
 							}
 							break;
 						}
 					}
 				} else if (oldFocus instanceof AbsListView && newFocus instanceof AbsListView) {
 					if (attacheViews.indexOf(oldFocus) >= 0 && attacheViews.indexOf(newFocus) >= 0) {
-
 						AbsListView a = (AbsListView) oldFocus;
 						AbsListView b = (AbsListView) newFocus;
 
-						MyOnItemSelectedListener oldOn = (MyOnItemSelectedListener) onItemSelectedListenerList
-								.get(oldFocus);
-						MyOnItemSelectedListener newOn = (MyOnItemSelectedListener) onItemSelectedListenerList
-								.get(newFocus);
+						MyOnItemSelectedListener oldOn = (MyOnItemSelectedListener) onItemSelectedListenerList.get(oldFocus);
+						MyOnItemSelectedListener newOn = (MyOnItemSelectedListener) onItemSelectedListenerList.get(newFocus);
 
 						int factorX = 0, factorY = 0;
 						Rect rect = new Rect();
@@ -201,17 +197,16 @@ public class BorderEffect implements Effect {
 						} else {
 							newOn.newFocus = b.getSelectedView();
 						}
-
 					}
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
+		
 	};
 
 	protected List<Animator> getScaleAnimator(View view, boolean isScale) {
-
 		List<Animator> animatorList = new ArrayList<Animator>(2);
 		if (!mScalable)
 			return animatorList;
@@ -233,13 +228,10 @@ public class BorderEffect implements Effect {
 	}
 
 	protected List<Animator> getMoveAnimator(View newFocus, int factorX, int factorY) {
-
 		List<Animator> animatorList = new ArrayList<Animator>();
 		int newXY[];
 		int oldXY[];
-
 		try {
-
 			newXY = getLocation(newFocus);
 			oldXY = getLocation(mTarget);
 
@@ -255,7 +247,6 @@ public class BorderEffect implements Effect {
 				newHeight = (int) (scaleHeight + mMargin * 2 + 0.5);
 				newXY[0] = (int) (newXY[0] - (newWidth - newFocus.getMeasuredWidth()) / 2.0f) + factorX;
 				newXY[1] = (int) (newXY[1] - (newHeight - newFocus.getMeasuredHeight()) / 2.0f + 0.5 + factorY);
-
 			} else {
 				newWidth = newFocus.getWidth();
 				newHeight = newFocus.getHeight();
@@ -273,6 +264,7 @@ public class BorderEffect implements Effect {
 					valuesHeightHolder, valuesYHolder, valuesXHolder);
 
 			scaleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				
 				@Override
 				public synchronized void onAnimationUpdate(ValueAnimator animation) {
 					int width = (int) animation.getAnimatedValue("width");
@@ -290,9 +282,9 @@ public class BorderEffect implements Effect {
 					if (width > 0) {
 						view.requestLayout();
 						view.postInvalidate();
-
 					}
 				}
+				
 			});
 			animatorList.add(scaleAnimator);
 		} catch (Exception ex) {
@@ -328,9 +320,11 @@ public class BorderEffect implements Effect {
 	}
 
 	private class VisibleScope {
+		
 		public boolean isVisible;
 		public View oldFocus;
 		public View newFocus;
+		
 	}
 
 	protected VisibleScope checkVisibleScope(View oldFocus, View newFocus) {
@@ -366,7 +360,6 @@ public class BorderEffect implements Effect {
 					if (attacheViews.indexOf(oldFocus.getParent()) < 0) {
 						scope.oldFocus = null;
 					}
-
 				} else {
 					if (attacheViews.indexOf(newFocus.getParent()) < 0) {
 						mTarget.setVisibility(View.INVISIBLE);
@@ -424,7 +417,6 @@ public class BorderEffect implements Effect {
 			for (FocusListener f : this.mFocusListener) {
 				f.onFocusChanged(oldFocus, newFocus);
 			}
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -473,11 +465,9 @@ public class BorderEffect implements Effect {
 					animatorSet.setDuration(0).start();
 				}
 			}
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
 	}
 
 	protected boolean isScrolling = false;
@@ -503,10 +493,12 @@ public class BorderEffect implements Effect {
 				RecyclerView recyclerView = (RecyclerView) attachView;
 				RecyclerView.OnScrollListener recyclerViewOnScrollListener = null;
 				recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+					
 					@Override
 					public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 						try {
 							super.onScrollStateChanged(recyclerView, newState);
+							
 							// Log.d(TAG, "========>onScrollStateChanged");
 
 							if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -546,12 +538,12 @@ public class BorderEffect implements Effect {
 
 						}
 					}
+					
 				};
 				recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 			} else if (attachView instanceof AbsListView) {
 				final AbsListView absListView = (AbsListView) attachView;
-				final AdapterView.OnItemSelectedListener onItemSelectedListener = absListView
-						.getOnItemSelectedListener();
+				final AdapterView.OnItemSelectedListener onItemSelectedListener = absListView.getOnItemSelectedListener();
 
 				View temp = null;
 				if (absListView.getChildCount() > 0) {
@@ -563,7 +555,6 @@ public class BorderEffect implements Effect {
 				myOnItemSelectedListener.oldFocus = temp;
 				absListView.setOnItemSelectedListener(myOnItemSelectedListener);
 				onItemSelectedListenerList.put(attachView, myOnItemSelectedListener);
-
 			}
 			attacheViews.add(attachView);
 		} catch (Exception ex) {
@@ -601,7 +592,6 @@ public class BorderEffect implements Effect {
 				if (Math.abs(rect.left - rect.right) > newFocus.getMeasuredWidth()) {
 					factorX = (Math.abs(rect.left - rect.right) - newFocus.getMeasuredWidth()) / 2 - 1;
 					factorY = (Math.abs(rect.top - rect.bottom) - newFocus.getMeasuredHeight()) / 2;
-
 				}
 
 				List<Animator> animatorList = new ArrayList<Animator>(3);
@@ -622,7 +612,6 @@ public class BorderEffect implements Effect {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-
 		}
 
 		@Override
@@ -632,6 +621,7 @@ public class BorderEffect implements Effect {
 				onItemSelectedListener.onNothingSelected(parent);
 			}
 		}
+		
 	}
 
 	@Override
