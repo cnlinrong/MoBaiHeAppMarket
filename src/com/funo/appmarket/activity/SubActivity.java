@@ -378,11 +378,9 @@ public class SubActivity extends BaseActivity {
 									@Override
 									public void onFocusChange(View v, boolean hasFocus) {
 										if (hasFocus) {
-											v.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
-											v.setPadding(2, 2, 2, 2);
+											v.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
 										} else {
-											v.setBackgroundResource(android.R.color.transparent);
-											v.setPadding(0, 0, 0, 0);
+											v.findViewById(R.id.overlay).setVisibility(View.GONE);
 										}
 									}
 									

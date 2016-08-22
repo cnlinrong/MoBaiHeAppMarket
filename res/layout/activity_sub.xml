@@ -83,7 +83,7 @@
                 android:clipToPadding="false"
                 android:scrollbars="none" >
 
-                <android.support.v7.widget.GridLayout
+                <com.open.androidtvwidget.view.GridLayoutTV
                     android:id="@+id/gl_gridlayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

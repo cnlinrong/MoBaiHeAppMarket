@@ -13,6 +13,7 @@ import com.funo.appmarket.view.RatingView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import android.content.Context;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,6 +24,8 @@ public class PopularAppsGridViewAdapter extends BaseAdapter {
 	private Context mContext;
 	
 	private List<AppBean> appBeans = new ArrayList<AppBean>();
+	
+	private SparseIntArray colorMap = new SparseIntArray();
 	
 	public PopularAppsGridViewAdapter(Context context, List<AppBean> appBeans) {
 		this.mContext = context;
@@ -56,7 +59,17 @@ public class PopularAppsGridViewAdapter extends BaseAdapter {
 		View contentView = ViewHolderUtils.get(convertView, R.id.contentView);
 		AppBean appBean = getItem(position);
 		appName.setText(appBean.getAppName());
-		contentView.setBackgroundColor(CommonUtils.getRandomColor());
+		
+		int appId = (int) appBean.getAppId();
+		int color = colorMap.get(appId, -1);
+		if (color == -1) {
+			int randomColor = CommonUtils.getRandomColor();
+			contentView.setBackgroundColor(randomColor);
+			colorMap.append(appId, randomColor);
+		} else {
+			contentView.setBackgroundColor(color);
+		}
+		
 		ratingView.setScore(appBean.getScore());
 		size_downloadnum.setText(appBean.getAppSize() + "MB | " + appBean.getDownnum());
 		Glide.with(mContext).load(Constants.IMAGE_URL + appBean.getAppLogo()).into(appLogo);

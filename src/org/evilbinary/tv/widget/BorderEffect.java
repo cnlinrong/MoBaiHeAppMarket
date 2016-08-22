@@ -32,7 +32,7 @@ public class BorderEffect implements Effect {
 	// protected float mScale = 1.1f;
 	protected float mScale = 1.05f;
 
-	protected long mDurationTraslate = 200;
+	protected long mDurationTraslate = 500;
 	protected int mMargin = 0;
 	protected View lastFocus, oldLastFocus;
 	protected AnimatorSet mAnimatorSet;

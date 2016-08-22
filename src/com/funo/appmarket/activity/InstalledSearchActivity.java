@@ -8,14 +8,15 @@ import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.KeyboardGridViewAdapter;
 import com.funo.appmarket.adapter.PopularAppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
+import com.funo.appmarket.business.InstalledAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService;
+import com.funo.appmarket.business.InstalledAppInfoService.InstalledAppInfoCallback;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
+import com.funo.appmarket.business.define.IInstalledAppInfoService.InstalledAppInfoParam;
 import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
 import com.funo.appmarket.db.AppModelDB;
 import com.funo.appmarket.util.AnimationUtils;
 import com.funo.appmarket.util.ModelBeanConverter;
-import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
-import com.open.androidtvwidget.view.MainUpView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,8 +43,8 @@ public class InstalledSearchActivity extends BaseActivity {
 	private long duration = 200;
 
 	private RecAppInfoService recAppInfoService;
+	private InstalledAppInfoService installedAppInfoService;
 	
-	private MainUpView mainUpView1;
 	private View mOldView;
 	
 	private TextView label_tv;
@@ -65,15 +66,9 @@ public class InstalledSearchActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		
 		recAppInfoService = new RecAppInfoService(getContext());
+		installedAppInfoService = new InstalledAppInfoService(getContext());
 		
 		setContentView(R.layout.activity_search);
-		
-		mainUpView1 = (MainUpView) findViewById(R.id.mainUpView1);
-		EffectNoDrawBridge effectNoDrawBridge = new EffectNoDrawBridge();
-        effectNoDrawBridge.setTranDurAnimTime(200);
-        mainUpView1.setEffectBridge(effectNoDrawBridge); // 4.3以下版本边框移动.
-//        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
-        mainUpView1.setDrawUpRectPadding(2);
 		
         label_tv = (TextView) findViewById(R.id.label_tv);
         
@@ -83,34 +78,21 @@ public class InstalledSearchActivity extends BaseActivity {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				/**
-				 * 这里注意要加判断是否为NULL.
-				 * 因为在重新加载数据以后会出问题.
-				 */
-				if (view != null && parent.isFocused() && mOldView != view) {
+				if (view != null && parent.isFocused() && view != mOldView) {
 					if (mOldView != null) {
-						mOldView.setBackgroundResource(android.R.color.transparent);
-						mOldView.setPadding(0, 0, 0, 0);
+						mOldView.findViewById(R.id.overlay).setVisibility(View.GONE);
+						mOldView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(500).start();
 					}
-					
 					view.bringToFront();
-					mainUpView1.setFocusView(view, mOldView, 1.05f);
+					view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+					view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(500).start();
 					mOldView = view;
-					
-					view.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
-					view.setPadding(2, 2, 2, 2);
 				}
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				mainUpView1.setUnFocusView(mOldView);
-				mainUpView1.setVisibility(View.GONE);
 				
-				if (mOldView != null) {
-					mOldView.setBackgroundResource(android.R.color.transparent);
-					mOldView.setPadding(0, 0, 0, 0);
-				}
 			}
 			
 		});
@@ -122,19 +104,15 @@ public class InstalledSearchActivity extends BaseActivity {
 					View selectedView = popular_apps.getSelectedView();
 					if (selectedView != null) {
 						selectedView.bringToFront();
-						mainUpView1.setFocusView(selectedView, 1.1f);
+						selectedView.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+						selectedView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(500).start();
 						mOldView = selectedView;
-						
-						selectedView.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
-						selectedView.setPadding(2, 2, 2, 2);
 					}
 				} else {
-					mainUpView1.setUnFocusView(mOldView);
-					mainUpView1.setVisibility(View.GONE);
-					
 					if (mOldView != null) {
-						mOldView.setBackgroundResource(android.R.color.transparent);
-						mOldView.setPadding(0, 0, 0, 0);
+						mOldView.findViewById(R.id.overlay).setVisibility(View.GONE);
+						mOldView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(500).start();
+						mOldView = null;
 					}
 				}
 			}
@@ -264,6 +242,37 @@ public class InstalledSearchActivity extends BaseActivity {
 		search("");
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if (appData != null && !appData.isEmpty()) {
+			StringBuilder appIds = new StringBuilder();
+			for (int i = 0; i < appData.size(); i++) {
+				if (i != appData.size() - 1) {
+					appIds.append(appData.get(i).getAppId() + ",");
+				} else {
+					appIds.append(appData.get(i).getAppId() + "");
+				}
+			}
+			InstalledAppInfoParam installedAppInfoParam = new InstalledAppInfoParam();
+			installedAppInfoParam.appId = appIds.toString();
+			installedAppInfoParam.pageSize = Integer.MAX_VALUE;
+			installedAppInfoParam.currentPage = 1;
+			installedAppInfoService.installedAppInfo(installedAppInfoParam, new InstalledAppInfoCallback() {
+				
+				@Override
+				public void doCallback(List<AppBean> appBeans) {
+					if (appBeans != null) {
+						InstalledSearchActivity.this.appData = appBeans;
+						popularAppsGridViewAdapter.setData(appBeans);
+					}
+				}
+				
+			});
+		}
+	}
+	
 	private void search(String keyword) {
 		if (TextUtils.isEmpty(keyword)) {
 			label_tv.setText("热门应用");
@@ -276,6 +285,7 @@ public class InstalledSearchActivity extends BaseActivity {
 				@Override
 				public void doCallback(List<AppBean> appData) {
 					if (appData != null) {
+						InstalledSearchActivity.this.appData = appData;
 						popularAppsGridViewAdapter.setData(appData);
 					}
 				}

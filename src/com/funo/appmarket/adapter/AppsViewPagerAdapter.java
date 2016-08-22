@@ -8,8 +8,6 @@ import com.funo.appmarket.bean.AppBean;
 import com.funo.appmarket.business.SearchAppByTypeService;
 import com.funo.appmarket.business.SearchAppByTypeService.SearchAppByTypeCallback;
 import com.funo.appmarket.business.define.ISearchAppByTypeService.SearchAppByTypeParam;
-import com.open.androidtvwidget.bridge.EffectNoDrawBridge;
-import com.open.androidtvwidget.view.MainUpView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,11 +16,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,8 +37,6 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 	private View mOldView;
 	
 	private int pageSize = 15;
-	
-	private SparseArray<GridView> gridViews = new SparseArray<GridView>();
 	
 	public AppsViewPagerAdapter(FragmentManager fm, Context context, int pageCount, int orderType, String subParentId) {
 		super(fm);
@@ -89,46 +83,26 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_apps_view_pager, null);
 			
-			final MainUpView mainUpView1 = (MainUpView) rootView.findViewById(R.id.mainUpView1);
-			EffectNoDrawBridge effectNoDrawBridge = new EffectNoDrawBridge();
-	        effectNoDrawBridge.setTranDurAnimTime(200);
-	        mainUpView1.setEffectBridge(effectNoDrawBridge); // 4.3以下版本边框移动.
-//	        mainUpView1.setUpRectResource(R.drawable.test_rectangle); // 设置移动边框的图片.
-	        mainUpView1.setDrawUpRectPadding(2);
-	        
 			apps_list = (GridView) rootView.findViewById(R.id.apps_list);
 			apps_list.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					/**
-					 * 这里注意要加判断是否为NULL.
-					 * 因为在重新加载数据以后会出问题.
-					 */
 					if (view != null && parent.isFocused() && mOldView != view) {
 						if (mOldView != null) {
-							mOldView.setBackgroundResource(android.R.color.transparent);
-							mOldView.setPadding(0, 0, 0, 0);
+							mOldView.findViewById(R.id.overlay).setVisibility(View.GONE);
+							mOldView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(500).start();
 						}
-						
 						view.bringToFront();
-						mainUpView1.setFocusView(view, mOldView, 1.1f);
+						view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+						view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(500).start();
 						mOldView = view;
-						
-						view.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
-						view.setPadding(2, 2, 2, 2);
 					}
 				}
 
 				@Override
 				public void onNothingSelected(AdapterView<?> parent) {
-					mainUpView1.setUnFocusView(mOldView);
-					mainUpView1.setVisibility(View.GONE);
 					
-					if (mOldView != null) {
-						mOldView.setBackgroundResource(android.R.color.transparent);
-						mOldView.setPadding(0, 0, 0, 0);
-					}
 				}
 				
 			});
@@ -140,19 +114,15 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 						View selectedView = apps_list.getSelectedView();
 						if (selectedView != null) {
 							selectedView.bringToFront();
-							mainUpView1.setFocusView(selectedView, 1.1f);
+							selectedView.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+							selectedView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(500).start();
 							mOldView = selectedView;
-							
-							selectedView.setBackgroundResource(R.drawable.gridlayout_selector_decorator);
-							selectedView.setPadding(2, 2, 2, 2);
 						}
 					} else {
-						mainUpView1.setUnFocusView(mOldView);
-						mainUpView1.setVisibility(View.GONE);
-						
 						if (mOldView != null) {
-							mOldView.setBackgroundResource(android.R.color.transparent);
-							mOldView.setPadding(0, 0, 0, 0);
+							mOldView.findViewById(R.id.overlay).setVisibility(View.GONE);
+							mOldView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(500).start();
+							mOldView = null;
 						}
 					}
 				}

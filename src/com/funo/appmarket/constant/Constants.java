@@ -2,7 +2,7 @@ package com.funo.appmarket.constant;
 
 public class Constants {
 
-	public static final String BASE_URL = "http://172.16.16.139:8080/mobaiheInte/";// 接口地址
+	public static final String BASE_URL = "http://172.16.16.139:8081/mobaiheInte/";// 接口地址
 	public static final String IMAGE_URL = "http://172.16.16.146/wcity/FTP/gsfop/";// 文件地址
 //	public static final String BASE_URL = "http://112.5.141.83:10098/mobaiheInte/";// 接口地址-外网
 //	public static final String IMAGE_URL = "http://112.5.141.83:10254/wcity/FTP/gsfop/";// 文件地址-外网

@@ -53,6 +53,13 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="-5dp"
             android:visibility="gone" />
+
+        <View
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gridlayout_selector_decorator"
+            android:visibility="gone" />
     </FrameLayout>
 
 </LinearLayout>

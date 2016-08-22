@@ -19,9 +19,4 @@
         android:scrollbars="none"
         android:verticalSpacing="15dp" />
 
-    <com.open.androidtvwidget.view.MainUpView
-        android:id="@+id/mainUpView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
 </LinearLayout>
