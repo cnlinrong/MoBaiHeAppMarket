@@ -126,7 +126,7 @@ public class SubActivity extends BaseActivity {
 
 			@Override
 			public void run() {
-				int itemHeight = navList.getHeight() / 4 + 1;
+				int itemHeight = (int) Math.ceil(navList.getHeight() / 4.0);
 				navListAdapter = new NavListAdapter(getContext(), navItems, itemHeight);
 				navList.setAdapter(navListAdapter);
 			}
@@ -378,6 +378,7 @@ public class SubActivity extends BaseActivity {
 									@Override
 									public void onFocusChange(View v, boolean hasFocus) {
 										if (hasFocus) {
+											v.bringToFront();
 											v.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
 										} else {
 											v.findViewById(R.id.overlay).setVisibility(View.GONE);

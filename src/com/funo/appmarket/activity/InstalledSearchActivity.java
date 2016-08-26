@@ -8,11 +8,8 @@ import com.funo.appmarket.activity.base.BaseActivity;
 import com.funo.appmarket.adapter.KeyboardGridViewAdapter;
 import com.funo.appmarket.adapter.PopularAppsGridViewAdapter;
 import com.funo.appmarket.bean.AppBean;
-import com.funo.appmarket.business.InstalledAppInfoService;
 import com.funo.appmarket.business.RecAppInfoService;
-import com.funo.appmarket.business.InstalledAppInfoService.InstalledAppInfoCallback;
 import com.funo.appmarket.business.RecAppInfoService.RecAppInfoCallback;
-import com.funo.appmarket.business.define.IInstalledAppInfoService.InstalledAppInfoParam;
 import com.funo.appmarket.business.define.IRecAppInfoService.RecAppInfoReqParam;
 import com.funo.appmarket.db.AppModelDB;
 import com.funo.appmarket.util.AnimationUtils;
@@ -43,7 +40,6 @@ public class InstalledSearchActivity extends BaseActivity {
 	private long duration = 200;
 
 	private RecAppInfoService recAppInfoService;
-	private InstalledAppInfoService installedAppInfoService;
 	
 	private View mOldView;
 	
@@ -61,12 +57,13 @@ public class InstalledSearchActivity extends BaseActivity {
 	
 	private List<AppBean> appData = new ArrayList<AppBean>();
 	
+	private boolean focus_inited = false;// 让聚焦监听只处理一次焦点
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		recAppInfoService = new RecAppInfoService(getContext());
-		installedAppInfoService = new InstalledAppInfoService(getContext());
 		
 		setContentView(R.layout.activity_search);
 		
@@ -100,13 +97,15 @@ public class InstalledSearchActivity extends BaseActivity {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
+				if (hasFocus && !focus_inited) {
 					View selectedView = popular_apps.getSelectedView();
 					if (selectedView != null) {
 						selectedView.bringToFront();
 						selectedView.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
 						selectedView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(500).start();
 						mOldView = selectedView;
+						
+						focus_inited = true;
 					}
 				} else {
 					if (mOldView != null) {
@@ -238,39 +237,13 @@ public class InstalledSearchActivity extends BaseActivity {
 			}
 
 		});
-		
-		search("");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		if (appData != null && !appData.isEmpty()) {
-			StringBuilder appIds = new StringBuilder();
-			for (int i = 0; i < appData.size(); i++) {
-				if (i != appData.size() - 1) {
-					appIds.append(appData.get(i).getAppId() + ",");
-				} else {
-					appIds.append(appData.get(i).getAppId() + "");
-				}
-			}
-			InstalledAppInfoParam installedAppInfoParam = new InstalledAppInfoParam();
-			installedAppInfoParam.appId = appIds.toString();
-			installedAppInfoParam.pageSize = Integer.MAX_VALUE;
-			installedAppInfoParam.currentPage = 1;
-			installedAppInfoService.installedAppInfo(installedAppInfoParam, new InstalledAppInfoCallback() {
-				
-				@Override
-				public void doCallback(List<AppBean> appBeans) {
-					if (appBeans != null) {
-						InstalledSearchActivity.this.appData = appBeans;
-						popularAppsGridViewAdapter.setData(appBeans);
-					}
-				}
-				
-			});
-		}
+		search(search_input.getText().toString());
 	}
 	
 	private void search(String keyword) {

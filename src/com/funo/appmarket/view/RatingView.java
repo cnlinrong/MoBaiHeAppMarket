@@ -61,7 +61,6 @@ public class RatingView extends LinearLayout {
 		stars.add(star3);
 
 		final ImageView star4 = new ImageView(getContext());
-		star4.setBackgroundResource(getStarImage(4));
 		star4.setImageResource(getStarImage(4));
 		LayoutParams layoutParams4 = new LayoutParams(star_width, star_height);
 		layoutParams4.leftMargin = margin_left;

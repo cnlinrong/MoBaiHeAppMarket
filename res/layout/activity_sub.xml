@@ -7,7 +7,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="40dp"
         android:clipToPadding="false"
         android:paddingLeft="40dp"
@@ -70,10 +69,10 @@
             android:layout_weight="4"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:paddingBottom="37dp"
-            android:paddingLeft="10dp"
+            android:paddingBottom="36dp"
+            android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:paddingTop="57dp" >
+            android:paddingTop="56dp" >
 
             <org.evilbinary.tv.widget.TvHorizontalScrollView
                 android:id="@+id/hsv"
@@ -86,7 +85,7 @@
                 <com.open.androidtvwidget.view.GridLayoutTV
                     android:id="@+id/gl_gridlayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
             </org.evilbinary.tv.widget.TvHorizontalScrollView>
         </RelativeLayout>
     </LinearLayout>

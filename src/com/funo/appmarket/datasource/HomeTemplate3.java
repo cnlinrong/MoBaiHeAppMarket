@@ -29,7 +29,7 @@ public class HomeTemplate3 implements IHomeTemplate {
 		this.appBeans = appData;
 		this.containerHeight = containerHeight;
 		
-		baseItemHeight = (containerHeight - spacing * 3) / 3;
+		baseItemHeight = (int) Math.rint((containerHeight - spacing * 3.0) / 3.0);
 		baseItemWidth = baseItemHeight + 40;
 		
 		if (appBeans != null) {
@@ -50,7 +50,7 @@ public class HomeTemplate3 implements IHomeTemplate {
 				GridItem gridItem = new GridItem();
 				gridItem.setView_type(0);
 				gridItem.setRowSize(2);
-				gridItem.setHeight(baseItemHeight * 2);
+				gridItem.setHeight(baseItemHeight * 2 + spacing);
 				gridItem.setColumnSize(2);
 				gridItem.setWidth(baseItemWidth * 2 + spacing);
 				gridItem.setData(appBean);

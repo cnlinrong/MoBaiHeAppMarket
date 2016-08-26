@@ -30,7 +30,7 @@ public class HomeTemplate1 implements IHomeTemplate {
 		this.appBeans = appData;
 		this.containerHeight = containerHeight;
 		
-		baseItemHeight = (containerHeight - spacing * 2) / 3;
+		baseItemHeight = (int) Math.rint((containerHeight - spacing * 2.0) / 3.0);
 		baseItemWidth = baseItemHeight + 40;
 		
 		if (appBeans != null) {

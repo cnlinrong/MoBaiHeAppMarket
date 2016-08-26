@@ -29,8 +29,8 @@ public class BorderEffect implements Effect {
 	private String TAG = BorderEffect.class.getSimpleName();
 
 	protected boolean mScalable = true;
-	// protected float mScale = 1.1f;
-	protected float mScale = 1.05f;
+	protected float mScale = 1.1f;
+//	protected float mScale = 1.05f;
 
 	protected long mDurationTraslate = 500;
 	protected int mMargin = 0;

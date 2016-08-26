@@ -74,6 +74,8 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 		
 		AppsGridViewAdapter appsGridViewAdapter;
 		
+		private boolean focus_inited = false;// 让聚焦监听只处理一次焦点
+		
 		public MyFragment(int position) {
 			this.position = position;
 		}
@@ -110,13 +112,15 @@ public class AppsViewPagerAdapter extends FragmentPagerAdapter {
 				
 				@Override
 				public void onFocusChange(View v, boolean hasFocus) {
-					if (hasFocus) {
+					if (hasFocus && !focus_inited) {
 						View selectedView = apps_list.getSelectedView();
 						if (selectedView != null) {
 							selectedView.bringToFront();
 							selectedView.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
 							selectedView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(500).start();
 							mOldView = selectedView;
+							
+							focus_inited = true;
 						}
 					} else {
 						if (mOldView != null) {

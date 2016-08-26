@@ -1,5 +1,15 @@
 package com.gridbuilder;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import com.gridbuilder.calculator.PositionCalculator;
+import com.gridbuilder.listener.OnItemClickListener;
+import com.gridbuilder.listener.OnItemSelectedListener;
+import com.gridbuilder.listener.OnViewCreateCallBack;
+import com.gridbuilder.utils.BitmapUtils;
+
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -9,16 +19,6 @@ import android.view.LayoutInflater;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.ImageView;
-
-import com.gridbuilder.calculator.PositionCalculator;
-import com.gridbuilder.listener.OnItemClickListener;
-import com.gridbuilder.listener.OnItemSelectedListener;
-import com.gridbuilder.listener.OnViewCreateCallBack;
-import com.gridbuilder.utils.BitmapUtils;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by EasonX on 15/5/20.
@@ -245,10 +245,11 @@ public class GridBuilder implements View.OnFocusChangeListener, View.OnClickList
 //            gridItem.setHeight(layoutParams.height);
 //        }
 
-        layoutParams.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, gridItem.getRowSize(), gridItem.getRowWeight());
+//        layoutParams.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, gridItem.getRowSize(), gridItem.getRowWeight());
+        layoutParams.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, gridItem.getRowSize());
         layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, gridItem.getColumnSize());
         
-        layoutParams.setGravity(gridItem.getGravity());
+//        layoutParams.setGravity(gridItem.getGravity());
 
         // 设置每个item间距,最外层间距也需要设置(因为需要体现边缘item的scale效果)
         if (gridItem.getRow() > 0) {
