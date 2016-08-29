@@ -57,8 +57,6 @@ public class InstalledSearchActivity extends BaseActivity {
 	
 	private List<AppBean> appData = new ArrayList<AppBean>();
 	
-	private boolean focus_inited = false;// 让聚焦监听只处理一次焦点
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -97,15 +95,13 @@ public class InstalledSearchActivity extends BaseActivity {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus && !focus_inited) {
+				if (hasFocus) {
 					View selectedView = popular_apps.getSelectedView();
 					if (selectedView != null) {
 						selectedView.bringToFront();
 						selectedView.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
 						selectedView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(500).start();
 						mOldView = selectedView;
-						
-						focus_inited = true;
 					}
 				} else {
 					if (mOldView != null) {
